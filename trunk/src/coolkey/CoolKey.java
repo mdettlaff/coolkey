@@ -99,8 +99,8 @@ public class CoolKey {
 	/**
 	 * Czyta treść pliku i zwraca ją jako napis.
 	 *
-	 * @param filePath Plik który chcemy odczytać.
-	 * @return         Zawartość pliku jako napis.
+	 * @param file Plik który chcemy odczytać.
+	 * @return     Zawartość pliku jako napis.
 	 */
 	public static String readFileAsString(File file)
 		throws IOException {
