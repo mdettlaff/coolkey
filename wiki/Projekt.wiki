@@ -1,0 +1,76 @@
+#summary Plan opisujący interfejs i strukturę programu.
+#labels Phase-Design,Phase-Requirements
+
+== Pasek menu ==
+
+_Na razie należy traktować to jako ogólny szkic_
+
+Użytkownik
+  * Dodaj użytkownika (nazwa, hasło opcjonalnie)
+  * Zmień użytkownika (wybierz / usuń)
+  * Ustawienia (zmień hasło)
+  * Statystyka (zakładki: Prędkość, Poprawność)
+
+Kurs
+  * Kontynuuj
+  * Rozpocznij nowy kurs:
+     * Podstawowy / pełny / klawiatura numeryczna / cyfry
+     * Układ klawiatury: QWERTY / Dvorak
+  * Zarządzanie kursami (lista kursów: wybierz, dodaj, usuń)
+  * Ustawienia (tryb: standardowy/gra)
+
+Pojedynczy test
+  * Teksty literackie >
+    * Standardowe
+    * Specjalistyczne
+    * Poezja
+  * Tekst z pliku
+  * Automatycznie wygenerowany tekst
+  * Lekcje:
+    * Lekcja 1: asdf
+    * Lekcja 2: jkl;
+    * ..............
+    * Lekcja x: Powtórka: litery
+    * Lekcja x: `.,`
+    * Lekcja x: `?!`
+    * Lekcja x: `;:`
+    * Lekcja x: `"'`
+    * Lekcja x: `()`
+    * Lekcja x: `-_`
+    * Lekcja x: `/\`
+    * Lekcja x: Wielkie i małe litery
+    * Lekcja x: Polskie litery
+    * Lekcja x: Powtórka: zdania
+    * Lekcja x: `[]`
+    * Lekcja x: `{}`
+    * Lekcja x: `+=`
+    * Lekcja x: `<>`
+    * Lekcja x: Cyfry 12
+    * Lekcja x: Cyfry 34
+    * Lekcja x: Cyfry 56
+    * Lekcja x: Cyfry 78
+    * Lekcja x: Cyfry 90
+    * Lekcja x: Powtórka: cyfry
+    * Lekcja x: `@#`
+    * Lekcja x: `$%`
+    * Lekcja x: `^&*`
+    * Lekcja x: Powtórka: cyfry i znaki specjalne
+    * Lekcja x: Powtórka: cała klawiatura
+    * Lekcja x: Klawiatura numeryczna cz. 1
+    * Lekcja x: Klawiatura numeryczna cz. 2
+    * Lekcja x: Klawiatura numeryczna cz. 3
+    * Lekcja x: Powtórka: Klawiatura numeryczna
+  * Wprawki >
+    * Klawisze
+    * Dla palców
+    * Rzędy klawiszy
+  * Test spersonalizowany:
+    * Typ tekstu: Losowe słowa / Zdania
+
+Gra
+  * Rozpocznij grę
+  * Najlepsze wyniki (w prędkości)
+
+Pomoc
+  * Tematy pomocy
+  * O programie
