@@ -10,6 +10,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
+import coolkey.gui.GUI;
+
 /**
  * Główna klasa programu.
  */
@@ -22,6 +24,7 @@ public class CoolKey {
 	public static void main(String[] args) {
 		File[] files = new File(txtDirectory).listFiles(new TextfileFilter());
 
+		
 		try {
 			// tekst bazowy (w postaci ciągu słów), na podstawie którego będzie
 			// generowany tekst przy pomocy łańcucha Markowa
@@ -40,6 +43,8 @@ public class CoolKey {
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
+		
+		GUI.run();
 	}
 	
 	/**
