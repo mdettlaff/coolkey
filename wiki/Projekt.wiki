@@ -7,8 +7,8 @@ _Na razie należy traktować to jako ogólny szkic_
 
 Użytkownik
   * Dodaj użytkownika (nazwa, hasło opcjonalnie)
-  * Zmień użytkownika (wybierz / usuń)
-  * Ustawienia (zmień hasło)
+  * Zmień użytkownika (wybierz, usuń, zmień hasło)
+  * Ustawienia (dźwięki, pokaż klawiaturę, pokaż wykresy, koniec linii)
   * Statystyka (zakładki: Prędkość, Poprawność)
 
 Kurs
@@ -17,7 +17,6 @@ Kurs
      * Podstawowy / pełny / klawiatura numeryczna / cyfry
      * Układ klawiatury: QWERTY / Dvorak
   * Zarządzanie kursami (lista kursów: wybierz, dodaj, usuń)
-  * Ustawienia (tryb: standardowy/gra)
 
 Pojedynczy test
   * Teksty literackie >
