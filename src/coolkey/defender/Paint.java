@@ -41,12 +41,16 @@ public class Paint implements PaintListener {
 				drawMenuItem(Engine.MENU_HELP);
 				break;
 			case Engine.STATE_GAME:
+				gc.drawString("Game - ESC to exit", 50, 50, true);
 				break;
 			case Engine.STATE_RESULT:
+				gc.drawString("Result - ESC to exit", 50, 50, true);
 				break;
 			case Engine.STATE_TOP10:
+				gc.drawString("Top10 - ESC to exit", 50, 50, true);
 				break;
 			case Engine.STATE_HELP:
+				gc.drawString("Help - ESC to exit", 50, 50, true);
 				break;
 		}
 		if(this.engine.showFps()) {

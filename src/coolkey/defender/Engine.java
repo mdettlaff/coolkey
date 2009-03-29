@@ -103,7 +103,7 @@ public class Engine implements Runnable {
 	}
 	
 	public synchronized void escapeToMenu() {
-		if(!this.newGame)
+		if(!this.newGame && this.state == STATE_GAME)
 			this.menuSelectId = MENU_CONTINUE;
 		this.state = STATE_MENU;
 	}
