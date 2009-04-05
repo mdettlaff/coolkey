@@ -1,6 +1,8 @@
 package coolkey.gui;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
@@ -36,9 +38,9 @@ public class MenuBar {
 		course.setMenu(courseMenu);
 		final MenuItem continueItem = new MenuItem(courseMenu, SWT.PUSH);
         continueItem.setText("Kontynuuj");
-        final MenuItem newCourseItem = new MenuItem(courseMenu, SWT.CASCADE);
+        final MenuItem newCourseItem = new MenuItem(courseMenu, SWT.PUSH);
         newCourseItem.setText("Rozpocznij nowy kurs");
-	        Menu newCourseMenu = new Menu(menu);
+	        /*Menu newCourseMenu = new Menu(menu);
 	        final MenuItem baseItem = new MenuItem(newCourseMenu, SWT.PUSH);
 	        baseItem.setText("Podstawowy");
 	        final MenuItem sub1Item = new MenuItem(newCourseMenu, SWT.PUSH);
@@ -56,7 +58,7 @@ public class MenuBar {
 		        final MenuItem dvorakItem = new MenuItem(keybordSetMenu, SWT.RADIO);
 		        dvorakItem.setText("Dvorak");
 		        keybordSetItem.setMenu(keybordSetMenu);
-		        newCourseItem.setMenu(newCourseMenu);
+		        newCourseItem.setMenu(newCourseMenu);*/
         final MenuItem coursesManagerItem = new MenuItem(courseMenu, SWT.PUSH);
         coursesManagerItem.setText("Zarządzanie kursami");
         final MenuItem settings2Item = new MenuItem(courseMenu, SWT.PUSH);
@@ -116,5 +118,42 @@ public class MenuBar {
         aboutItem.setText("O programie");
         
 		GUI.shell.setMenuBar(menu);
+		
+		addUserItem.addListener(SWT.Selection, new Listener() {
+            public void handleEvent(Event event) {
+            	AddUser addShell = new AddUser();
+            	addShell.open();
+            }
+        });
+		changeUserItem.addListener(SWT.Selection, new Listener() {
+            public void handleEvent(Event event) {
+            	ChangeUser changeShell = new ChangeUser();
+            	changeShell.open();
+            }
+        });
+		newCourseItem.addListener(SWT.Selection, new Listener() {
+            public void handleEvent(Event event) {
+            	NewCourse newCourseShell = new NewCourse();
+            	newCourseShell.open();
+            }
+        });
+		statsItem.addListener(SWT.Selection, new Listener() {
+            public void handleEvent(Event event) {
+            	Stats statsShell = new Stats();
+            	statsShell.open();
+            }
+        });
+		coursesManagerItem.addListener(SWT.Selection, new Listener() {
+            public void handleEvent(Event event) {
+            	CourseManager cmShell = new CourseManager();
+            	cmShell.open();
+            }
+        });
+		settingsItem.addListener(SWT.Selection, new Listener() {
+            public void handleEvent(Event event) {
+            	UserSettings usShell = new UserSettings();
+            	usShell.open();
+            }
+        });
 	}
 }
