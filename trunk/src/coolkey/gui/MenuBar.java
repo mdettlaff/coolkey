@@ -66,7 +66,7 @@ public class MenuBar {
         
         /*Pojedyńczy test*/
         final MenuItem singleTest = new MenuItem(menu, SWT.CASCADE);
-		singleTest.setText("&Pojedyńczy test");
+		singleTest.setText("&Pojedynczy test");
 		
 		final Menu singleTestMenu = new Menu(GUI.shell, SWT.DROP_DOWN);
 		singleTest.setMenu(singleTestMenu);
@@ -108,7 +108,7 @@ public class MenuBar {
 		
         /*Pomoc*/
         final MenuItem help = new MenuItem(menu, SWT.CASCADE);
-		help.setText("&Pomc");
+		help.setText("&Pomoc");
 		
 		final Menu helpMenu = new Menu(GUI.shell, SWT.DROP_DOWN);
 		game.setMenu(gameMenu);
