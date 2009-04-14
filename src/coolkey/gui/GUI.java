@@ -28,7 +28,7 @@ public class GUI {
 		
 		display = new Display();
 		shell = new Shell(display);
-		shell.setText("CoolKey 0.001");
+		shell.setText("CoolKey 0.1");
 		shell.setLayout(new GridLayout(2, false));
 		
 		/* Wyśrodkowanie shella */
@@ -42,9 +42,7 @@ public class GUI {
 		
 		new MenuBar();
 		
-		/*obszar przepisywania*/
-		Canvas canvas3 = new Canvas(shell, SWT.BORDER);
-		canvas3.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		new WritingArea(); // obszar przepisywania
 		
 		/*panel boczny z prawej*/
 		Canvas canvas2 = new Canvas(shell, SWT.BORDER);

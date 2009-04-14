@@ -7,27 +7,23 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Canvas;
 
 /**
- * Tworzy obiekt klawiatura.
+ * Wizualizacja klawiatury.
  * @author kd
  *
  */
 public class Keyboard {
-	public Canvas klawiatura;
-		
+	public Canvas keyboard;
+
 	public Keyboard() {
-		klawiatura = new Canvas(GUI.shell, SWT.BORDER);
-		klawiatura.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		
-		
-		klawiatura.addPaintListener(new PaintListener() {
-		      public void paintControl(PaintEvent e) {
-		        e.gc.drawRoundRectangle(0, 0, 550, 200, 20, 20);
-		      }
-		    });
-		
-		klawiatura.redraw();
+		keyboard = new Canvas(GUI.shell, SWT.BORDER);
+		keyboard.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+
+		keyboard.addPaintListener(new PaintListener() {
+			public void paintControl(PaintEvent e) {
+				e.gc.drawRoundRectangle(0, 0, 685, 229, 20, 20);
+			}
+		});
+
+		keyboard.redraw();
 	}
-	
-	
-	
 }

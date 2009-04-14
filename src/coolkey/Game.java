@@ -7,7 +7,7 @@ import org.eclipse.swt.widgets.Shell;
 import coolkey.defender.Defender;
 import coolkey.defender.Engine;
 
-public class Run {
+public class Game {
 	public static void main(String[] args) {
 		final Display display = new Display();
 		final Shell shell = new Shell(display);
