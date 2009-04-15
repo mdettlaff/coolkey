@@ -4,15 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Przechowuje aktualny stan ćwiczenia polegającego na przepisywaniu.
+ * Ćwiczenie polegające na przepisywaniu zadanego tekstu.
  */
 public class Lesson {
 
 	private List<String> textLines = new ArrayList<String>();
 	private List<String> writtenLines = new ArrayList<String>();
 	private List<String> mistakes = new ArrayList<String>();
+	private List<String> mistakesShadow = new ArrayList<String>();
 	private int mistakesCount = 0;
 
+	/**
+	 * Nowe ćwiczenie polegające na przepisaniu podanego tekstu.
+	 *
+	 * @param text Tekst do przepisania.
+	 */
 	public Lesson(String text) {
 		List<String> textWords = new ArrayList<String>();
 		// podziel tekst na słowa
@@ -34,9 +40,10 @@ public class Lesson {
 		if (line.length() > 0) {
 			textLines.add(line.trim());
 		}
-		
+
 		writtenLines.add("");
-		getMistakes().add("");
+		mistakes.add("");
+		mistakesShadow.add("");
 	}
 
 	/**
@@ -60,7 +67,10 @@ public class Lesson {
 			mistakesCount++;
 		}
 		writtenLines.set(last, writtenLines.get(last) + correctChar);
-		getMistakes().set(last, getMistakes().get(last) + incorrectChar);
+		mistakes.set(last, mistakes.get(last) + incorrectChar);
+		if (writtenLines.get(last).length() > mistakesShadow.get(last).length()) {
+			mistakesShadow.set(last, mistakesShadow.get(last) + incorrectChar);
+		}
 	}
 
 	public void typeEnter() {
@@ -68,6 +78,7 @@ public class Lesson {
 		if (writtenLines.get(last).length() >= textLines.get(last).length()) {
 			writtenLines.add("");
 			mistakes.add("");
+			mistakesShadow.add("");
 		}
 	}
 
@@ -84,6 +95,7 @@ public class Lesson {
 		} else if (writtenLines.size() > 1) {
 			writtenLines.remove(writtenLines.size() - 1);
 			mistakes.remove(mistakes.size() - 1);
+			mistakesShadow.remove(mistakesShadow.size() - 1);
 		}
 	}
 
@@ -95,10 +107,24 @@ public class Lesson {
 	}
 
 	/**
-	 * Tekst przepisany przez użytkownika.
+	 * Poprawny tekst przepisany przez użytkownika.
 	 */
 	public List<String> getWrittenLines() {
-		return writtenLines;
+		// ukrywamy znaki pokrywające się z poprawkami
+		List<String> wl = new ArrayList<String>();
+		for (int j=0; j < writtenLines.size(); j++) {
+			String line = "";
+			for (int i=0; i < writtenLines.get(j).length(); i++) {
+				if (mistakesShadow.get(j).charAt(i) != ' ' &&
+						mistakes.get(j).charAt(i) == ' ') {
+					line += ' ';
+				} else {
+					line += writtenLines.get(j).charAt(i);
+				}
+			}
+			wl.add(line);
+		}
+		return wl;
 	}
 
 	/**
@@ -109,9 +135,55 @@ public class Lesson {
 	}
 
 	/**
+	 * Znaki, które zostały przepisane błędnie a następnie poprawione.
+	 */
+	public List<String> getCorrections() {
+		List<String> corrections = new ArrayList<String>();
+		for (int j=0; j < mistakesShadow.size(); j++) {
+			String line = "";
+			for (int i=0; i < mistakes.get(j).length(); i++) {
+				if (mistakesShadow.get(j).charAt(i) != ' ' &&
+						mistakes.get(j).charAt(i) == ' ') {
+					line += writtenLines.get(j).charAt(i);
+				} else {
+					line += ' ';
+				}
+			}
+			corrections.add(line);
+		}
+		return corrections;
+	}
+
+	/**
+	 * Ilość wszystkich przepisanych znaków (również błędnych).
+	 */
+	public int getWrittenCharsCount() {
+		int writtenCharsCount = 0;
+		for (String line : writtenLines) {
+			writtenCharsCount += line.length();
+		}
+		return writtenCharsCount;
+	}
+
+	/**
 	 * Ilość nieprawidłowo przepisanych znaków.
 	 */
 	public int getMistakesCount() {
 		return mistakesCount;
+	}
+
+	/**
+	 * Ilość znaków, które zostały przepisane błędnie a następnie poprawione.
+	 */
+	public int getCorrectionsCount() {
+		int correctionsCount = 0;
+		for (String line : getCorrections()) {
+			for (int i=0; i < line.length(); i++) {
+				if (line.charAt(i) != ' ') {
+					correctionsCount++;
+				}
+			}
+		}
+		return correctionsCount;
 	}
 }
