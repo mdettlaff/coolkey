@@ -11,8 +11,9 @@ public class Lesson {
 	private List<String> textLines = new ArrayList<String>();
 	private List<String> writtenLines = new ArrayList<String>();
 	private List<String> mistakes = new ArrayList<String>();
-	private List<String> mistakesShadow = new ArrayList<String>();
+	private List<StringBuilder> mistakesShadow = new ArrayList<StringBuilder>();
 	private int mistakesCount = 0;
+	private boolean isFinished = false;
 
 	/**
 	 * Nowe ćwiczenie polegające na przepisaniu podanego tekstu.
@@ -43,7 +44,7 @@ public class Lesson {
 
 		writtenLines.add("");
 		mistakes.add("");
-		mistakesShadow.add("");
+		mistakesShadow.add(new StringBuilder());
 	}
 
 	/**
@@ -69,16 +70,22 @@ public class Lesson {
 		writtenLines.set(last, writtenLines.get(last) + correctChar);
 		mistakes.set(last, mistakes.get(last) + incorrectChar);
 		if (writtenLines.get(last).length() > mistakesShadow.get(last).length()) {
-			mistakesShadow.set(last, mistakesShadow.get(last) + incorrectChar);
+			mistakesShadow.get(last).append(incorrectChar);
+		} else if (writtenLines.get(last).length() > textLines.get(last).length()
+				|| textLines.get(last).charAt(writtenLines.get(last).length() - 1) != c) {
+			int cIndex = writtenLines.get(last).length() - 1;
+			mistakesShadow.get(last).replace(cIndex, cIndex + 1, c + "");
 		}
 	}
 
 	public void typeEnter() {
 		int last = writtenLines.size() - 1;
-		if (writtenLines.get(last).length() >= textLines.get(last).length()) {
+		if (writtenLines.size() == textLines.size()) {
+			isFinished = true;
+		} else if (writtenLines.get(last).length() >= textLines.get(last).length()) {
 			writtenLines.add("");
 			mistakes.add("");
-			mistakesShadow.add("");
+			mistakesShadow.add(new StringBuilder());
 		}
 	}
 
@@ -185,5 +192,13 @@ public class Lesson {
 			}
 		}
 		return correctionsCount;
+	}
+
+	/**
+	 * @return <code>true</code> jeśli lekcja się już zakończyła,
+	 *         <code>false</code> w przeciwnym wypadku.
+	 */
+	public boolean isFinished() {
+		return isFinished;
 	}
 }
