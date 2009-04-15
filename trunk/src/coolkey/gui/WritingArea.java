@@ -5,6 +5,7 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
@@ -15,7 +16,7 @@ import coolkey.CoolKey;
 public class WritingArea {
 	private Canvas writingArea;
 	
-	private final int lineHeight = 50;
+	private final int lineHeight = 44;
 
 	public WritingArea() {
 		writingArea = new Canvas(GUI.shell, SWT.BORDER);
@@ -25,7 +26,15 @@ public class WritingArea {
 
 			@Override
 			public void keyPressed(KeyEvent keyEvent) {
-				CoolKey.getCurrentLesson().type(keyEvent.character);
+				char c = keyEvent.character;
+				if (c == '\r') {
+					CoolKey.getCurrentLesson().typeEnter();
+				} else if (c == SWT.BS) {
+					CoolKey.getCurrentLesson().typeBackspace();
+				} else if (!Character.isISOControl(c)) {
+					CoolKey.getCurrentLesson().typeChar(c);
+				}
+				writingArea.redraw();
 			}
 
 			public void keyReleased(KeyEvent keyEvent) {}
@@ -35,12 +44,42 @@ public class WritingArea {
 			public void paintControl(PaintEvent e) {
 				GC gc = e.gc;
 				gc.setBackground(GUI.display.getSystemColor(SWT.COLOR_WHITE));
+				gc.setFont(new Font(GUI.display, "Courier New", 10, SWT.NORMAL));
 				Point areaSize = writingArea.getSize();
 				gc.fillRectangle(0, 0, areaSize.x, areaSize.y);
+				// narysuj tekst do przepisania
 				int x = 15;
-				int y = 10;
+				int y = 8;
 				for (String line : CoolKey.getCurrentLesson().getTextLines()) {
 					gc.drawString(line, x, y);
+					y += lineHeight;
+				}
+				// narysuj przepisany tekst
+				gc.setForeground(GUI.display.getSystemColor(SWT.COLOR_BLUE));
+				y = 28;
+				for (int i=0; i < CoolKey.getCurrentLesson().getWrittenLines().size(); i++) {
+					String line = CoolKey.getCurrentLesson().getWrittenLines().get(i);
+					gc.drawString(line, x, y);
+					y += lineHeight;
+				}
+				// narysuj kursor
+				String lastLine = CoolKey.getCurrentLesson().getWrittenLines().get(
+						CoolKey.getCurrentLesson().getWrittenLines().size() - 1);
+				String cursor = "";
+				for (int i=0; i < lastLine.length(); i++) {
+					cursor += ' ';
+				}
+				cursor += '_';
+				if (CoolKey.getCurrentLesson().getMistakesCount() > 0) {
+					gc.setForeground(GUI.display.getSystemColor(SWT.COLOR_RED));
+				}
+				y -= lineHeight;
+				gc.drawString(cursor, x, y, true);
+				// zaznacz pomyłki na czerwono
+				gc.setForeground(GUI.display.getSystemColor(SWT.COLOR_RED));
+				y = 28;
+				for (String line : CoolKey.getCurrentLesson().getMistakes()) {
+					gc.drawString(line, x, y, true);
 					y += lineHeight;
 				}
 			}
