@@ -10,17 +10,17 @@ import coolkey.gui.GUI;
 public class CoolKey {
 
 	public static final String TXT_DIRECTORY = "data" + File.separator + "txt";
-	public static final int MAX_CHARS_IN_LINE = 80;
+	public static final int MAX_CHARS_IN_LINE = 70;
 
-	private static Lesson currentLesson = null;
+	private static Lesson currentLesson;
 
 	private CoolKey() {}
 
 	public static void main(String[] args) {
 		int autoGenTextSizeInLines = 12;
 		int minGenTextLength = (autoGenTextSizeInLines-1) * (MAX_CHARS_IN_LINE-5);
-		currentLesson = new Lesson(Markov.generateMarkovChain(
-				Utils.getWords(CoolKey.TXT_DIRECTORY), minGenTextLength));
+		CoolKey.setCurrentLesson(new Lesson(Markov.generateMarkovChain(
+				Utils.getWords(CoolKey.TXT_DIRECTORY), minGenTextLength)));
 
 		GUI.run();
 	}
