@@ -22,7 +22,7 @@ public class WritingArea {
 	/**
 	 * Maksymalna ilość przepisanych linii jaką widać na ekranie.
 	 */
-	private final int MAX_TYPING_LINES = 4;
+	private final int MAX_TYPING_LINES = 3;
 	private final int LEFT_MARGIN = 15;
 	private final int TOP_MARGIN_TEXT = 6;
 	private final int TOP_MARGIN_WRITTEN = 27;
@@ -111,7 +111,7 @@ public class WritingArea {
 				y -= LINE_HEIGHT;
 				gc.drawString(cursor, x, y, true);
 				// zaznacz znaki które zostały poprawione
-				gc.setForeground(new Color(GUI.display, 192, 0, 192));
+				gc.setForeground(new Color(GUI.display, 192, 0, 216));
 				y = TOP_MARGIN_WRITTEN;
 				for (int i = startLine; i <= endLine; i++) {
 					String line = CoolKey.getCurrentLesson().getCorrections().get(i);
