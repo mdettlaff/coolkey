@@ -5,6 +5,7 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
@@ -13,10 +14,13 @@ import org.eclipse.swt.widgets.Canvas;
 
 import coolkey.CoolKey;
 
+/**
+ * Obszar na którym odbywa się przepisywanie.
+ */
 public class WritingArea {
+	private final int LINE_HEIGHT = 44;
+
 	private Canvas writingArea;
-	
-	private final int lineHeight = 44;
 
 	public WritingArea() {
 		writingArea = new Canvas(GUI.shell, SWT.BORDER);
@@ -52,7 +56,7 @@ public class WritingArea {
 				int y = 8;
 				for (String line : CoolKey.getCurrentLesson().getTextLines()) {
 					gc.drawString(line, x, y);
-					y += lineHeight;
+					y += LINE_HEIGHT;
 				}
 				// narysuj przepisany tekst
 				gc.setForeground(GUI.display.getSystemColor(SWT.COLOR_BLUE));
@@ -60,7 +64,7 @@ public class WritingArea {
 				for (int i=0; i < CoolKey.getCurrentLesson().getWrittenLines().size(); i++) {
 					String line = CoolKey.getCurrentLesson().getWrittenLines().get(i);
 					gc.drawString(line, x, y);
-					y += lineHeight;
+					y += LINE_HEIGHT;
 				}
 				// narysuj kursor
 				String lastLine = CoolKey.getCurrentLesson().getWrittenLines().get(
@@ -73,14 +77,21 @@ public class WritingArea {
 				if (CoolKey.getCurrentLesson().getMistakesCount() > 0) {
 					gc.setForeground(GUI.display.getSystemColor(SWT.COLOR_RED));
 				}
-				y -= lineHeight;
+				y -= LINE_HEIGHT;
 				gc.drawString(cursor, x, y, true);
+				// zaznacz znaki które zostały poprawione
+				gc.setForeground(new Color(GUI.display, 192, 0, 192));
+				y = 28;
+				for (String line : CoolKey.getCurrentLesson().getCorrections()) {
+					gc.drawString(line, x, y, true);
+					y += LINE_HEIGHT;
+				}
 				// zaznacz pomyłki na czerwono
 				gc.setForeground(GUI.display.getSystemColor(SWT.COLOR_RED));
 				y = 28;
 				for (String line : CoolKey.getCurrentLesson().getMistakes()) {
 					gc.drawString(line, x, y, true);
-					y += lineHeight;
+					y += LINE_HEIGHT;
 				}
 			}
 		});
