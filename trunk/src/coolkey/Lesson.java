@@ -80,12 +80,16 @@ public class Lesson {
 
 	public void typeEnter() {
 		int last = writtenLines.size() - 1;
-		if (writtenLines.size() == textLines.size()) {
-			isFinished = true;
-		} else if (writtenLines.get(last).length() >= textLines.get(last).length()) {
-			writtenLines.add("");
-			mistakes.add("");
-			mistakesShadow.add(new StringBuilder());
+		if (writtenLines.get(last).length() >= textLines.get(last).length()) {
+			if (writtenLines.size() < textLines.size()) {
+				writtenLines.add("");
+				mistakes.add("");
+				if (mistakes.size() > mistakesShadow.size()) {
+					mistakesShadow.add(new StringBuilder());
+				}
+			} else {
+				isFinished = true;
+			}
 		}
 	}
 
@@ -102,7 +106,6 @@ public class Lesson {
 		} else if (writtenLines.size() > 1) {
 			writtenLines.remove(writtenLines.size() - 1);
 			mistakes.remove(mistakes.size() - 1);
-			mistakesShadow.remove(mistakesShadow.size() - 1);
 		}
 	}
 
@@ -146,12 +149,16 @@ public class Lesson {
 	 */
 	public List<String> getCorrections() {
 		List<String> corrections = new ArrayList<String>();
-		for (int j=0; j < mistakesShadow.size(); j++) {
+		for (int j=0; j < writtenLines.size(); j++) {
 			String line = "";
 			for (int i=0; i < mistakes.get(j).length(); i++) {
 				if (mistakesShadow.get(j).charAt(i) != ' ' &&
 						mistakes.get(j).charAt(i) == ' ') {
-					line += writtenLines.get(j).charAt(i);
+					if (writtenLines.get(j).charAt(i) != ' ') {
+						line += writtenLines.get(j).charAt(i);
+					} else {
+						line += '_'; // tak zaznacz poprawioną spację
+					}
 				} else {
 					line += ' ';
 				}

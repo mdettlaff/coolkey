@@ -10,7 +10,7 @@ import coolkey.gui.GUI;
 public class CoolKey {
 
 	public static final String TXT_DIRECTORY = "data" + File.separator + "txt";
-	public static final int MAX_CHARS_IN_LINE = 70;
+	public static final int MAX_CHARS_IN_LINE = 65;
 
 	private static Lesson currentLesson;
 

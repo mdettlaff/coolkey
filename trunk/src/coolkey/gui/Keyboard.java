@@ -20,7 +20,7 @@ public class Keyboard {
 
 		keyboard.addPaintListener(new PaintListener() {
 			public void paintControl(PaintEvent e) {
-				e.gc.drawRoundRectangle(0, 0, 685, 229, 20, 20);
+				e.gc.drawRoundRectangle(0, 0, 580, 229, 20, 20);
 			}
 		});
 
