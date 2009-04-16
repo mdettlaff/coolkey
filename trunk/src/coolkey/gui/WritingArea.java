@@ -13,6 +13,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Canvas;
 
 import coolkey.CoolKey;
+import coolkey.LessonResults;
 
 /**
  * Obszar na którym odbywa się przepisywanie.
@@ -43,8 +44,9 @@ public class WritingArea {
 					if (c == '\r') {
 						CoolKey.getCurrentLesson().typeEnter();
 						if (CoolKey.getCurrentLesson().isFinished()) {
-							// TODO: Okienko z wynikami.
-							System.out.println("Pokaż wyniki");
+							LessonResults results =
+								new LessonResults(CoolKey.getCurrentLesson());
+							new ResultsMessage(results);
 						}
 					} else if (c == SWT.BS) {
 						CoolKey.getCurrentLesson().typeBackspace();
@@ -105,7 +107,19 @@ public class WritingArea {
 					cursor += ' ';
 				}
 				cursor += '_';
-				if (CoolKey.getCurrentLesson().getMistakesCount() > 0) {
+				boolean noMistakes = true;
+				for (String line : CoolKey.getCurrentLesson().getMistakes()) {
+					for (int i=0; i < line.length(); i++) {
+						if (line.charAt(i) != ' ') {
+							noMistakes = false;
+							break;
+						}
+					}
+					if (!noMistakes) {
+						break;
+					}
+				}
+				if (!noMistakes) {
 					gc.setForeground(GUI.display.getSystemColor(SWT.COLOR_RED));
 				}
 				y -= LINE_HEIGHT;
