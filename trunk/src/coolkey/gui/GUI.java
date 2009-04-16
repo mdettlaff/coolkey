@@ -4,9 +4,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Canvas;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
@@ -19,10 +17,15 @@ public class GUI {
 	 */
 	public static Shell shell;
 	
+	public static WritingArea writingArea;
+	public static Keyboard keyboard;
+
+	private GUI() {}
+
 	/**
 	 * Inicjalizuje graficzny interfejs użytkownika.
 	 */
-	public static void run() {
+	public static void init() {
 		
 		display = new Display();
 		shell = new Shell(display);
@@ -40,23 +43,16 @@ public class GUI {
 		
 		new MenuBar();
 		
-		new WritingArea(); // obszar przepisywania
+		writingArea = new WritingArea(); // obszar przepisywania
 		
-		/*panel boczny z prawej*/
+		/* Panel boczny z prawej */
 		Canvas canvas2 = new Canvas(shell, SWT.BORDER);
 		canvas2.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true, 1, 3));
-		
-		/*Przyciski pauzy i zakończenia lekcji*/
-		Composite comp = new Composite(shell, SWT.NONE);
-		comp.setLayout(new GridLayout(4, false));
-		comp.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
-		Button pause = new Button(comp, SWT.PUSH);
-		pause.setText("Pauza");
-		Button endLesson = new Button(comp, SWT.PUSH);
-		endLesson.setText("Zakończ lekcję");
 
-		new Keyboard();
-		
+		new ButtonBar();
+
+		keyboard = new Keyboard();
+
 		shell.open();
 		
 		while (!shell.isDisposed()) {

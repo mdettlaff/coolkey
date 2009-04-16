@@ -119,6 +119,20 @@ public class Lesson {
 	}
 
 	/**
+	 * Rozpocznij lekcję od nowa.
+	 */
+	public void restart() {
+		timeStarted = null;
+		timeFinished = null;
+		writtenLines.clear();
+		mistakes.clear();
+		mistakesShadow.clear();
+		writtenLines.add("");
+		mistakes.add("");
+		mistakesShadow.add(new StringBuilder());
+	}
+
+	/**
 	 * Tekst do przepisania w tej lekcji.
 	 */
 	public List<String> getTextLines() {
@@ -194,6 +208,50 @@ public class Lesson {
 			long interval = timeElapsed.getTime() - timeStarted.getTime(); 
 			return new Long(interval).intValue();
 		}
+	}
+
+	/**
+	 * Wyniki z tej lekcji (prędkość, poprawność itp.).
+	 *
+	 * @return Wyniki lub <code>null</code> jeśli lekcja się nie zaczęła.
+	 */
+	public LessonResults getResults() {
+		if (isStarted()) {
+			return new LessonResults(this);
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * Następny znak, który należy przepisać.
+	 *
+	 * @return Kolejny znak. Jeśli to Enter, zwraca <code>'\r'</code>.
+	 */
+	public char getNextChar() {
+		int last = writtenLines.size() - 1;
+		if (writtenLines.get(last).length() < textLines.get(last).length()) {
+			return textLines.get(last).charAt(writtenLines.get(last).length() - 1);
+		} else {
+			return '\r';
+		}
+	}
+
+	/**
+	 * Czy popełniono błąd przy przepisywaniu.
+	 *
+	 * @return <code>true</code>, jeśli ilość błędów jest większa od 0,
+	 *         <code>false</code> w przeciwnym wypadku.
+	 */
+	public boolean isMistakeMade() {
+		for (String line : CoolKey.getCurrentLesson().getMistakes()) {
+			for (int i=0; i < line.length(); i++) {
+				if (line.charAt(i) != ' ') {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	/**

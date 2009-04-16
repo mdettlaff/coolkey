@@ -13,7 +13,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Canvas;
 
 import coolkey.CoolKey;
-import coolkey.LessonResults;
 
 /**
  * Obszar na którym odbywa się przepisywanie.
@@ -39,22 +38,7 @@ public class WritingArea {
 
 			@Override
 			public void keyPressed(KeyEvent keyEvent) {
-				if (!CoolKey.getCurrentLesson().isFinished()) {
-					char c = keyEvent.character;
-					if (c == '\r') {
-						CoolKey.getCurrentLesson().typeEnter();
-						if (CoolKey.getCurrentLesson().isFinished()) {
-							LessonResults results =
-								new LessonResults(CoolKey.getCurrentLesson());
-							new ResultsMessage(results);
-						}
-					} else if (c == SWT.BS) {
-						CoolKey.getCurrentLesson().typeBackspace();
-					} else if (!Character.isISOControl(c)) {
-						CoolKey.getCurrentLesson().typeChar(c);
-					}
-					writingArea.redraw();
-				}
+				pressKey(keyEvent.character);
 			}
 
 			public void keyReleased(KeyEvent keyEvent) {}
@@ -107,19 +91,7 @@ public class WritingArea {
 					cursor += ' ';
 				}
 				cursor += '_';
-				boolean noMistakes = true;
-				for (String line : CoolKey.getCurrentLesson().getMistakes()) {
-					for (int i=0; i < line.length(); i++) {
-						if (line.charAt(i) != ' ') {
-							noMistakes = false;
-							break;
-						}
-					}
-					if (!noMistakes) {
-						break;
-					}
-				}
-				if (!noMistakes) {
+				if (CoolKey.getCurrentLesson().isMistakeMade()) {
 					gc.setForeground(GUI.display.getSystemColor(SWT.COLOR_RED));
 				}
 				y -= LINE_HEIGHT;
@@ -143,6 +115,34 @@ public class WritingArea {
 			}
 		});
 
+		writingArea.redraw();
+	}
+
+	/**
+	 * Obsługa zdarzenia polegającego na wpisaniu danego znaku.
+	 *
+	 * @param c Wpisywany znak.
+	 */
+	public void pressKey(char c) {
+		if (!CoolKey.getCurrentLesson().isFinished()) {
+			if (c == '\r') {
+				CoolKey.getCurrentLesson().typeEnter();
+				if (CoolKey.getCurrentLesson().isFinished()) {
+					new ResultsMessage(CoolKey.getCurrentLesson().getResults());
+				}
+			} else if (c == SWT.BS) {
+				CoolKey.getCurrentLesson().typeBackspace();
+			} else if (!Character.isISOControl(c)) {
+				CoolKey.getCurrentLesson().typeChar(c);
+			}
+			writingArea.redraw();
+		}
+	}
+
+	/**
+	 * Wyświetl aktualną wersję tego elementu.
+	 */
+	public void refresh() {
 		writingArea.redraw();
 	}
 }
