@@ -1,6 +1,7 @@
 package coolkey;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -12,8 +13,8 @@ public class Lesson {
 	private List<String> writtenLines = new ArrayList<String>();
 	private List<String> mistakes = new ArrayList<String>();
 	private List<StringBuilder> mistakesShadow = new ArrayList<StringBuilder>();
-	private int mistakesCount = 0;
-	private boolean isFinished = false;
+	private Date timeStarted;
+	private Date timeFinished;
 
 	/**
 	 * Nowe ćwiczenie polegające na przepisaniu podanego tekstu.
@@ -51,6 +52,12 @@ public class Lesson {
 	 * Przepisanie pojedynczego znaku.
 	 */
 	public void typeChar(Character c) {
+		if (timeStarted == null) {
+			timeStarted = new Date();
+		}
+		if (timeFinished != null) {
+			return;
+		}
 		int last = writtenLines.size() - 1;
 		char correctChar;
 		char incorrectChar;
@@ -65,7 +72,6 @@ public class Lesson {
 			} else {
 				incorrectChar = '_';
 			}
-			mistakesCount++;
 		}
 		writtenLines.set(last, writtenLines.get(last) + correctChar);
 		mistakes.set(last, mistakes.get(last) + incorrectChar);
@@ -79,6 +85,9 @@ public class Lesson {
 	}
 
 	public void typeEnter() {
+		if (timeStarted == null || timeFinished != null) {
+			return;
+		}
 		int last = writtenLines.size() - 1;
 		if (writtenLines.get(last).length() >= textLines.get(last).length()) {
 			if (writtenLines.size() < textLines.size()) {
@@ -88,19 +97,19 @@ public class Lesson {
 					mistakesShadow.add(new StringBuilder());
 				}
 			} else {
-				isFinished = true;
+				timeFinished = new Date();
 			}
 		}
 	}
 
 	public void typeBackspace() {
+		if (timeStarted == null || timeFinished != null) {
+			return;
+		}
 		String lastLine = writtenLines.get(writtenLines.size() - 1);
 		if (lastLine.length() > 0) {
 			writtenLines.set(writtenLines.size() - 1,
 					lastLine.substring(0, lastLine.length() - 1));
-			if (!mistakes.get(mistakes.size() - 1).endsWith(" ")) {
-				mistakesCount--;
-			}
 			mistakes.set(mistakes.size() - 1, mistakes.get(mistakes.size() - 1).
 					substring(0, lastLine.length() - 1));
 		} else if (writtenLines.size() > 1) {
@@ -169,43 +178,41 @@ public class Lesson {
 	}
 
 	/**
-	 * Ilość wszystkich przepisanych znaków (również błędnych).
+	 * Czas pisania.
+	 *
+	 * @return Czas pisania w milisekundach lub <code>-1</code> jeśli
+	 *         nie rozpoczęto jeszcze pisania.
 	 */
-	public int getWrittenCharsCount() {
-		int writtenCharsCount = 0;
-		for (String line : writtenLines) {
-			writtenCharsCount += line.length();
-		}
-		return writtenCharsCount;
-	}
-
-	/**
-	 * Ilość nieprawidłowo przepisanych znaków.
-	 */
-	public int getMistakesCount() {
-		return mistakesCount;
-	}
-
-	/**
-	 * Ilość znaków, które zostały przepisane błędnie a następnie poprawione.
-	 */
-	public int getCorrectionsCount() {
-		int correctionsCount = 0;
-		for (String line : getCorrections()) {
-			for (int i=0; i < line.length(); i++) {
-				if (line.charAt(i) != ' ') {
-					correctionsCount++;
-				}
+	public int getWritingTimeMilliseconds() {
+		if (timeStarted == null) {
+			return -1;
+		} else {
+			Date timeElapsed = timeFinished;
+			if (timeFinished == null) {
+				timeElapsed = new Date();
 			}
+			long interval = timeElapsed.getTime() - timeStarted.getTime(); 
+			return new Long(interval).intValue();
 		}
-		return correctionsCount;
 	}
 
 	/**
+	 * Sprawdź czy lekcja się rozpoczęła.
+	 *
+	 * @return <code>true</code> jeśli lekcja się rozpoczęła,
+	 *         <code>false</code> w przeciwnym wypadku.
+	 */
+	public boolean isStarted() {
+		return timeStarted != null;
+	}
+
+	/**
+	 * Sprawdź czy lekcja się zakończyła.
+	 *
 	 * @return <code>true</code> jeśli lekcja się już zakończyła,
 	 *         <code>false</code> w przeciwnym wypadku.
 	 */
 	public boolean isFinished() {
-		return isFinished;
+		return timeFinished != null;
 	}
 }
