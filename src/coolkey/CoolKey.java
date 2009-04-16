@@ -22,7 +22,7 @@ public class CoolKey {
 		CoolKey.setCurrentLesson(new Lesson(Markov.generateMarkovChain(
 				Utils.getWords(CoolKey.TXT_DIRECTORY), minGenTextLength)));
 
-		GUI.run();
+		GUI.init();
 	}
 
 	public static Lesson getCurrentLesson() {
