@@ -8,6 +8,7 @@ import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Canvas;
@@ -31,13 +32,15 @@ public class WritingArea {
 	private final int TOP_MARGIN_WRITTEN = 27;
 	private final int LINE_HEIGHT = 44;
 
-	private Canvas writingArea;
+	private Canvas canvas;
+	private Image buffer;
+	private GC gc;
 
 	public WritingArea() {
-		writingArea = new Canvas(GUI.shell, SWT.BORDER);
-		writingArea.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		canvas = new Canvas(GUI.shell, SWT.BORDER);
+		canvas.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		writingArea.addKeyListener(new KeyListener() {
+		canvas.addKeyListener(new KeyListener() {
 			@Override
 			public void keyPressed(KeyEvent keyEvent) {
 				pressKey(keyEvent.character);
@@ -46,13 +49,17 @@ public class WritingArea {
 			public void keyReleased(KeyEvent keyEvent) {}
 		});
 
-		writingArea.addPaintListener(new PaintListener() {
-			public void paintControl(PaintEvent e) {
-				GC gc = e.gc;
+		canvas.addPaintListener(new PaintListener() {
+			public void paintControl(PaintEvent pe) {
+				Point canvasSize = canvas.getSize();
+				if (gc == null) {
+					buffer = new Image(GUI.display, canvasSize.x, canvasSize.y);
+					gc = new GC(buffer);
+				}
 				gc.setBackground(GUI.display.getSystemColor(SWT.COLOR_WHITE));
+				gc.setForeground(GUI.display.getSystemColor(SWT.COLOR_BLACK));
 				gc.setFont(new Font(GUI.display, "Courier New", 10, SWT.NORMAL));
-				Point areaSize = writingArea.getSize();
-				gc.fillRectangle(0, 0, areaSize.x, areaSize.y);
+				gc.fillRectangle(0, 0, canvasSize.x, canvasSize.y); // tło
 				// zakres linii do wyświetlenia
 				int startLine = CoolKey.getCurrentLesson().
 						getWrittenLines().size() - MAX_TYPING_LINES;
@@ -114,10 +121,11 @@ public class WritingArea {
 					gc.drawString(line, x, y, true);
 					y += LINE_HEIGHT;
 				}
+				pe.gc.drawImage(buffer, 0, 0);
 			}
 		});
 
-		writingArea.redraw();
+		canvas.redraw();
 	}
 
 	/**
@@ -143,7 +151,7 @@ public class WritingArea {
 				}
 				CoolKey.getCurrentLesson().typeChar(c);
 			}
-			writingArea.redraw();
+			canvas.redraw();
 			if (CoolKey.getCurrentLesson().isPaused()) {
 				CoolKey.getCurrentLesson().pauseUnpause();
 			}
@@ -156,13 +164,13 @@ public class WritingArea {
 	 * Wyświetl aktualną wersję tego elementu.
 	 */
 	public void refresh() {
-		writingArea.redraw();
+		canvas.redraw();
 	}
 
 	/**
 	 * Skup uwagę na tym obszarze, aby przechwytywać zdarzenia.
 	 */
 	public void setFocus() {
-		writingArea.setFocus();
+		canvas.setFocus();
 	}
 }
