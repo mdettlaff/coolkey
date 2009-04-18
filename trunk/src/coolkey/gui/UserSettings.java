@@ -58,7 +58,7 @@ public class UserSettings {
 		
 		Button okB = new Button(left, SWT.PUSH);
 		okB.setLayoutData(new GridData(SWT.CENTER, SWT.FILL, false, true));
-		okB.setText("Zastosuj");
+		okB.setText(" OK ");
 		Button canB = new Button(right, SWT.PUSH);
 		canB.setLayoutData(new GridData(SWT.CENTER, SWT.FILL, false, true));
 		canB.setText(" Anuluj ");

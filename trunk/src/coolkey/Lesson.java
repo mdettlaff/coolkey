@@ -15,6 +15,8 @@ public class Lesson {
 	private List<StringBuilder> mistakesShadow = new ArrayList<StringBuilder>();
 	private Date timeStarted;
 	private Date timeFinished;
+	private boolean isPaused;
+	private List<Date> timesPaused = new ArrayList<Date>();
 
 	/**
 	 * Nowe ćwiczenie polegające na przepisaniu podanego tekstu.
@@ -46,6 +48,7 @@ public class Lesson {
 		writtenLines.add("");
 		mistakes.add("");
 		mistakesShadow.add(new StringBuilder());
+		isPaused = false;
 	}
 
 	/**
@@ -127,9 +130,11 @@ public class Lesson {
 		writtenLines.clear();
 		mistakes.clear();
 		mistakesShadow.clear();
+		timesPaused.clear();
 		writtenLines.add("");
 		mistakes.add("");
 		mistakesShadow.add(new StringBuilder());
+		isPaused = false;
 	}
 
 	/**
@@ -192,7 +197,8 @@ public class Lesson {
 	}
 
 	/**
-	 * Czas pisania.
+	 * Ilość milisekund jakie minęły od rozpoczęcia do zakończenia pisania,
+	 * albo do chwili obecnej jeśli nie zakończono jeszcze pisania.
 	 *
 	 * @return Czas pisania w milisekundach lub <code>-1</code> jeśli
 	 *         nie rozpoczęto jeszcze pisania.
@@ -205,22 +211,30 @@ public class Lesson {
 			if (timeFinished == null) {
 				timeElapsed = new Date();
 			}
-			long interval = timeElapsed.getTime() - timeStarted.getTime(); 
+			long interval = timeElapsed.getTime() - timeStarted.getTime();
+			// odejmij czas, w którym lekcja była zapauzowana
+			long pausedInterval = 0;
+			for (int i=0; i < timesPaused.size(); i++) {
+				if (i % 2 == 0) {
+					pausedInterval -= timesPaused.get(i).getTime();
+				} else {
+					pausedInterval += timesPaused.get(i).getTime();
+				}
+			}
+			if (isPaused) {
+				pausedInterval += timesPaused.get(
+						timesPaused.size() - 1).getTime();
+			}
+			interval -= pausedInterval;
 			return new Long(interval).intValue();
 		}
 	}
 
 	/**
 	 * Wyniki z tej lekcji (prędkość, poprawność itp.).
-	 *
-	 * @return Wyniki lub <code>null</code> jeśli lekcja się nie zaczęła.
 	 */
 	public LessonResults getResults() {
-		if (isStarted()) {
-			return new LessonResults(this);
-		} else {
-			return null;
-		}
+		return new LessonResults(this);
 	}
 
 	/**
@@ -231,7 +245,7 @@ public class Lesson {
 	public char getNextChar() {
 		int last = writtenLines.size() - 1;
 		if (writtenLines.get(last).length() < textLines.get(last).length()) {
-			return textLines.get(last).charAt(writtenLines.get(last).length() - 1);
+			return textLines.get(last).charAt(writtenLines.get(last).length());
 		} else {
 			return '\r';
 		}
@@ -272,5 +286,17 @@ public class Lesson {
 	 */
 	public boolean isFinished() {
 		return timeFinished != null;
+	}
+
+	/**
+	 * Zapauzuj lekcję, lub wznów jeśli jest zapauzowana.
+	 */
+	public void pauseUnpause() {
+		isPaused = !isPaused;
+		timesPaused.add(new Date());
+	}
+
+	public boolean isPaused() {
+		return isPaused;
 	}
 }

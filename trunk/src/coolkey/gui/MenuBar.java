@@ -11,7 +11,7 @@ public class MenuBar {
 	public MenuBar() {
 		Menu menu = new Menu(GUI.shell, SWT.BAR);
 		
-		/*Menu Użytkownik*/
+		/* Menu Użytkownik */
 		final MenuItem user = new MenuItem(menu, SWT.CASCADE);
 		user.setText("&Użytkownik");
 		
@@ -30,41 +30,20 @@ public class MenuBar {
         final MenuItem exitMenuItem = new MenuItem(userMenu, SWT.PUSH);
         exitMenuItem.setText("&Wyjście");
         
-        /*Kurs*/
+        /* Kurs */
         final MenuItem course = new MenuItem(menu, SWT.CASCADE);
 		course.setText("&Kurs");
 		
 		final Menu courseMenu = new Menu(GUI.shell, SWT.DROP_DOWN);
 		course.setMenu(courseMenu);
 		final MenuItem continueItem = new MenuItem(courseMenu, SWT.PUSH);
-        continueItem.setText("Kontynuuj");
+        continueItem.setText("Następna lekcja");
         final MenuItem newCourseItem = new MenuItem(courseMenu, SWT.PUSH);
         newCourseItem.setText("Rozpocznij nowy kurs");
-	        /*Menu newCourseMenu = new Menu(menu);
-	        final MenuItem baseItem = new MenuItem(newCourseMenu, SWT.PUSH);
-	        baseItem.setText("Podstawowy");
-	        final MenuItem sub1Item = new MenuItem(newCourseMenu, SWT.PUSH);
-	        sub1Item.setText("Pełny");
-	        final MenuItem sub2Item = new MenuItem(newCourseMenu, SWT.PUSH);
-	        sub2Item.setText("Klawiatura numeryczna");
-	        final MenuItem sub3Item = new MenuItem(newCourseMenu, SWT.PUSH);
-	        sub3Item.setText("Cyfry");
-			final MenuItem keybordSetItem = new MenuItem(newCourseMenu, SWT.CASCADE);
-	        keybordSetItem.setText("Układ klawiatury");
-		        Menu keybordSetMenu = new Menu(newCourseMenu);
-		        final MenuItem qwertyItem = new MenuItem(keybordSetMenu, SWT.RADIO);
-		        qwertyItem.setText("QWERTY");
-		        qwertyItem.setSelection(true);
-		        final MenuItem dvorakItem = new MenuItem(keybordSetMenu, SWT.RADIO);
-		        dvorakItem.setText("Dvorak");
-		        keybordSetItem.setMenu(keybordSetMenu);
-		        newCourseItem.setMenu(newCourseMenu);*/
         final MenuItem coursesManagerItem = new MenuItem(courseMenu, SWT.PUSH);
         coursesManagerItem.setText("Zarządzanie kursami");
-        final MenuItem settings2Item = new MenuItem(courseMenu, SWT.PUSH);
-        settings2Item.setText("Ustawienia");
         
-        /*Pojedyńczy test*/
+        /* Pojedynczy test*/
         final MenuItem singleTest = new MenuItem(menu, SWT.CASCADE);
 		singleTest.setText("&Pojedynczy test");
 		
@@ -72,30 +51,30 @@ public class MenuBar {
 		singleTest.setMenu(singleTestMenu);
 		MenuItem poemTextItem = new MenuItem(singleTestMenu, SWT.CASCADE);
 		poemTextItem.setText("Teksty literackie");
-			Menu poemTextMenu = new Menu(singleTestMenu);
-			final MenuItem standardItem = new MenuItem(poemTextMenu, SWT.PUSH);
-			standardItem.setText("Standardowe");
-			final MenuItem specItem = new MenuItem(poemTextMenu, SWT.PUSH);
-			specItem.setText("Specjalistyczne");
-			final MenuItem poemItem = new MenuItem(poemTextMenu, SWT.PUSH);
-			poemItem.setText("Poezja");
-			poemTextItem.setMenu(poemTextMenu);
+		Menu poemTextMenu = new Menu(singleTestMenu);
+		final MenuItem standardItem = new MenuItem(poemTextMenu, SWT.PUSH);
+		standardItem.setText("Standardowe");
+		final MenuItem specItem = new MenuItem(poemTextMenu, SWT.PUSH);
+		specItem.setText("Specjalistyczne");
+		final MenuItem poemItem = new MenuItem(poemTextMenu, SWT.PUSH);
+		poemItem.setText("Poezja");
+		poemTextItem.setMenu(poemTextMenu);
 		MenuItem fileTextItem = new MenuItem(singleTestMenu, SWT.PUSH);
 		fileTextItem.setText("Tekst z pliku");
 		MenuItem autoTextItem = new MenuItem(singleTestMenu, SWT.PUSH);
 		autoTextItem.setText("Automatycznie wygenerowany tekst");
 		MenuItem lessonsItem = new MenuItem(singleTestMenu, SWT.CASCADE);
 		lessonsItem.setText("Lekcje");
-			Menu lessonsMenu = new Menu(singleTestMenu);
-			final MenuItem lesson1Item = new MenuItem(lessonsMenu, SWT.PUSH);
-			lesson1Item.setText("Lekcja 1: asdf");
-			lessonsItem.setMenu(lessonsMenu);
+		Menu lessonsMenu = new Menu(singleTestMenu);
+		final MenuItem lesson1Item = new MenuItem(lessonsMenu, SWT.PUSH);
+		lesson1Item.setText("Lekcja 1: asdf");
+		lessonsItem.setMenu(lessonsMenu);
 		MenuItem practiseItem = new MenuItem(singleTestMenu, SWT.PUSH);
 		practiseItem.setText("Wprawki");
 		MenuItem ownTextItem = new MenuItem(singleTestMenu, SWT.PUSH);
-		ownTextItem.setText("Tekst spersonalizowany");
+		ownTextItem.setText("Test spersonalizowany");
 		
-		/*Gra*/
+		/* Gra */
         final MenuItem game = new MenuItem(menu, SWT.CASCADE);
 		game.setText("&Gra");
 		
@@ -106,12 +85,12 @@ public class MenuBar {
         final MenuItem scoresItem = new MenuItem(gameMenu, SWT.PUSH);
         scoresItem.setText("Najlepsze wyniki");
 		
-        /*Pomoc*/
+        /* Pomoc */
         final MenuItem help = new MenuItem(menu, SWT.CASCADE);
 		help.setText("&Pomoc");
 		
 		final Menu helpMenu = new Menu(GUI.shell, SWT.DROP_DOWN);
-		game.setMenu(gameMenu);
+		help.setMenu(helpMenu);
 		final MenuItem topicsItem = new MenuItem(helpMenu, SWT.PUSH);
         topicsItem.setText("Tematy pomocy");
         final MenuItem aboutItem = new MenuItem(helpMenu, SWT.PUSH);
@@ -142,6 +121,11 @@ public class MenuBar {
             	Stats statsShell = new Stats();
             	statsShell.open();
             }
+        });
+        exitMenuItem.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event arg0) {
+                System.exit(0);
+			}
         });
 		coursesManagerItem.addListener(SWT.Selection, new Listener() {
             public void handleEvent(Event event) {
