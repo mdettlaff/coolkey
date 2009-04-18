@@ -44,8 +44,7 @@ public class Graphs implements Runnable	{
 					LessonResults newestResults = resultsList.get(
 							resultsList.size() - 1);
 					String progress = String.format("%.0f%%",
-							((double)newestResults.getWrittenCharsCount()) /
-							newestResults.getTotalCharsCount() * 100);
+							newestResults.getProgress());
 					int seconds = newestResults.getWritingTimeMilliseconds() / 1000;
 					e.gc.drawString(seconds + "", 7, 40);
 					e.gc.drawString(progress, 7, 76);
@@ -78,9 +77,9 @@ public class Graphs implements Runnable	{
 	/**
 	 * Prędkość chwilowa.
 	 *
-	 * @param n Ilość pomiarów brana pod uwagę.
-	 * @return Średnia prędkość z czasu ostatnich <code>n</code> pomiarów,
-	 *         lub <code>-1.0</code> jeśli jest zbyt mało danych.
+	 * @param  n Ilość pomiarów brana pod uwagę.
+	 * @return   Średnia prędkość z czasu ostatnich <code>n</code> pomiarów,
+	 *           lub <code>-1.0</code> jeśli jest zbyt mało danych.
 	 */
 	private double currentSpeed(int n) {
 		if (n > resultsList.size()) {

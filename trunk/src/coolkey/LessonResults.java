@@ -129,6 +129,17 @@ public class LessonResults {
 		return writingTimeMilliseconds;
 	}
 
+	/**
+	 * Stopień ukończenia lekcji w procentach.
+	 */
+	public double getProgress() {
+		double progress = ((double)writtenCharsCount) / totalCharsCount * 100;
+		if (progress > 100) {
+			return 100.;
+		}
+		return progress;
+	}
+
 	public String toString() {
 		int writingTimeSeconds = getWritingTimeMilliseconds() / 1000;
 		int minutes = writingTimeSeconds / 60;

@@ -39,6 +39,9 @@ public class ButtonBar {
 		restartLesson.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
+				if (!CoolKey.getCurrentLesson().isPaused()) {
+					CoolKey.getCurrentLesson().pauseUnpause();
+				}
 				MessageBox confirmation = new MessageBox(GUI.shell,
 						SWT.ICON_QUESTION | SWT.YES | SWT.NO);
 				confirmation.setText("Potwierdzenie");
@@ -49,8 +52,10 @@ public class ButtonBar {
 					CoolKey.getCurrentLesson().restart();
 					GUI.keyboard.refresh();
 					GUI.writingArea.refresh();
-					GUI.writingArea.setFocus();
+				} else {
+					CoolKey.getCurrentLesson().pauseUnpause();
 				}
+				GUI.writingArea.setFocus();
 				refresh();
 			}
 		});
