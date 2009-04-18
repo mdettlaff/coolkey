@@ -24,25 +24,23 @@ public class Lesson {
 	 * @param text Tekst do przepisania.
 	 */
 	public Lesson(String text) {
-		List<String> textWords = new ArrayList<String>();
-		// podziel tekst na słowa
-		for (String line : text.replaceAll(" +", " ").
-				trim().split("\n")) {
-			for (String word : line.split(" ")) {
-				textWords.add(word.trim());
-			}
+		for (String line : text.replaceAll(" +", " ").trim().split("\n")) {
+			textLines.add(line);
 		}
-		// podziel tekst na linie
-		String line = "";
-		for (String word : textWords) {
-			if (line.length() + word.length() > CoolKey.MAX_CHARS_IN_LINE) {
-				textLines.add(line.trim());
-				line = "";
+		// łamanie linii
+		int lineEndIndex = 0;
+		for (int i=0; i < textLines.size(); i++) {
+			for (int j=1; j < textLines.get(i).length()
+					&& j <= CoolKey.MAX_CHARS_IN_LINE; j++) {
+				if (textLines.get(i).charAt(j) == ' '
+						|| textLines.get(i).charAt(j) == '\t') {
+					lineEndIndex = j;
+				}
+				if (j == CoolKey.MAX_CHARS_IN_LINE) { // łamiemy linię
+					textLines.add(i+1, textLines.get(i).substring(lineEndIndex + 1));
+					textLines.set(i, textLines.get(i).substring(0, lineEndIndex));
+				}
 			}
-			line += word + " ";
-		}
-		if (line.length() > 0) {
-			textLines.add(line.trim());
 		}
 
 		writtenLines.add("");

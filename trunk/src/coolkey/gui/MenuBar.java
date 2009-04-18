@@ -4,16 +4,20 @@ import java.io.File;
 import java.io.IOException;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.Shell;
 
 import coolkey.CoolKey;
 import coolkey.Lesson;
 import coolkey.Utils;
+import coolkey.defender.Defender;
+import coolkey.defender.Engine;
 
 public class MenuBar {
 
@@ -91,8 +95,6 @@ public class MenuBar {
 		game.setMenu(gameMenu);
 		final MenuItem startItem = new MenuItem(gameMenu, SWT.PUSH);
 		startItem.setText("Rozpocznij grę");
-		final MenuItem scoresItem = new MenuItem(gameMenu, SWT.PUSH);
-		scoresItem.setText("Najlepsze wyniki");
 
 		/* Pomoc */
 		final MenuItem help = new MenuItem(menu, SWT.CASCADE);
@@ -148,6 +150,7 @@ public class MenuBar {
 				usShell.open();
 			}
 		});
+		// załaduj plik tekstowy
 		fileTextItem.addListener(SWT.Selection,  new Listener() {
 			public void handleEvent(Event event) {
 				FileDialog dialog = new FileDialog (GUI.shell, SWT.OPEN);
@@ -172,6 +175,24 @@ public class MenuBar {
 						messageBox.open();
 					}
 				}
+			}
+		});
+		// rozpocznij grę
+		startItem.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event event) {
+				final Shell shell = new Shell(GUI.shell);
+				shell.setText("Defender");
+				Point p = shell.computeSize(Engine.WIDTH, Engine.HEIGHT);
+				shell.setSize(p);
+				shell.setMinimumSize(p);
+				Defender game = new Defender(shell);
+				game.showFps(true);
+				game.start();
+				shell.open();
+				while (!shell.isDisposed()){
+					if (!GUI.display.readAndDispatch()) GUI.display.sleep();
+				}
+				game.stop();
 			}
 		});
 	}
