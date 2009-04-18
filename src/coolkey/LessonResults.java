@@ -25,7 +25,11 @@ public class LessonResults {
 		// policz wszystkie przepisane znaki (również błędne)
 		writtenCharsCount = 0;
 		for (String line : lesson.getWrittenLines()) {
-			writtenCharsCount += line.length() + 1; // +1 za Enter
+			writtenCharsCount += line.length();
+		}
+		writtenCharsCount += lesson.getWrittenLines().size() - 1; // za Entery
+		if (lesson.isFinished()) {
+			writtenCharsCount++; // +1 za ostatni Enter
 		}
 		// policz błędnie przepisane znaki
 		mistakesCount = 0;
@@ -37,7 +41,11 @@ public class LessonResults {
 				}
 			}
 			if (line.length() != lesson.getTextLines().get(j).length()) {
-				mistakesCount++; // za źle przepisany Enter (za długa linia)
+				if (j < lesson.getMistakes().size() - 1) {
+					mistakesCount++; // +1 za źle przepisany Enter
+				} else if (lesson.isFinished()) {
+					mistakesCount++; // +1 za ostatni źle przepisany Enter
+				}
 			}
 		}
 		// policz poprawione znaki
@@ -57,7 +65,7 @@ public class LessonResults {
 	 * Prędkość pisania, biorąc pod uwagę błędnie przepisane znaki.
 	 */
 	public double getSpeed() {
-		int charsCount = getTotalCharsCount();
+		int charsCount = getWrittenCharsCount();
 		double timeMinutes = ((double)writingTimeMilliseconds) / 1000 / 60;
 		return charsCount / timeMinutes;
 	}
@@ -66,7 +74,7 @@ public class LessonResults {
 	 * Prędkość pisania, bez błędnie przepisanych znaków.
 	 */
 	public double getRealSpeed() {
-		int charsCount = getTotalCharsCount() - getMistakesCount();
+		int charsCount = getWrittenCharsCount() - getMistakesCount();
 		double timeMinutes = ((double)writingTimeMilliseconds) / 1000 / 60;
 		return charsCount / timeMinutes;
 	}
@@ -75,8 +83,11 @@ public class LessonResults {
 	 * Poprawność w procentach. Poprawki traktujemy jako błędy.
 	 */
 	public double getCorrectness() {
+		if (writtenCharsCount == 0) {
+			return 100.;
+		}
 		return ((double)(writtenCharsCount - mistakesCount - correctionsCount))
-		/ totalCharsCount * 100;
+		/ writtenCharsCount * 100;
 	}
 
 	/**
@@ -108,16 +119,20 @@ public class LessonResults {
 	}
 
 	/**
-	 * Ilość sekund jakie minęły od rozpoczęcia do zakończenia pisania, albo
-	 * do chwili obecnej jeśli nie zakończono jeszcze pisania.
+	 * Ilość milisekund jakie minęły od rozpoczęcia do zakończenia pisania,
+	 * albo do chwili obecnej jeśli nie zakończono jeszcze pisania.
+	 *
+	 * @return Czas pisania w milisekundach lub <code>-1</code> jeśli
+	 *         nie rozpoczęto jeszcze pisania.
 	 */
-	public int getWritingTimeSeconds() {
-		return writingTimeMilliseconds / 1000;
+	public int getWritingTimeMilliseconds() {
+		return writingTimeMilliseconds;
 	}
 
 	public String toString() {
-		int minutes = getWritingTimeSeconds() / 60;
-		int seconds = getWritingTimeSeconds() % 60;
+		int writingTimeSeconds = getWritingTimeMilliseconds() / 1000;
+		int minutes = writingTimeSeconds / 60;
+		int seconds = writingTimeSeconds % 60;
 		String formatString = "prędkość: %.1f znaków/min\n"
 			+ "realna prędkość: %.1f znaków/min\n"
 			+ "poprawność: %.1f%% (%d błędów)\n"

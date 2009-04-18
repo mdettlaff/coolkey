@@ -13,11 +13,14 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Canvas;
 
 import coolkey.CoolKey;
+import coolkey.LessonResults;
 
 /**
  * Obszar na którym odbywa się przepisywanie.
  */
 public class WritingArea {
+	public static final Color COLOR_CORRECTION = new Color(GUI.display, 192, 0, 216);
+
 	private final int MAX_LINES = 10;
 	/**
 	 * Maksymalna ilość przepisanych linii jaką widać na ekranie.
@@ -35,7 +38,6 @@ public class WritingArea {
 		writingArea.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		writingArea.addKeyListener(new KeyListener() {
-
 			@Override
 			public void keyPressed(KeyEvent keyEvent) {
 				pressKey(keyEvent.character);
@@ -97,7 +99,7 @@ public class WritingArea {
 				y -= LINE_HEIGHT;
 				gc.drawString(cursor, x, y, true);
 				// zaznacz znaki które zostały poprawione
-				gc.setForeground(new Color(GUI.display, 192, 0, 216));
+				gc.setForeground(COLOR_CORRECTION);
 				y = TOP_MARGIN_WRITTEN;
 				for (int i = startLine; i <= endLine; i++) {
 					String line = CoolKey.getCurrentLesson().getCorrections().get(i);
@@ -128,14 +130,25 @@ public class WritingArea {
 			if (c == '\r') {
 				CoolKey.getCurrentLesson().typeEnter();
 				if (CoolKey.getCurrentLesson().isFinished()) {
-					new ResultsMessage(CoolKey.getCurrentLesson().getResults());
+					LessonResults finalResults = CoolKey.getCurrentLesson().getResults();
+					GUI.graphs.addFinalResults(finalResults);
+					GUI.graphs.refresh();
+					new ResultsMessage(finalResults);
 				}
 			} else if (c == SWT.BS) {
 				CoolKey.getCurrentLesson().typeBackspace();
 			} else if (!Character.isISOControl(c)) {
+				if (!CoolKey.getCurrentLesson().isStarted()) {
+					GUI.graphs.reset(); // zaczynamy przepisywanie
+				}
 				CoolKey.getCurrentLesson().typeChar(c);
 			}
 			writingArea.redraw();
+			if (CoolKey.getCurrentLesson().isPaused()) {
+				CoolKey.getCurrentLesson().pauseUnpause();
+			}
+			GUI.buttonBar.refresh();
+			GUI.keyboard.refresh();
 		}
 	}
 
@@ -144,5 +157,12 @@ public class WritingArea {
 	 */
 	public void refresh() {
 		writingArea.redraw();
+	}
+
+	/**
+	 * Skup uwagę na tym obszarze, aby przechwytywać zdarzenia.
+	 */
+	public void setFocus() {
+		writingArea.setFocus();
 	}
 }

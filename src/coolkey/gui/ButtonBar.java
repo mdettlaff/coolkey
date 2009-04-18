@@ -16,15 +16,25 @@ import coolkey.CoolKey;
  */
 public class ButtonBar {
 
+	private Button pause;
+	private Button restartLesson;
+
 	public ButtonBar() {
 		Composite comp = new Composite(GUI.shell, SWT.NONE);
 		comp.setLayout(new GridLayout(4, false));
 		comp.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
 		// przycisk pauzy
-		Button pause = new Button(comp, SWT.PUSH);
-		pause.setText("Pauza");
+		pause = new Button(comp, SWT.PUSH);
+		pause.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				CoolKey.getCurrentLesson().pauseUnpause();
+				refresh();
+				GUI.writingArea.setFocus();
+			}
+		});
 		// przycisk restartujący lekcję
-		Button restartLesson = new Button(comp, SWT.PUSH);
+		restartLesson = new Button(comp, SWT.PUSH);
 		restartLesson.setText("Zacznij od nowa");
 		restartLesson.addListener(SWT.Selection, new Listener() {
 			@Override
@@ -37,9 +47,29 @@ public class ButtonBar {
 				int response = confirmation.open();
 				if (response == SWT.YES) {
 					CoolKey.getCurrentLesson().restart();
+					GUI.keyboard.refresh();
 					GUI.writingArea.refresh();
+					GUI.writingArea.setFocus();
 				}
+				refresh();
 			}
 		});
+		refresh();
+	}
+
+	public void refresh() {
+		if (CoolKey.getCurrentLesson().isStarted()
+				&& !CoolKey.getCurrentLesson().isFinished()) {
+			pause.setEnabled(true);
+			if (!CoolKey.getCurrentLesson().isPaused()) {
+				pause.setText(" Pauza ");
+			} else {
+				pause.setText("Wznów");
+			}
+		} else {
+			pause.setText(" Pauza ");
+			pause.setEnabled(false);
+		}
+		restartLesson.setEnabled(CoolKey.getCurrentLesson().isStarted());
 	}
 }
