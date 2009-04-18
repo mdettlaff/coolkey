@@ -8,7 +8,6 @@ import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Canvas;
@@ -33,11 +32,9 @@ public class WritingArea {
 	private final int LINE_HEIGHT = 44;
 
 	private Canvas canvas;
-	private Image buffer;
-	private GC gc;
 
 	public WritingArea() {
-		canvas = new Canvas(GUI.shell, SWT.BORDER);
+		canvas = new Canvas(GUI.shell, SWT.BORDER | SWT.DOUBLE_BUFFERED);
 		canvas.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		canvas.addKeyListener(new KeyListener() {
@@ -51,11 +48,8 @@ public class WritingArea {
 
 		canvas.addPaintListener(new PaintListener() {
 			public void paintControl(PaintEvent pe) {
+				GC gc = pe.gc;
 				Point canvasSize = canvas.getSize();
-				if (gc == null) {
-					buffer = new Image(GUI.display, canvasSize.x, canvasSize.y);
-					gc = new GC(buffer);
-				}
 				gc.setBackground(GUI.display.getSystemColor(SWT.COLOR_WHITE));
 				gc.setForeground(GUI.display.getSystemColor(SWT.COLOR_BLACK));
 				gc.setFont(new Font(GUI.display, "Courier New", 10, SWT.NORMAL));
@@ -121,7 +115,6 @@ public class WritingArea {
 					gc.drawString(line, x, y, true);
 					y += LINE_HEIGHT;
 				}
-				pe.gc.drawImage(buffer, 0, 0);
 			}
 		});
 
