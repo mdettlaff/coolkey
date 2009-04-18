@@ -7,7 +7,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Canvas;
@@ -27,22 +26,17 @@ public class Graphs implements Runnable	{
 
 	private Thread thread;
 	private Canvas canvas;
-	private Image buffer;
-	private GC gc;
 
 	private List<LessonResults> resultsList = new ArrayList<LessonResults>();
 
 	public Graphs() {
-		canvas = new Canvas(GUI.shell, SWT.BORDER);
+		canvas = new Canvas(GUI.shell, SWT.BORDER | SWT.DOUBLE_BUFFERED);
 		canvas.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true, 1, 3));
 
 		canvas.addPaintListener(new PaintListener() {
 			public void paintControl(PaintEvent pe) {
+				GC gc = pe.gc;
 				Point canvasSize = canvas.getSize();
-				if (gc == null) {
-					buffer = new Image(GUI.display, canvasSize.x, canvasSize.y);
-					gc = new GC(buffer);
-				}
 				gc.setBackground(GUI.display.getSystemColor(SWT.COLOR_WHITE));
 				gc.setForeground(GUI.display.getSystemColor(SWT.COLOR_BLACK));
 				gc.fillRectangle(0, 0, canvasSize.x, canvasSize.y); // tło
@@ -82,7 +76,6 @@ public class Graphs implements Runnable	{
 							newestResults.getCorrectionsCount());
 					System.out.println('\n' + s);
 				}
-				pe.gc.drawImage(buffer, 0, 0);
 			}
 		});
 
