@@ -6,6 +6,9 @@ import java.util.List;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Canvas;
 
@@ -21,16 +24,28 @@ public class Graphs implements Runnable	{
 	 * Przedział czasu, z którego obliczana jest prędkość chwilowa.
 	 */
 	private final int CURRENT_SPEED_INTERVAL = 10;
+
 	private Thread thread;
-	private Canvas graphs;
+	private Canvas canvas;
+	private Image buffer;
+	private GC gc;
+
 	private List<LessonResults> resultsList = new ArrayList<LessonResults>();
 
 	public Graphs() {
-		graphs = new Canvas(GUI.shell, SWT.BORDER);
-		graphs.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true, 1, 3));
+		canvas = new Canvas(GUI.shell, SWT.BORDER);
+		canvas.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true, 1, 3));
 
-		graphs.addPaintListener(new PaintListener() {
-			public void paintControl(PaintEvent e) {
+		canvas.addPaintListener(new PaintListener() {
+			public void paintControl(PaintEvent pe) {
+				Point canvasSize = canvas.getSize();
+				if (gc == null) {
+					buffer = new Image(GUI.display, canvasSize.x, canvasSize.y);
+					gc = new GC(buffer);
+				}
+				gc.setBackground(GUI.display.getSystemColor(SWT.COLOR_WHITE));
+				gc.setForeground(GUI.display.getSystemColor(SWT.COLOR_BLACK));
+				gc.fillRectangle(0, 0, canvasSize.x, canvasSize.y); // tło
 				/*
 				 * Info dla Karola:
 				 * Twoje zadanie to zrobić tutaj rysowanie wykresów.
@@ -38,16 +53,16 @@ public class Graphs implements Runnable	{
 				 * Dane z kolejnych sekund masz w zmiennej resultsList.
 				 * Powodzenia! :)
 				 */
-				e.gc.drawString("czas: ", 7, 24);
-				e.gc.drawString("postęp: ", 7, 60);
+				gc.drawString("czas: ", 7, 24);
+				gc.drawString("postęp: ", 7, 60);
 				if (resultsList.size() > 0) {
 					LessonResults newestResults = resultsList.get(
 							resultsList.size() - 1);
 					String progress = String.format("%.0f%%",
 							newestResults.getProgress());
 					int seconds = newestResults.getWritingTimeMilliseconds() / 1000;
-					e.gc.drawString(seconds + "", 7, 40);
-					e.gc.drawString(progress, 7, 76);
+					gc.drawString(seconds + "", 7, 40);
+					gc.drawString(progress, 7, 76);
 					String s = "";
 					s += String.format("prędkość średnia: %.1f znaków/min\n",
 							newestResults.getSpeed());
@@ -67,6 +82,7 @@ public class Graphs implements Runnable	{
 							newestResults.getCorrectionsCount());
 					System.out.println('\n' + s);
 				}
+				pe.gc.drawImage(buffer, 0, 0);
 			}
 		});
 
@@ -103,7 +119,7 @@ public class Graphs implements Runnable	{
 	 * Wyświetl aktualną wersję tego elementu.
 	 */
 	public void refresh() {
-		graphs.redraw();
+		canvas.redraw();
 	}
 
 	/**

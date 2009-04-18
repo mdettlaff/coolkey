@@ -24,7 +24,8 @@ public class Lesson {
 	 * @param text Tekst do przepisania.
 	 */
 	public Lesson(String text) {
-		for (String line : text.replaceAll(" +", " ").trim().split("\n")) {
+		for (String line : text.replaceAll(" +", " ").replaceAll("\r", "")
+				.trim().split("\n")) {
 			textLines.add(line);
 		}
 		// łamanie linii
