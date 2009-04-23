@@ -18,7 +18,7 @@ public class CoolKey {
 
 	public static void main(String[] args) {
 		int autoGenTextSizeInLines = 10;
-		int minGenTextLength = (autoGenTextSizeInLines-1) * (MAX_CHARS_IN_LINE-5);
+		int minGenTextLength = (autoGenTextSizeInLines-1) * (MAX_CHARS_IN_LINE-4);
 		CoolKey.setCurrentLesson(new Lesson(Markov.generateMarkovChain(
 				Utils.getWords(CoolKey.TXT_DIRECTORY), minGenTextLength)));
 

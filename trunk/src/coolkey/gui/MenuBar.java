@@ -180,7 +180,7 @@ public class MenuBar {
 		// rozpocznij grę
 		startItem.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
-				final Shell shell = new Shell(GUI.shell);
+				final Shell shell = new Shell(GUI.shell, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 				shell.setText("Defender");
 				Point p = shell.computeSize(Engine.WIDTH, Engine.HEIGHT);
 				shell.setSize(p);
