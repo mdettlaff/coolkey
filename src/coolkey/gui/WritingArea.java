@@ -43,6 +43,7 @@ public class WritingArea {
 				pressKey(keyEvent.character);
 			}
 
+			@Override
 			public void keyReleased(KeyEvent keyEvent) {}
 		});
 
