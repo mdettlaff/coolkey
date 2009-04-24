@@ -52,4 +52,11 @@ public class GUI {
 		}
 		display.dispose();
 	}
+
+	public static void refresh() {
+		writingArea.refresh();
+		buttonBar.refresh();
+		keyboard.refresh();
+		graphs.refresh();
+	}
 }

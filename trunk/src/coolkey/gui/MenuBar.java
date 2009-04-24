@@ -31,7 +31,7 @@ public class MenuBar {
 		final Menu userMenu = new Menu(GUI.shell, SWT.DROP_DOWN);
 		user.setMenu(userMenu);
 		final MenuItem addUserItem = new MenuItem(userMenu, SWT.PUSH);
-		addUserItem.setText("&Dodaj użytkownika");
+		addUserItem.setText("&Nowy użytkownik");
 		final MenuItem changeUserItem = new MenuItem(userMenu, SWT.PUSH);
 		changeUserItem.setText("&Zmień użytkownika");
 		final MenuItem settingsItem = new MenuItem(userMenu, SWT.PUSH);
@@ -165,9 +165,7 @@ public class MenuBar {
 					try {
 						text = Utils.readFileAsString(new File(result));
 						CoolKey.setCurrentLesson(new Lesson(text));
-						GUI.writingArea.refresh();
-						GUI.buttonBar.refresh();
-						GUI.keyboard.refresh();
+						GUI.refresh();
 					} catch (IOException e) {
 						MessageBox messageBox = new MessageBox(GUI.shell, SWT.ICON_ERROR);
 						messageBox.setText("Błąd");
