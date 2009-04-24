@@ -1,5 +1,6 @@
 package coolkey;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -7,7 +8,8 @@ import java.util.List;
 /**
  * Ćwiczenie polegające na przepisywaniu zadanego tekstu.
  */
-public class Lesson {
+public class Lesson implements Serializable {
+	private static final long serialVersionUID = 1L;
 
 	private List<String> textLines = new ArrayList<String>();
 	private List<String> writtenLines = new ArrayList<String>();

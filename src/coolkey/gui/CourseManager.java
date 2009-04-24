@@ -21,7 +21,7 @@ public class CourseManager {
 		Table users = new Table(CMShell, SWT.SINGLE | SWT.H_SCROLL | SWT.BORDER);
 		users.setHeaderVisible(true);
 		users.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 3));
-		new TableColumn(users, SWT.NONE).setText("Twoje kusry");
+		new TableColumn(users, SWT.NONE).setText("Twoje kursy");
 		new TableItem(users, SWT.NONE).setText("Kurs 1");
 		new TableItem(users, SWT.NONE).setText("Kurs 2");
 		new TableItem(users, SWT.NONE).setText("Kurs 3");

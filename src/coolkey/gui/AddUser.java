@@ -9,8 +9,12 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+
+import coolkey.CoolKey;
+import coolkey.User;
 
 /**
  * Panel dodawania nowego użytkownika.
@@ -22,46 +26,47 @@ public class AddUser {
 	private static Shell addUserShell;
 	
 	public AddUser() {
-		addUserShell = new Shell(GUI.shell, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL );
-		addUserShell.setText("Dodaj użytkownika");
+		addUserShell = new Shell(GUI.shell, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
+		addUserShell.setText("Nowy użytkownik");
 		addUserShell.setLayout(new GridLayout());
 		
-		/*Imię*/
+		/* Imię */
 		Composite comp0 = new Composite(addUserShell, SWT.NONE);
 	    comp0.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 	    comp0.setLayout(new GridLayout(2, false));
 	    new Label(comp0, SWT.NONE).setText("Imię: ");
-	    final Text imie = new Text(comp0, SWT.BORDER);
-	    imie.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-	    imie.setFocus();
+	    final Text name = new Text(comp0, SWT.BORDER);
+	    name.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+	    name.setFocus();
 		
-	    /*Hasło*/
+	    /* Hasło */
 	    Group pass = new Group(addUserShell, SWT.SHADOW_NONE);
 		pass.setLayout(new GridLayout());
-		pass.setText("Hasło");
+		pass.setText("Prywatność");
 		Composite comp1 = new Composite(pass, SWT.NONE);
 		comp1.setLayout(new GridLayout(2, false));
 		comp1.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		final Button checkPassword = new Button(comp1, SWT.CHECK);
-		checkPassword.setSelection(true);
+		checkPassword.setSelection(false);
 		new Label(comp1, SWT.NONE).setText("Zabezpiecz profil hasłem");
 		new Label(comp1, SWT.NONE).setText("Hasło:");
 		final Text password = new Text(comp1, SWT.BORDER);
 		password.setEchoChar('*');
 		password.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		new Label(comp1, SWT.NONE).setText("powtórz hasło:");
+		password.setEnabled(false);
+		new Label(comp1, SWT.NONE).setText("Powtórz:");
 		final Text passwordRepeat = new Text(comp1, SWT.BORDER);
 		passwordRepeat.setEchoChar('*');
 		passwordRepeat.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		passwordRepeat.setEnabled(false);
 		
-		/*Przycisk  "dodaj użytkownika"*/
+		/* Przycisk "Dodaj użytkownika" */
 		Button addUser = new Button(addUserShell, SWT.PUSH);
 		addUser.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, false, false));
-		addUser.setText("Dodaj użytkowika");
-		
-	    
+		addUser.setText("Dodaj użytkownika");
+
 	    addUserShell.pack();
-	    
+
 	    checkPassword.addListener(SWT.Selection, new Listener(){
 	    	public void handleEvent(Event event) {
 				if (!checkPassword.getSelection()) {
@@ -73,8 +78,53 @@ public class AddUser {
 				}
 			}
 	    });
+
+	    addUser.addListener(SWT.Selection, new Listener(){
+	    	public void handleEvent(Event event) {
+	    		if (name.getText().length() == 0) {
+	    			MessageBox messageBox = new MessageBox(GUI.shell, SWT.ICON_WARNING);
+	    			messageBox.setText("Ostrzeżenie");
+	    			messageBox.setMessage("Musisz podać nazwę użytkownika.");
+	    			messageBox.open();
+	    		} else if (checkPassword.getSelection() && password.getText().length() == 0) {
+	    			MessageBox messageBox = new MessageBox(GUI.shell, SWT.ICON_WARNING);
+	    			messageBox.setText("Ostrzeżenie");
+	    			messageBox.setMessage("Hasło nie może być puste.");
+	    			messageBox.open();
+	    		} else if (!password.getText().equals(passwordRepeat.getText())) {
+	    			MessageBox messageBox = new MessageBox(GUI.shell, SWT.ICON_WARNING);
+	    			messageBox.setText("Ostrzeżenie");
+	    			messageBox.setMessage("Hasło musi być identyczne z powtórzonym hasłem.");
+	    			messageBox.open();
+	    		} else {
+	    			String pass;
+	    			if (checkPassword.getSelection()) {
+	    				pass = password.getText();
+	    			} else {
+	    				pass = null;
+	    			}
+	    			User newUser = new User(name.getText(), pass);
+	    			if (!CoolKey.getUsers().contains(newUser)) {
+		    			if (CoolKey.getCurrentLesson().isStarted()) {
+		    				CoolKey.getCurrentLesson().restart();
+		    			}
+	    				GUI.graphs.reset();
+		    			CoolKey.addUser(newUser);
+		    			addUserShell.dispose();
+		    			GUI.refresh();
+	    			} else {
+	    				MessageBox messageBox = new MessageBox(GUI.shell, SWT.ICON_WARNING);
+		    			messageBox.setText("Ostrzeżenie");
+	    				messageBox.setMessage("Użytkownik o podanej nazwie już istnieje.");
+	    				messageBox.open();
+	    			}
+	    			newUser = null;
+	    		}
+	    	}
+	    });
+
 	}
-	
+
 	public void open() {
 		addUserShell.open();
 	}
