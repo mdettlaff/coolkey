@@ -11,14 +11,14 @@ public class Config implements Serializable {
 	private boolean soundOn;
 	private boolean showKeyboard;
 	private boolean showGraphs;
-	private boolean stopAtMistakes;
+	private boolean continueAtMistakes;
 	private String lineBreakers;
 
 	public Config() {
 		soundOn = true;
 		showKeyboard = true;
 		showGraphs = true;
-		stopAtMistakes = false;
+		continueAtMistakes = true;
 		lineBreakers = "\n";
 	}
 
@@ -46,12 +46,12 @@ public class Config implements Serializable {
 		this.showGraphs = showGraphs;
 	}
 
-	public boolean isStopAtMistakes() {
-		return stopAtMistakes;
+	public boolean isContinueAtMistakes() {
+		return continueAtMistakes;
 	}
 
-	public void setStopAtMistakes(boolean stopAtMistakes) {
-		this.stopAtMistakes = stopAtMistakes;
+	public void setContinueAtMistakes(boolean continueAtMistakes) {
+		this.continueAtMistakes = continueAtMistakes;
 	}
 
 	public String getLineBreakers() {

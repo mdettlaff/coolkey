@@ -37,9 +37,9 @@ public class Stats {
 		speed.setControl(speedComp);
 		accuracy.setControl(accuracyComp);
 		
-		Canvas speedCanv = new Canvas(speedComp, SWT.BORDER);
+		/*Canvas speedCanv = */new Canvas(speedComp, SWT.BORDER);
 		//TODO canvas statystyk prędkości
-		Canvas accCanv = new Canvas(accuracyComp, SWT.BORDER);
+		/*Canvas accCanv = */new Canvas(accuracyComp, SWT.BORDER);
 		//TODO canvas statystyk poprawności
 		
 		statsShell.setSize(250, 220);

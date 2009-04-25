@@ -15,7 +15,7 @@ public class User implements Serializable {
 
 	private String name;
 	private String passwordHash;
-	private static Config config = new Config();
+	private Config config;
 	private Lesson currentLesson;
 	private List<Integer> highscore;
 
@@ -26,6 +26,7 @@ public class User implements Serializable {
 		} else {
 			this.passwordHash = null;
 		}
+		config = new Config();
 		highscore = new ArrayList<Integer>();
 		// domyślna lekcja
 		int minGenTextLines = 10;
@@ -107,7 +108,7 @@ public class User implements Serializable {
 	/**
 	 * Ustawienia wybrane przez użytkownika.
 	 */
-	public static Config getConfig() {
+	public Config getConfig() {
 		return config;
 	}
 

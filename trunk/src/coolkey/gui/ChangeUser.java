@@ -75,7 +75,7 @@ public class ChangeUser {
 		}
 
 		// wybierz użytkownika
-		select.addListener(SWT.Selection, new Listener() {
+		Listener userSelection = new Listener() {
 			@Override
 			public void handleEvent(Event e) {
 				// logowanie
@@ -131,7 +131,8 @@ public class ChangeUser {
 					data.right = new FormAttachment(cancel, 0, SWT.DEFAULT);
 					data.bottom = new FormAttachment(100, 0);
 					ok.setLayoutData(data);
-					ok.addListener(SWT.Selection, new Listener() {
+
+					Listener confirmPassword = new Listener() {
 						@Override
 						public void handleEvent(Event e) {
 							if (selectedUser.validatePassword(
@@ -146,7 +147,9 @@ public class ChangeUser {
 								messageBox.open();
 							}
 						}
-					});
+					};
+					ok.addListener(SWT.Selection, confirmPassword);
+					passwordText.addListener(SWT.DefaultSelection, confirmPassword);
 
 					passwordText.setFocus();
 					dialog.pack();
@@ -171,7 +174,10 @@ public class ChangeUser {
 					GUI.refresh();
 				}
 			}
-		});
+		};
+
+		select.addListener(SWT.Selection, userSelection);
+		users.addListener(SWT.DefaultSelection, userSelection);
 
 		// usuń użytkownika
 		delete.addListener(SWT.Selection, new Listener() {
@@ -249,7 +255,7 @@ public class ChangeUser {
 					cancel.setText("Anuluj");
 					cancel.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, true, false));
 
-					change.addListener(SWT.Selection, new Listener() {
+					Listener changePasswordListener = new Listener() {
 						@Override
 						public void handleEvent(Event e) {
 							if (selectedUser.changePassword(
@@ -269,7 +275,11 @@ public class ChangeUser {
 								messageBox.open();
 							}
 						}
-					});
+					};
+
+					change.addListener(SWT.Selection, changePasswordListener);
+					newPassword.addListener(SWT.DefaultSelection,
+							changePasswordListener);
 
 					cancel.addListener(SWT.Selection, new Listener() {
 						@Override
