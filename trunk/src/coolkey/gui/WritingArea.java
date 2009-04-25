@@ -14,6 +14,7 @@ import org.eclipse.swt.widgets.Canvas;
 
 import coolkey.CoolKey;
 import coolkey.LessonResults;
+import coolkey.Sound;
 
 /**
  * Obszar na którym odbywa się przepisywanie.
@@ -32,10 +33,14 @@ public class WritingArea {
 	private final int LINE_HEIGHT = 44;
 
 	private Canvas canvas;
+	private Sound typingSound;
+	private Sound mistakeSound;
 
 	public WritingArea() {
 		canvas = new Canvas(GUI.shell, SWT.BORDER | SWT.DOUBLE_BUFFERED);
 		canvas.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		typingSound = new Sound(0);
+		mistakeSound = new Sound(1);
 
 		canvas.addKeyListener(new KeyListener() {
 			@Override
@@ -130,6 +135,9 @@ public class WritingArea {
 	public void pressKey(char c) {
 		if (!CoolKey.getCurrentLesson().isFinished()) {
 			if (c == '\r') {
+				if (CoolKey.getUser().getConfig().isSoundOn()) {
+					typingSound.play();
+				}
 				CoolKey.getCurrentLesson().typeEnter();
 				if (CoolKey.getCurrentLesson().isFinished()) {
 					LessonResults finalResults = CoolKey.getCurrentLesson().getResults();
@@ -138,12 +146,23 @@ public class WritingArea {
 					new ResultsMessage(finalResults);
 				}
 			} else if (c == SWT.BS) {
+				if (CoolKey.getUser().getConfig().isSoundOn()) {
+					typingSound.play();
+				}
 				CoolKey.getCurrentLesson().typeBackspace();
 			} else if (!Character.isISOControl(c)) {
 				if (!CoolKey.getCurrentLesson().isStarted()) {
 					GUI.graphs.reset(); // zaczynamy przepisywanie
 				}
-				CoolKey.getCurrentLesson().typeChar(c);
+				if (CoolKey.getCurrentLesson().typeChar(c)) {
+					if (CoolKey.getUser().getConfig().isSoundOn()) {
+						typingSound.play();
+					}
+				} else {
+					if (CoolKey.getUser().getConfig().isSoundOn()) {
+						mistakeSound.play();
+					}
+				}
 			}
 			canvas.redraw();
 			if (CoolKey.getCurrentLesson().isPaused()) {
@@ -166,5 +185,10 @@ public class WritingArea {
 	 */
 	public void setFocus() {
 		canvas.setFocus();
+	}
+
+	public void close() {
+		typingSound.close();
+		mistakeSound.close();
 	}
 }
