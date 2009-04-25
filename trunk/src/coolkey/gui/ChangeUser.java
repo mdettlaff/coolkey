@@ -31,11 +31,18 @@ public class ChangeUser {
 	private static Shell changeUserShell;
 	private final Table users;
 
-	public ChangeUser() {
+	/**
+	 * Otwórz okno wyboru i edycji użytkownika.
+	 *
+	 * @param onStartupFlag Czy okno zostało otwarte tuż po uruchomieniu
+	 *                      programu. Jeśli tak, wymuś wybór.
+	 */
+	public ChangeUser(boolean onStartupFlag) {
+		final boolean onStartup = onStartupFlag;
 		changeUserShell = new Shell(GUI.shell, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL | SWT.RESIZE);
-		changeUserShell.setText("Zmień użytkownika");
+		changeUserShell.setText("Użytkownicy");
 		changeUserShell.setLayout(new GridLayout(2, false));
-		
+
 		users = new Table(changeUserShell, SWT.SINGLE |
 				SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.BORDER);
 		users.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 3));
@@ -58,6 +65,15 @@ public class ChangeUser {
 
 		changeUserShell.pack();
 
+		if (onStartup) {
+			changeUserShell.addListener(SWT.Close, new Listener() {
+				@Override
+				public void handleEvent(Event e) {
+					GUI.shell.dispose();
+				}
+			});
+		}
+
 		// wybierz użytkownika
 		select.addListener(SWT.Selection, new Listener() {
 			@Override
@@ -66,7 +82,7 @@ public class ChangeUser {
 				final User selectedUser = CoolKey.getUsers().get(
 						users.getSelectionIndex());
 				final boolean[] isPasswordValid = new boolean[1];
-				if (CoolKey.getUser().equals(selectedUser) ||
+				if ((!onStartup && CoolKey.getUser().equals(selectedUser)) ||
 						selectedUser.validatePassword(null)) {
 					isPasswordValid[0] = true;
 				} else {
@@ -98,15 +114,15 @@ public class ChangeUser {
 						}
 					});
 
-					final Text text = new Text(dialog, SWT.BORDER);
-					text.setEchoChar('*');
+					final Text passwordText = new Text(dialog, SWT.BORDER);
+					passwordText.setEchoChar('*');
 					data = new FormData();
 					data.width = 200;
 					data.left = new FormAttachment(label, 0, SWT.DEFAULT);
 					data.right = new FormAttachment(100, 0);
 					data.top = new FormAttachment(label, 0, SWT.CENTER);
 					data.bottom = new FormAttachment(cancel, 0, SWT.DEFAULT);
-					text.setLayoutData(data);
+					passwordText.setLayoutData(data);
 
 					Button ok = new Button(dialog, SWT.PUSH);
 					ok.setText("OK");
@@ -118,11 +134,13 @@ public class ChangeUser {
 					ok.addListener(SWT.Selection, new Listener() {
 						@Override
 						public void handleEvent(Event e) {
-							if (selectedUser.validatePassword(text.getText())) {
+							if (selectedUser.validatePassword(
+									passwordText.getText())) {
 								isPasswordValid[0] = true;
 								dialog.close();
 							} else {
-								MessageBox messageBox = new MessageBox(GUI.shell, SWT.ICON_WARNING);
+								MessageBox messageBox = new MessageBox(
+										GUI.shell, SWT.ICON_WARNING);
 								messageBox.setText("Ostrzeżenie");
 								messageBox.setMessage("Podane hasło jest nieprawidłowe.");
 								messageBox.open();
@@ -130,7 +148,7 @@ public class ChangeUser {
 						}
 					});
 
-					text.setFocus();
+					passwordText.setFocus();
 					dialog.pack();
 					dialog.open();
 
@@ -161,7 +179,7 @@ public class ChangeUser {
 			public void handleEvent(Event e) {
 				User selectedUser = CoolKey.getUsers().get(
 						users.getSelectionIndex());
-				if (selectedUser.getName() != CoolKey.DEFAULT_USERNAME) {
+				if (!selectedUser.getName().equals(CoolKey.DEFAULT_USERNAME)) {
 					MessageBox confirmation = new MessageBox(GUI.shell,
 							SWT.ICON_QUESTION | SWT.YES | SWT.NO);
 					confirmation.setText("Potwierdzenie");
@@ -192,10 +210,77 @@ public class ChangeUser {
 		});
 
 		// zmień hasło
-		delete.addListener(SWT.Selection, new Listener() {
+		changePass.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event e) {
-				// TODO zmiana hasła
+				final User selectedUser = CoolKey.getUsers().get(
+						users.getSelectionIndex());
+				if (selectedUser.validatePassword(null)) {
+					MessageBox messageBox = new MessageBox(GUI.shell,
+							SWT.ICON_INFORMATION);
+					messageBox.setText("Informacja");
+					messageBox.setMessage("Ten profil nie jest zabezpieczony hasłem.");
+					messageBox.open();
+				} else {
+					final Shell changePassword = new Shell(GUI.shell,
+							SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
+					changePassword.setText("Zmiana hasła");
+					changePassword.setLayout(new GridLayout());
+
+					Composite comp = new Composite(changePassword, SWT.NONE);
+					comp.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+					comp.setLayout(new GridLayout(3, false));
+
+					new Label(comp, SWT.NONE).setText("Aktualne hasło: ");
+					final Text oldPassword = new Text(comp, SWT.BORDER);
+					oldPassword.setEchoChar('*');
+					oldPassword.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
+					oldPassword.setFocus();
+					new Label(comp, SWT.NONE).setText("Nowe hasło: ");
+					final Text newPassword = new Text(comp, SWT.BORDER);
+					newPassword.setEchoChar('*');
+					newPassword.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
+
+					new Label(comp, SWT.NONE).setText(" ");
+					Button change = new Button(comp, SWT.PUSH);
+					change.setText("Zmień hasło");
+					change.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, true, false));
+					Button cancel = new Button(comp, SWT.PUSH);
+					cancel.setText("Anuluj");
+					cancel.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, true, false));
+
+					change.addListener(SWT.Selection, new Listener() {
+						@Override
+						public void handleEvent(Event e) {
+							if (selectedUser.changePassword(
+									oldPassword.getText(),
+									newPassword.getText())) {
+								MessageBox messageBox = new MessageBox(GUI.shell,
+										SWT.ICON_INFORMATION);
+								messageBox.setText("Informacja");
+								messageBox.setMessage("Hasło zostało zmienione.");
+								messageBox.open();
+								changePassword.close();
+							} else {
+								MessageBox messageBox = new MessageBox(GUI.shell,
+										SWT.ICON_WARNING);
+								messageBox.setText("Ostrzeżenie");
+								messageBox.setMessage("Podane aktualne hasło jest nieprawidłowe.");
+								messageBox.open();
+							}
+						}
+					});
+
+					cancel.addListener(SWT.Selection, new Listener() {
+						@Override
+						public void handleEvent(Event e) {
+							changePassword.close();
+						}
+					});
+
+					changePassword.pack();
+					changePassword.open();
+				}
 			}
 		});
 	}

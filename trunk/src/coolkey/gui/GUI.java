@@ -6,6 +6,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
 
+import coolkey.CoolKey;
+
 public class GUI {
 
 	public static Display display;
@@ -47,8 +49,16 @@ public class GUI {
 
 		shell.open();
 
+		if (CoolKey.getUsers().size() > 1) {
+			new ChangeUser(true).open();
+		}
+
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) display.sleep();
+		}
+		// zamykanie programu
+		if (CoolKey.getCurrentLesson().isStarted()) {
+			CoolKey.getCurrentLesson().restart();
 		}
 		display.dispose();
 	}
