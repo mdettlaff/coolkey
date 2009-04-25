@@ -54,13 +54,17 @@ public class Lesson implements Serializable {
 
 	/**
 	 * Przepisanie pojedynczego znaku.
+	 *
+	 * @return <code>true</code> jeśli znak został przepisany prawidłowo,
+	 *         <code>false</code> w przeciwnym wypadku.
 	 */
-	public void typeChar(Character c) {
+	public boolean typeChar(Character c) {
+		boolean typedCorrectly = true;
 		if (timeStarted == null) {
 			timeStarted = new Date();
 		}
 		if (timeFinished != null) {
-			return;
+			return false;
 		}
 		int last = writtenLines.size() - 1;
 		char correctChar;
@@ -76,6 +80,7 @@ public class Lesson implements Serializable {
 			} else {
 				incorrectChar = '_';
 			}
+			typedCorrectly = false;
 		}
 		writtenLines.set(last, writtenLines.get(last) + correctChar);
 		mistakes.set(last, mistakes.get(last) + incorrectChar);
@@ -86,6 +91,7 @@ public class Lesson implements Serializable {
 			int cIndex = writtenLines.get(last).length() - 1;
 			mistakesShadow.get(last).replace(cIndex, cIndex + 1, c + "");
 		}
+		return typedCorrectly;
 	}
 
 	public void typeEnter() {
