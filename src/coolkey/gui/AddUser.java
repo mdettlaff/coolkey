@@ -39,16 +39,23 @@ public class AddUser {
 	    name.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 	    name.setFocus();
 		
-	    /* Hasło */
+	    /* Prywatność */
 	    Group pass = new Group(addUserShell, SWT.SHADOW_NONE);
 		pass.setLayout(new GridLayout());
 		pass.setText("Prywatność");
 		Composite comp1 = new Composite(pass, SWT.NONE);
 		comp1.setLayout(new GridLayout(2, false));
 		comp1.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		final Button checkPassword = new Button(comp1, SWT.CHECK);
+
+		// przycisk wyboru (czy zabezpieczyć profil hasłem)
+		Composite checkComp = new Composite(comp1, SWT.NONE);
+	    checkComp.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, true, true, 2, 1));
+	    checkComp.setLayout(new GridLayout(2, false));
+		final Button checkPassword = new Button(checkComp, SWT.CHECK);
 		checkPassword.setSelection(false);
-		new Label(comp1, SWT.NONE).setText("Zabezpiecz profil hasłem");
+		new Label(checkComp, SWT.NONE).setText("Zabezpiecz profil hasłem");
+
+		// hasło
 		new Label(comp1, SWT.NONE).setText("Hasło:");
 		final Text password = new Text(comp1, SWT.BORDER);
 		password.setEchoChar('*');
@@ -60,10 +67,16 @@ public class AddUser {
 		passwordRepeat.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		passwordRepeat.setEnabled(false);
 		
-		/* Przycisk "Dodaj użytkownika" */
-		Button addUser = new Button(addUserShell, SWT.PUSH);
+		/* Przyciski "Dodaj użytkownika" i "Anuluj" */
+		Composite comp2 = new Composite(addUserShell, SWT.NONE);
+	    comp2.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, true, true));
+	    comp2.setLayout(new GridLayout(2, false));
+		Button addUser = new Button(comp2, SWT.PUSH);
 		addUser.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, false, false));
 		addUser.setText("Dodaj użytkownika");
+		Button cancel = new Button(comp2, SWT.PUSH);
+		cancel.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, false, false));
+		cancel.setText("Anuluj");
 
 	    addUserShell.pack();
 
@@ -77,6 +90,12 @@ public class AddUser {
 					passwordRepeat.setEnabled(true);
 				}
 			}
+	    });
+
+	    cancel.addListener(SWT.Selection, new Listener(){
+	    	public void handleEvent(Event event) {
+	    		addUserShell.close();
+	    	}
 	    });
 
 	    addUser.addListener(SWT.Selection, new Listener(){
@@ -122,7 +141,6 @@ public class AddUser {
 	    		}
 	    	}
 	    });
-
 	}
 
 	public void open() {

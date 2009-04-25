@@ -117,7 +117,7 @@ public class MenuBar {
 		});
 		changeUserItem.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
-				ChangeUser changeShell = new ChangeUser();
+				ChangeUser changeShell = new ChangeUser(false);
 				changeShell.open();
 			}
 		});

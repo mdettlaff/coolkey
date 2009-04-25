@@ -3,6 +3,8 @@ package coolkey;
 import java.io.Serializable;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Dane użytkownika.
@@ -13,8 +15,9 @@ public class User implements Serializable {
 
 	private String name;
 	private String passwordHash;
-	private Lesson currentLesson;
 	private static Config config = new Config();
+	private Lesson currentLesson;
+	private List<Integer> highscore;
 
 	public User(String name, String password) {
 		this.name = name;
@@ -23,6 +26,7 @@ public class User implements Serializable {
 		} else {
 			this.passwordHash = null;
 		}
+		highscore = new ArrayList<Integer>();
 		// domyślna lekcja
 		int minGenTextLines = 10;
 		int minGenTextLength = (minGenTextLines - 1) * (
@@ -38,6 +42,9 @@ public class User implements Serializable {
 		this(CoolKey.DEFAULT_USERNAME, null);
 	}
 
+	/**
+	 * Funkcja haszująca dla hasła.
+	 */
 	private String hash(String password, String hashFunctionName) {
 		String hexString = "";
 		try {
@@ -78,6 +85,32 @@ public class User implements Serializable {
 		return false;
 	}
 
+	/**
+	 * Zmień hasło użytkownika.
+	 *
+	 * @param  oldPassword Aktualne hasło.
+	 * @param  newPassword Nowe hasło.
+	 * @return             <code>true</code>, jeśli zmiana się powiodła,
+	 *                     <code>false</code> w przeciwnym wypadku.
+	 *                     Jeśli użytkownik nie jest zabezpieczony hasłem,
+	 *                     zawsze zwraca <code>false</code>.
+	 */
+	public boolean changePassword(String oldPassword, String newPassword) {
+		if (passwordHash != null && validatePassword(oldPassword)) {
+			this.passwordHash = hash(newPassword, PASSWORD_HASH_FUNC);
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * Ustawienia wybrane przez użytkownika.
+	 */
+	public static Config getConfig() {
+		return config;
+	}
+
 	public Lesson getCurrentLesson() {
 		return currentLesson;
 	}
@@ -87,10 +120,17 @@ public class User implements Serializable {
 	}
 
 	/**
-	 * Ustawienia wybrane przez użytkownika.
+	 * Uaktualnij wyniki użytkownika w grze edukacyjnej.
 	 */
-	public static Config getConfig() {
-		return config;
+	public void setHighscore(List<Integer> highscore) {
+		this.highscore = highscore;
+	}
+
+	/**
+	 * Wyniki użytkownika w grze edukacyjnej.
+	 */
+	public List<Integer> getHighscore() {
+		return highscore;
 	}
 
 	@Override

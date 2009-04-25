@@ -54,8 +54,7 @@ public class ButtonBar {
 					CoolKey.getCurrentLesson().restart();
 					GUI.keyboard.refresh();
 					GUI.writingArea.refresh();
-				}
-				if (!wasPaused) {
+				} else if (!wasPaused) {
 					CoolKey.getCurrentLesson().pauseUnpause(); // odpauzuj
 				}
 				GUI.writingArea.setFocus();

@@ -42,8 +42,8 @@ public class Persistence {
 	 * Odczytuje dane z dysku.
 	 *
 	 * @param  file Plik z którego odczytujemy dane.
-	 * @return Obiekt danych odczytanych z pliku, <code>null</code> jeśli wystąpi
-	 *         błąd.
+	 * @return      Obiekt danych odczytanych z pliku, <code>null</code> jeśli
+	 *              wystąpi błąd.
 	 */
 	public static Object read(File file) {
 		ObjectInputStream ois = null;
@@ -67,10 +67,10 @@ public class Persistence {
 	/**
 	 * Zapisuje dane do pliku.
 	 *
-	 * @param  file Plik do którego zapisujemy dane.
+	 * @param  file   Plik do którego zapisujemy dane.
 	 * @param  object Obiekt danych, które chcemy zapisać.
-	 * @return <code>true</code> jeśli operacja się powiedzie,
-	 *         <code>false</code> w przeciwnym wypadku.
+	 * @return        <code>true</code> jeśli operacja się powiedzie,
+	 *                <code>false</code> w przeciwnym wypadku.
 	 */
 	public static boolean write(File file, Object object) {
 		ObjectOutputStream oos = null;
