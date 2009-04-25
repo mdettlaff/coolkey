@@ -134,7 +134,7 @@ public class MenuBar {
 			}
 		});
 		exitMenuItem.addListener(SWT.Selection, new Listener() {
-			public void handleEvent(Event arg0) {
+			public void handleEvent(Event e) {
 				System.exit(0);
 			}
 		});
