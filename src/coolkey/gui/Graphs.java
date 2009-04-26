@@ -18,6 +18,7 @@ import coolkey.LessonResults;
  * Panel z wykresami po prawej stronie. Wykresy są animowane w osobnym wątku.
  */
 public class Graphs implements Runnable	{
+	private final int CANVAS_WIDTH = 195;
 	private final int SLEEP_TIME = 1000;
 	/**
 	 * Przedział czasu, z którego obliczana jest prędkość chwilowa.
@@ -31,7 +32,9 @@ public class Graphs implements Runnable	{
 
 	public Graphs() {
 		canvas = new Canvas(GUI.shell, SWT.BORDER | SWT.DOUBLE_BUFFERED);
-		canvas.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true, 1, 3));
+		GridData gd = new GridData(SWT.FILL, SWT.FILL, false, true, 1, 3);
+		gd.widthHint = CANVAS_WIDTH;
+		canvas.setLayoutData(gd);
 
 		canvas.addPaintListener(new PaintListener() {
 			public void paintControl(PaintEvent pe) {
@@ -47,16 +50,16 @@ public class Graphs implements Runnable	{
 				 * Dane z kolejnych sekund masz w zmiennej resultsList.
 				 * Powodzenia! :)
 				 */
-				gc.drawString("czas: ", 7, 24);
-				gc.drawString("postęp: ", 7, 60);
+				gc.drawString("czas: ", 15, 24);
+				gc.drawString("postęp: ", 15, 60);
 				if (resultsList.size() > 0) {
 					LessonResults newestResults = resultsList.get(
 							resultsList.size() - 1);
 					String progress = String.format("%.0f%%",
 							newestResults.getProgress());
 					int seconds = newestResults.getWritingTimeMilliseconds() / 1000;
-					gc.drawString(seconds + "", 7, 40);
-					gc.drawString(progress, 7, 76);
+					gc.drawString(seconds + "", 15, 40);
+					gc.drawString(progress, 15, 76);
 					String s = "";
 					s += String.format("prędkość średnia: %.1f znaków/min\n",
 							newestResults.getSpeed());

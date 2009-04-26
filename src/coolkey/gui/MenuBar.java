@@ -41,7 +41,7 @@ public class MenuBar {
 		//exportMenuItem.setAccelerator(SWT.CTRL+'E');
 		new MenuItem(userMenu, SWT.SEPARATOR);
 		final MenuItem exitMenuItem = new MenuItem(userMenu, SWT.PUSH);
-		exitMenuItem.setText("&Wyjście");
+		exitMenuItem.setText("&Zakończ");
 
 		/* Kurs */
 		final MenuItem course = new MenuItem(menu, SWT.CASCADE);

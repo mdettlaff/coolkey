@@ -14,13 +14,16 @@ import coolkey.CoolKey;
  * Wizualizacja klawiatury, z podświetleniem następnego klawisza.
  */
 public class Keyboard {
+	private final int CANVAS_HEIGHT = 230;
 	private Canvas canvas;
 
 	private Character nextChar;
 
 	public Keyboard() {
 		canvas = new Canvas(GUI.shell, SWT.BORDER | SWT.DOUBLE_BUFFERED);
-		canvas.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1);
+		gd.heightHint = CANVAS_HEIGHT;
+		canvas.setLayoutData(gd);
 
 		canvas.addPaintListener(new PaintListener() {
 			public void paintControl(PaintEvent pe) {
@@ -35,7 +38,7 @@ public class Keyboard {
 				 * i Dvorak, więc zrób tak, żeby można było łatwo przełączać
 				 * się między tymi układami.
 				 */
-				gc.drawRoundRectangle(0, 0, 580, 229, 20, 20);
+				gc.drawRoundRectangle(0, 0, 554, 228, 20, 20);
 				if (CoolKey.getCurrentLesson().isMistakeMade()) {
 					/*
 					 * Po popełnieniu błędu przyciski podświetlają się
