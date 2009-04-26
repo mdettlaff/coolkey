@@ -57,7 +57,6 @@ public class GUI {
 			if (!display.readAndDispatch()) display.sleep();
 		}
 		// zamykanie programu
-		GUI.writingArea.close();
 		if (CoolKey.getCurrentLesson().isStarted()) {
 			CoolKey.getCurrentLesson().restart();
 		}

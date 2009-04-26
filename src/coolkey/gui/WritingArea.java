@@ -186,9 +186,4 @@ public class WritingArea {
 	public void setFocus() {
 		canvas.setFocus();
 	}
-
-	public void close() {
-		typingSound.close();
-		mistakeSound.close();
-	}
 }
