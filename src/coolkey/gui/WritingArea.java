@@ -39,8 +39,8 @@ public class WritingArea {
 	public WritingArea() {
 		canvas = new Canvas(GUI.shell, SWT.BORDER | SWT.DOUBLE_BUFFERED);
 		canvas.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		typingSound = new Sound(0);
-		mistakeSound = new Sound(1);
+		typingSound = new Sound(CoolKey.SOUND_DIRECTORY + "type.wav");
+		mistakeSound = new Sound(CoolKey.SOUND_DIRECTORY + "mistake.wav");
 
 		canvas.addKeyListener(new KeyListener() {
 			@Override

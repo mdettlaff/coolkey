@@ -11,7 +11,10 @@ import coolkey.gui.GUI;
  */
 public class CoolKey {
 
-	public static final String TXT_DIRECTORY = "data" + File.separator + "txt";
+	public static final String TXT_DIRECTORY = "data" + File.separator
+			+ "txt" + File.separator;
+	public static final String SOUND_DIRECTORY = "data" + File.separator
+			+ "sound" + File.separator;
 	public static final int MAX_CHARS_IN_LINE = 65;
 	public static final String DEFAULT_USERNAME = "(domyślny użytkownik)";
 
