@@ -12,32 +12,21 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 /**
- * Efekty dźwiękowe podczas przepisywania.
+ * Dźwięk do wielokrotnego odtwarzania.
  */
 public class Sound {
-	private static final String SND_PATH = "data" + File.separator
-			+ "sound" + File.separator;
-	private static final String TYPING_SOUND_PATH = SND_PATH + "type.wav";
-	private static final String MISTAKE_SOUND_PATH = SND_PATH + "mistake.wav";
 
 	private File soundFile;
 	private Clip sound;
 
 	/**
-	 * Utwórz nowy dźwięk do odtwarzania.
+	 * Tworzy nowy dźwięk.
 	 *
-	 * @param soundId Identyfikator dźwięku. Do wyboru są:<br>
-	 *                <code>0</code> - naciśnięcie klawisza na maszynie
-	 *                                 do pisania<br>
-	 *                <code>1</code> - błędne przepisanie znaku
+	 * @param soundFilePath Ścieżka do pliku dźwiękowego.
 	 */
-	public Sound(int soundId) {
-		if (soundId == 0) {
-			soundFile = new File(TYPING_SOUND_PATH);
-			initSound();
-		} else {
-			soundFile = new File(MISTAKE_SOUND_PATH);
-		}
+	public Sound(String soundFilePath) {
+		soundFile = new File(soundFilePath);
+		initSound();
 	}
 
 	private void initSound() {
