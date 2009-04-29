@@ -19,7 +19,7 @@ public class Utils {
 	 * Zwraca tekst zawarty w plikach tekstowych z danego katalogu w postaci
 	 * listy słów.
 	 */
-	public static List<String> getWords(String txtDirectory) {
+	public static List<String> words(String txtDirectory) {
 		File[] files = new File(txtDirectory).listFiles(new TextfileFilter());
 		List<String> corpus = new ArrayList<String>();
 		try {

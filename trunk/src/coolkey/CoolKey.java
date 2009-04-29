@@ -19,6 +19,9 @@ public class CoolKey {
 	public static final String DEFAULT_USERNAME = "(domyślny użytkownik)";
 
 	private static Persistence persistence = new Persistence();
+	private static Dictionary dictionary = new Dictionary(new File(
+			"data" + File.separator + "pl_dict.txt"));
+
 	private static List<User> users = new ArrayList<User>();
 	private static Integer currentUserIndex = 0;
 
@@ -80,6 +83,10 @@ public class CoolKey {
 
 	public static List<User> getUsers() {
 		return users;
+	}
+
+	public static Dictionary getDictionary() {
+		return dictionary;
 	}
 
 	/**
