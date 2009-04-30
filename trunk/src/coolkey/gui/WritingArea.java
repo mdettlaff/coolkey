@@ -1,5 +1,7 @@
 package coolkey.gui;
 
+import javax.sound.sampled.LineUnavailableException;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
@@ -33,14 +35,18 @@ public class WritingArea {
 	private final int LINE_HEIGHT = 44;
 
 	private Canvas canvas;
-	private Sound typingSound;
-	private Sound mistakeSound;
+	private Sound typewriter;
+	private Sound mistake;
 
 	public WritingArea() {
 		canvas = new Canvas(GUI.shell, SWT.BORDER | SWT.DOUBLE_BUFFERED);
 		canvas.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		typingSound = new Sound(CoolKey.SOUND_DIRECTORY + "type.wav");
-		mistakeSound = new Sound(CoolKey.SOUND_DIRECTORY + "mistake.wav");
+		try {
+			typewriter = new Sound(CoolKey.SOUND_DIRECTORY + "typewriter.wav");
+			mistake = new Sound(CoolKey.SOUND_DIRECTORY + "mistake.wav");
+		} catch (LineUnavailableException e) {
+			CoolKey.setSoundAvailable(false);
+		}
 
 		canvas.addKeyListener(new KeyListener() {
 			@Override
@@ -135,8 +141,9 @@ public class WritingArea {
 	public void pressKey(char c) {
 		if (!CoolKey.getCurrentLesson().isFinished()) {
 			if (c == '\r') {
-				if (CoolKey.getUser().getConfig().isSoundOn()) {
-					typingSound.play();
+				if (CoolKey.isSoundAvailable()
+						&& CoolKey.getUser().getConfig().isSoundOn()) {
+					typewriter.play();
 				}
 				CoolKey.getCurrentLesson().typeEnter();
 				if (CoolKey.getCurrentLesson().isFinished()) {
@@ -146,8 +153,9 @@ public class WritingArea {
 					new ResultsMessage(finalResults);
 				}
 			} else if (c == SWT.BS) {
-				if (CoolKey.getUser().getConfig().isSoundOn()) {
-					typingSound.play();
+				if (CoolKey.isSoundAvailable()
+						&& CoolKey.getUser().getConfig().isSoundOn()) {
+					typewriter.play();
 				}
 				CoolKey.getCurrentLesson().typeBackspace();
 			} else if (!Character.isISOControl(c)) {
@@ -155,17 +163,20 @@ public class WritingArea {
 					GUI.graphs.reset(); // zaczynamy przepisywanie
 				}
 				if (CoolKey.getCurrentLesson().typeChar(c)) {
-					if (CoolKey.getUser().getConfig().isSoundOn()) {
-						typingSound.play();
+					if (CoolKey.isSoundAvailable()
+							&& CoolKey.getUser().getConfig().isSoundOn()) {
+						typewriter.play();
 					}
 				} else {
-					if (CoolKey.getUser().getConfig().isSoundOn()) {
-						mistakeSound.play();
+					if (CoolKey.isSoundAvailable()
+							&& CoolKey.getUser().getConfig().isSoundOn()) {
+						mistake.play();
 					}
 				}
 			}
 			canvas.redraw();
-			if (CoolKey.getCurrentLesson().isPaused()) {
+			if (!Character.isISOControl(c)
+					&& CoolKey.getCurrentLesson().isPaused()) {
 				CoolKey.getCurrentLesson().pauseUnpause();
 			}
 			GUI.buttonBar.refresh();

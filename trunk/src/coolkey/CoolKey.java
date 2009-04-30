@@ -21,6 +21,7 @@ public class CoolKey {
 	private static Persistence persistence = new Persistence();
 	private static Dictionary dictionary = new Dictionary(new File(
 			"data" + File.separator + "pl_dict.txt"));
+	private static boolean isSoundAvailable = true;
 
 	private static List<User> users = new ArrayList<User>();
 	private static Integer currentUserIndex = 0;
@@ -87,6 +88,17 @@ public class CoolKey {
 
 	public static Dictionary getDictionary() {
 		return dictionary;
+	}
+
+	/**
+	 * Czy karta dźwiękowa jest dostępna.
+	 */
+	public static boolean isSoundAvailable() {
+		return isSoundAvailable;
+	}
+
+	public static void setSoundAvailable(boolean isSoundAvailable) {
+		CoolKey.isSoundAvailable = isSoundAvailable;
 	}
 
 	/**
