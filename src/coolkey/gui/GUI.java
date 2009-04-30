@@ -1,8 +1,10 @@
 package coolkey.gui;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
 
@@ -48,6 +50,15 @@ public class GUI {
 		keyboard = new Keyboard();
 
 		shell.open();
+
+		if (!CoolKey.isSoundAvailable()) {
+			MessageBox messageBox = new MessageBox(GUI.shell,
+					SWT.ICON_WARNING);
+			messageBox.setText("Ostrzeżenie");
+			messageBox.setMessage("Karta dźwiękowa jest niedostępna.\n\n"
+					+ "Sprawdź czy nie jest ona używana przez inny program.");
+			messageBox.open();
+		}
 
 		if (CoolKey.getUsers().size() > 1) {
 			new ChangeUser(true).open();
