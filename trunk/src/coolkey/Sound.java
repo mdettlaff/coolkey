@@ -68,7 +68,7 @@ public class Sound implements Runnable {
 		try {
 			Clip clip = sound;
 			clip.loop(0);
-			Thread.sleep(durationInMilliseconds + 100);
+			Thread.sleep(durationInMilliseconds + 1000);
 			clip.close();
 			clip = null;
 		} catch (InterruptedException e) {

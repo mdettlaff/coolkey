@@ -135,6 +135,7 @@ public class MenuBar {
 		});
 		exitMenuItem.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event e) {
+				CoolKey.persistState();
 				System.exit(0);
 			}
 		});
