@@ -19,6 +19,7 @@ public class Lesson implements Serializable {
 	private Date timeFinished;
 	private boolean isPaused;
 	private List<Date> timesPaused = new ArrayList<Date>();
+	private boolean isBlockedAtMistake = false;
 
 	/**
 	 * Nowe ćwiczenie polegające na przepisaniu podanego tekstu.
@@ -67,6 +68,18 @@ public class Lesson implements Serializable {
 			return false;
 		}
 		int last = writtenLines.size() - 1;
+		if (c == ' '
+			&& CoolKey.getUser().getConfig().getLineBreakers().contains(" ")
+			&& writtenLines.get(last).length()
+				== textLines.get(last).length()) {
+			// wymuś przejście do nowej linii
+			String breakers = new String(
+					CoolKey.getUser().getConfig().getLineBreakers());
+			CoolKey.getUser().getConfig().setLineBreakers(breakers + '\n');
+			typeEnter();
+			CoolKey.getUser().getConfig().setLineBreakers(breakers);
+			return true;
+		}
 		char correctChar;
 		char incorrectChar;
 		if (writtenLines.get(last).length() < textLines.get(last).length() &&
@@ -82,24 +95,45 @@ public class Lesson implements Serializable {
 			}
 			typedCorrectly = false;
 		}
-		writtenLines.set(last, writtenLines.get(last) + correctChar);
-		mistakes.set(last, mistakes.get(last) + incorrectChar);
-		if (writtenLines.get(last).length() > mistakesShadow.get(last).length()) {
-			mistakesShadow.get(last).append(incorrectChar);
-		} else if (writtenLines.get(last).length() > textLines.get(last).length()
-				|| textLines.get(last).charAt(writtenLines.get(last).length() - 1) != c) {
-			int cIndex = writtenLines.get(last).length() - 1;
-			mistakesShadow.get(last).replace(cIndex, cIndex + 1, c + "");
+		if (CoolKey.getUser().getConfig().isContinueAtMistakes()) {
+			writtenLines.set(last, writtenLines.get(last) + correctChar);
+			mistakes.set(last, mistakes.get(last) + incorrectChar);
+			if (writtenLines.get(last).length() > mistakesShadow.get(last).length()) {
+				mistakesShadow.get(last).append(incorrectChar);
+			} else if (writtenLines.get(last).length() > textLines.get(last).length()
+					|| textLines.get(last).charAt(writtenLines.get(last).length() - 1) != c) {
+				int cIndex = writtenLines.get(last).length() - 1;
+				mistakesShadow.get(last).replace(cIndex, cIndex + 1, c + "");
+			}
+			isBlockedAtMistake = false;
+		} else {
+			if (typedCorrectly) {
+				writtenLines.set(last, writtenLines.get(last) + correctChar);
+				mistakes.set(last, mistakes.get(last) + incorrectChar);
+				isBlockedAtMistake = false;
+			} else {
+				isBlockedAtMistake = true;
+			}
+			if (writtenLines.get(last).length() > mistakesShadow.get(last).length()) {
+				mistakesShadow.get(last).append(incorrectChar);
+			} else if (!typedCorrectly) {
+				int cIndex = writtenLines.get(last).length();
+				mistakesShadow.get(last).replace(cIndex, cIndex + 1, incorrectChar + "");
+			}
 		}
 		return typedCorrectly;
 	}
 
-	public void typeEnter() {
+	public boolean typeEnter() {
 		if (timeStarted == null || timeFinished != null) {
-			return;
+			return false;
+		}
+		if (!CoolKey.getUser().getConfig().getLineBreakers().contains("\n")) {
+			return false;
 		}
 		int last = writtenLines.size() - 1;
 		if (writtenLines.get(last).length() >= textLines.get(last).length()) {
+			isBlockedAtMistake = false;
 			if (writtenLines.size() < textLines.size()) {
 				writtenLines.add("");
 				mistakes.add("");
@@ -109,6 +143,9 @@ public class Lesson implements Serializable {
 			} else {
 				timeFinished = new Date();
 			}
+			return true;
+		} else {
+			return false;
 		}
 	}
 
@@ -126,6 +163,7 @@ public class Lesson implements Serializable {
 			writtenLines.remove(writtenLines.size() - 1);
 			mistakes.remove(mistakes.size() - 1);
 		}
+		isBlockedAtMistake = false;
 	}
 
 	/**
@@ -142,6 +180,7 @@ public class Lesson implements Serializable {
 		mistakes.add("");
 		mistakesShadow.add(new StringBuilder());
 		isPaused = false;
+		isBlockedAtMistake = false;
 	}
 
 	/**
@@ -253,8 +292,11 @@ public class Lesson implements Serializable {
 		int last = writtenLines.size() - 1;
 		if (writtenLines.get(last).length() < textLines.get(last).length()) {
 			return textLines.get(last).charAt(writtenLines.get(last).length());
-		} else {
+		} else if (CoolKey.getUser().getConfig().getLineBreakers()
+				.contains("\n")) {
 			return '\r';
+		} else {
+			return ' ';
 		}
 	}
 
@@ -265,6 +307,10 @@ public class Lesson implements Serializable {
 	 *         <code>false</code> w przeciwnym wypadku.
 	 */
 	public boolean isMistakeMade() {
+		if (!CoolKey.getUser().getConfig().isContinueAtMistakes()
+				&& isBlockedAtMistake) {
+			return true;
+		}
 		for (String line : CoolKey.getCurrentLesson().getMistakes()) {
 			for (int i=0; i < line.length(); i++) {
 				if (line.charAt(i) != ' ') {
