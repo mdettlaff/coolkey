@@ -231,7 +231,7 @@ public class Lesson implements Serializable {
 					if (writtenLines.get(j).charAt(i) != ' ') {
 						line += writtenLines.get(j).charAt(i);
 					} else {
-						line += '_'; // tak zaznacz poprawioną spację
+						line += '\u00A0'; // tak zaznacz poprawioną spację
 					}
 				} else {
 					line += ' ';
