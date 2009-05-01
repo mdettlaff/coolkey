@@ -56,7 +56,7 @@ public class GUI {
 					SWT.ICON_WARNING);
 			messageBox.setText("Ostrzeżenie");
 			messageBox.setMessage("Karta dźwiękowa jest niedostępna.\n\n"
-					+ "Sprawdź czy nie jest ona używana przez inny program.");
+					+ "Sprawdź czy nie jest ona zajęta przez inny program.");
 			messageBox.open();
 		}
 

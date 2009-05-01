@@ -141,20 +141,23 @@ public class WritingArea {
 	public void pressKey(char c) {
 		if (!CoolKey.getCurrentLesson().isFinished()) {
 			if (c == '\r') {
-				if (CoolKey.isSoundAvailable()
-						&& CoolKey.getUser().getConfig().isSoundOn()) {
-					typewriter.play();
-				}
-				CoolKey.getCurrentLesson().typeEnter();
-				if (CoolKey.getCurrentLesson().isFinished()) {
-					LessonResults finalResults = CoolKey.getCurrentLesson().getResults();
-					GUI.graphs.addFinalResults(finalResults);
-					GUI.graphs.refresh();
-					new ResultsMessage(finalResults);
+				if (CoolKey.getCurrentLesson().typeEnter()) {
+					if (CoolKey.isSoundAvailable()
+							&& CoolKey.getUser().getConfig().isSoundOn()
+							&& CoolKey.getCurrentLesson().isStarted()) {
+						typewriter.play();
+					}
+				} else {
+					if (CoolKey.isSoundAvailable()
+							&& CoolKey.getUser().getConfig().isSoundOn()
+							&& CoolKey.getCurrentLesson().isStarted()) {
+						mistake.play();
+					}
 				}
 			} else if (c == SWT.BS) {
 				if (CoolKey.isSoundAvailable()
-						&& CoolKey.getUser().getConfig().isSoundOn()) {
+						&& CoolKey.getUser().getConfig().isSoundOn()
+						&& CoolKey.getCurrentLesson().isStarted()) {
 					typewriter.play();
 				}
 				CoolKey.getCurrentLesson().typeBackspace();
@@ -173,6 +176,13 @@ public class WritingArea {
 						mistake.play();
 					}
 				}
+			}
+			if (CoolKey.getCurrentLesson().isFinished()) {
+				LessonResults finalResults =
+					CoolKey.getCurrentLesson().getResults();
+				GUI.graphs.addFinalResults(finalResults);
+				GUI.graphs.refresh();
+				new ResultsMessage(finalResults);
 			}
 			canvas.redraw();
 			if (!Character.isISOControl(c)
