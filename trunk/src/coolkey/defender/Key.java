@@ -28,6 +28,20 @@ public class Key implements KeyListener {
 				}
 				break;
 			case Engine.STATE_GAME:
+				switch(ke.keyCode) {
+					case KEY_ENTER:
+						this.engine.gameWordEnter();
+						break;
+					case SWT.BS:
+						this.engine.gameWordDel();
+						break;
+					case SWT.ESC:
+						this.engine.escapeToMenu();
+						break;
+					default:
+						this.engine.gameWordAdd(ke.character);
+				}
+				break;
 			case Engine.STATE_RESULT:
 			case Engine.STATE_TOP10:
 			case Engine.STATE_HELP:
