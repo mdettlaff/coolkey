@@ -11,6 +11,10 @@ public class MouseMove implements MouseMoveListener {
 	}
 
 	public void mouseMove(MouseEvent me) {
-
+		switch(this.engine.getState()) {
+		case Engine.STATE_MENU:
+			this.engine.mouseMove(me.x, me.y);
+			break;
+		}
 	}
 }

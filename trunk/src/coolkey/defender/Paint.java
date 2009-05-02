@@ -2,6 +2,9 @@ package coolkey.defender;
 
 import java.io.File;
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
@@ -10,6 +13,7 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 
 public class Paint implements PaintListener {
@@ -17,22 +21,26 @@ public class Paint implements PaintListener {
 	private Engine engine;
 	private String texturePath;
 	private Image bg;
-	private Image logo;
-	private Menu menu;
+	private Image defender;
 	private Image panel;
 	private Image life;
 	private Image bomb;
+	private List<Image> menu;
 	
 	public Paint(Display display, Engine engine) {
 		this.display = display;
 		this.engine = engine;
 		this.texturePath = "data" + File.separator + "texture" + File.separator;
 		this.bg = new Image(this.display, this.texturePath + "background.png");
-		this.logo = new Image(this.display, this.texturePath + "logo.png");
-		this.menu = new Menu(this.display, this.texturePath);
+		this.defender = new Image(this.display, this.texturePath + "defender.png");
 		this.panel = new Image(this.display, this.texturePath + "panel.png");
 		this.life = new Image(this.display, this.texturePath + "life.png");
 		this.bomb = new Image(this.display, this.texturePath + "bomb.png");
+		this.menu = new ArrayList<Image>();
+		this.menu.add(Engine.MENU_CONTINUE, new Image(this.display, this.texturePath + "menu_continue.png"));
+		this.menu.add(Engine.MENU_NEW, new Image(this.display, this.texturePath + "menu_new.png"));
+		this.menu.add(Engine.MENU_TOP10, new Image(this.display, this.texturePath + "menu_top10.png"));
+		this.menu.add(Engine.MENU_HELP, new Image(this.display, this.texturePath + "menu_help.png"));
 	}
 	
 	public void paintControl(PaintEvent pe) {
@@ -41,7 +49,7 @@ public class Paint implements PaintListener {
 		pe.gc.drawImage(this.bg, 0, 0);
 		switch(this.engine.getState()) {
 			case Engine.STATE_MENU:
-				pe.gc.drawImage(this.logo, 80, 20);
+				pe.gc.drawImage(this.defender, 80, 20);
 				if(!this.engine.isNewGame())
 					this.drawMenuItem(pe.gc, Engine.MENU_CONTINUE);
 				this.drawMenuItem(pe.gc, Engine.MENU_NEW);
@@ -77,27 +85,17 @@ public class Paint implements PaintListener {
 		pe.gc.dispose();
 	}
 	
-	private void drawMenuItem(GC gc, int menuID) {
-		MenuItem mi = this.menu.getMenu(menuID);
-		if(mi.getMenuID() == this.engine.getMenuSelectId())
-			gc.drawImage(mi.getImg(),
-					mi.getImgSelectX(),
-					mi.getImgSelectY(),
-					mi.getImgWidth(),
-					mi.getImgHeight(),
-					mi.getXLocation(),
-					mi.getYLocation(),
-					mi.getImgWidth(),
-					mi.getImgHeight());
-		gc.drawImage(mi.getImg(),
-				mi.getImgX(),
-				mi.getImgY(),
-				mi.getImgWidth(),
-				mi.getImgHeight(),
-				mi.getXLocation(),
-				mi.getYLocation(),
-				mi.getImgWidth(),
-				mi.getImgHeight());
+	private void drawMenuItem(GC gc, int id) {
+		Rectangle size = this.engine.getMenu(id);
+		if(size == null)
+			return;
+		if(id == this.engine.getMenuSelectId())
+			gc.drawImage(this.menu.get(id),
+					size.width, 0, size.width, size.height,
+					size.x, size.y, size.width, size.height);
+		gc.drawImage(this.menu.get(id),
+				0, 0, size.width, size.height,
+				size.x, size.y, size.width, size.height);
 	}
 	
 	private void drawBombs(GC gc) {
@@ -111,7 +109,7 @@ public class Paint implements PaintListener {
 			gc.drawImage(this.bomb, b.getX(), b.getY());
 			Point wordSize = gc.stringExtent(b.getWord());
 			int xLabel = b.getX() - (wordSize.x - 16)/2;
-			int yLabel = b.getY() - (wordSize.y - 46)/2;
+			int yLabel = b.getY() - (wordSize.y - 54)/2;
 			gc.fillRectangle(xLabel, yLabel, wordSize.x + 6, wordSize.y + 2);
 			gc.setForeground(this.display.getSystemColor(SWT.COLOR_GRAY));
 			gc.drawRectangle(xLabel, yLabel, wordSize.x + 6, wordSize.y + 2);
