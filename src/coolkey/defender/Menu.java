@@ -12,17 +12,13 @@ public class Menu {
 	public Menu(Display dispaly, String texturePath) {
 		this.menu = new ArrayList<MenuItem>();
 		MenuItem menuContinue = new MenuItem(Engine.MENU_CONTINUE, 192, 150,
-				new Image(dispaly, texturePath + "menu_continue.png"),
-				new Image(dispaly, texturePath + "menu_continue_select.png"));
+				new Image(dispaly, texturePath + "menu_continue.png"));
 		MenuItem menuNew = new MenuItem(Engine.MENU_NEW, 192, 214,
-				new Image(dispaly, texturePath + "menu_new.png"),
-				new Image(dispaly, texturePath + "menu_new_select.png"));
+				new Image(dispaly, texturePath + "menu_new.png"));
 		MenuItem menuTop10 = new MenuItem(Engine.MENU_TOP10, 192, 278,
-				new Image(dispaly, texturePath + "menu_top10.png"),
-				new Image(dispaly, texturePath + "menu_top10_select.png"));
+				new Image(dispaly, texturePath + "menu_top10.png"));
 		MenuItem menuHelp = new MenuItem(Engine.MENU_HELP, 192, 342,
-				new Image(dispaly, texturePath + "menu_help.png"),
-				new Image(dispaly, texturePath + "menu_help_select.png"));
+				new Image(dispaly, texturePath + "menu_help.png"));
 		this.menu.add(menuContinue.getMenuID(), menuContinue);
 		this.menu.add(menuNew.getMenuID(), menuNew);
 		this.menu.add(menuTop10.getMenuID(), menuTop10);

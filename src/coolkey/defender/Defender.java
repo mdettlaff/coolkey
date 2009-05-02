@@ -12,11 +12,13 @@ public class Defender {
 	
 	public Defender(Shell shell) {
 		this.shell = shell;
-		this.container = new Canvas(this.shell, SWT.NO_SCROLL | SWT.NO_BACKGROUND);
+		this.container = new Canvas(this.shell, SWT.NO_SCROLL | SWT.NO_BACKGROUND | SWT.DOUBLE_BUFFERED);
 		this.container.setSize(Engine.WIDTH, Engine.HEIGHT);
 		this.engine = new Engine(this.shell.getDisplay(), this.container);
 		this.container.addPaintListener(new Paint(this.shell.getDisplay(), this.engine));
 		this.container.addKeyListener(new Key(this.engine));
+		this.container.addMouseListener(new Mouse(this.engine));
+		this.container.addMouseMoveListener(new MouseMove(this.engine));
 	}
 
 	public Point getSize() {

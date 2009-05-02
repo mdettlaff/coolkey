@@ -4,35 +4,33 @@ import org.eclipse.swt.graphics.Image;
 
 public class MenuItem {
 	private int menuID;
-	private int x;
-	private int y;
+	private int xLocation;
+	private int yLocation;
 	private	 Image img;
-	private	 Image imgSelect;
 	
-	public MenuItem(int menuId, int x, int y, Image img, Image imgSelect) {
+	public MenuItem(int menuId, int xLocation, int yLocation, Image img) {
 		this.menuID = menuId;
-		this.x = x;
-		this.y = y;
+		this.xLocation = xLocation;
+		this.yLocation = yLocation;
 		this.img = img;
-		this.imgSelect = imgSelect;
 	}
 
-	public int getX() {
-		return this.x;
+	public int getXLocation() {
+		return this.xLocation;
 	}
 
-	public void setX(int x) {
-		this.x = x;
+	public void setXLocation(int xLocation) {
+		this.xLocation = xLocation;
 	}
 
-	public int getY() {
-		return this.y;
+	public int getYLocation() {
+		return this.yLocation;
 	}
 
-	public void setY(int y) {
-		this.y = y;
+	public void setYLocation(int yLocation) {
+		this.yLocation = yLocation;
 	}
-
+	
 	public Image getImg() {
 		return this.img;
 	}
@@ -41,15 +39,31 @@ public class MenuItem {
 		this.img = img;
 	}
 
-	public Image getImgSelect() {
-		return imgSelect;
-	}
-
-	public void setImgSelect(Image imgSelect) {
-		this.imgSelect = imgSelect;
-	}
-
 	public int getMenuID() {
 		return this.menuID;
+	}
+	
+	public int getImgX() {
+		return 0;
+	}
+	
+	public int getImgY() {
+		return 0;
+	}
+	
+	public int getImgSelectX() {
+		return this.img.getBounds().width / 2;
+	}
+	
+	public int getImgSelectY() {
+		return 0;
+	}
+	
+	public int getImgWidth() {
+		return this.img.getBounds().width / 2;
+	}
+	
+	public int getImgHeight() {
+		return this.img.getBounds().height;
 	}
 }
