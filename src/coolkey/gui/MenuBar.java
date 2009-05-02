@@ -5,16 +5,23 @@ import java.io.IOException;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Spinner;
 
 import coolkey.CoolKey;
 import coolkey.Lesson;
+import coolkey.Markov;
 import coolkey.Utils;
 import coolkey.defender.Defender;
 import coolkey.defender.Engine;
@@ -174,6 +181,72 @@ public class MenuBar {
 						messageBox.open();
 					}
 				}
+			}
+		});
+		// automatycznie wygenerowany tekst
+		autoTextItem.addListener(SWT.Selection,  new Listener() {
+			public void handleEvent(Event event) {
+				final Shell shell = new Shell(GUI.shell, SWT.DIALOG_TRIM
+						| SWT.APPLICATION_MODAL);
+				shell.setText("Autotekst");
+				shell.setLayout(new GridLayout(2, false));
+
+				Composite settings = new Composite(shell, SWT.NONE);
+				settings.setLayoutData(new GridData(SWT.CENTER, SWT.FILL, false, false, 2, 1));
+				settings.setLayout(new GridLayout(2, false));
+
+				Label minLines = new Label(settings, SWT.NONE);
+				minLines.setText("Ilość linii (minimum):");
+				final Spinner spinner = new Spinner(settings, SWT.BORDER);
+				spinner.setMinimum(1);
+				spinner.setMaximum(100);
+				spinner.setSelection(10);
+				spinner.setIncrement(1);
+				spinner.setPageIncrement(5);
+
+				Composite buttons = new Composite(shell, SWT.NONE);
+				buttons.setLayoutData(new GridData(SWT.CENTER, SWT.FILL, false, false, 2, 1));
+				buttons.setLayout(new GridLayout(2, false));
+
+				Composite left = new Composite(buttons, SWT.NONE);
+				left.setLayout(new GridLayout());
+				Composite right = new Composite(buttons, SWT.NONE);
+				right.setLayout(new GridLayout());
+
+				Button confirm = new Button(left, SWT.PUSH);
+				confirm.setLayoutData(new GridData(SWT.CENTER, SWT.FILL, false, true));
+				confirm.setText(" Wygeneruj ");
+				Button cancel = new Button(right, SWT.PUSH);
+				cancel.setLayoutData(new GridData(SWT.CENTER, SWT.FILL, false, true));
+				cancel.setText(" Anuluj ");
+
+				Listener generate = new Listener() {
+					@Override
+					public void handleEvent(Event e) {
+						int minGenTextLines = spinner.getSelection();
+						int minGenTextLength = (minGenTextLines - 1) * (
+								CoolKey.MAX_CHARS_IN_LINE - 2);
+						CoolKey.setCurrentLesson(new Lesson(
+								Markov.generateMarkovChain(
+										Utils.words(
+												CoolKey.TEXT_DIRECTORY),
+												minGenTextLength)));
+						GUI.refresh();
+						shell.dispose();
+					}
+				};
+				confirm.addListener(SWT.Selection, generate);
+				spinner.addListener(SWT.DefaultSelection, generate);
+
+				cancel.addListener(SWT.Selection, new Listener() {
+					@Override
+					public void handleEvent(Event e) {
+						shell.close();
+					}
+				});
+
+				shell.pack();
+				shell.open();
 			}
 		});
 		// rozpocznij grę
