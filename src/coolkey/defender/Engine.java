@@ -9,6 +9,7 @@ import java.util.Random;
 
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Display;
 
@@ -46,7 +47,9 @@ public class Engine implements Runnable {
 	
 	private boolean newGame;
 	private int state;
+	
 	private int menuSelectId;
+	private List<Rectangle> menu;
 	
 	private int gameLevel;
 	private int gameLife;
@@ -63,53 +66,86 @@ public class Engine implements Runnable {
 		this.newGame = true;
 		this.state = STATE_MENU;
 		this.menuSelectId = MENU_NEW;
+		this.menu = new ArrayList<Rectangle>();
+		this.menu.add(MENU_CONTINUE, new Rectangle(192, 150, 256, 64));
+		this.menu.add(MENU_NEW, new Rectangle(192, 214, 256, 64));
+		this.menu.add(MENU_TOP10, new Rectangle(192, 278, 256, 64));
+		this.menu.add(MENU_HELP, new Rectangle(192, 342, 256, 64));
 		this.gameNew();
 	}
 	
-	public synchronized double getFps() {
+	public double getFps() {
 		return this.fps;
 	}
 
-	public synchronized boolean showFps() {
+	public boolean showFps() {
 		return this.showFps;
 	}
 	
-	public synchronized void showFps(boolean showFps) {
+	public void showFps(boolean showFps) {
 		this.showFps = showFps;
 	}
 	
-	public synchronized int getState() {
+	public int getState() {
 		return this.state;
 	}
 	
-	public synchronized boolean isNewGame() {
+	public boolean isNewGame() {
 		return this.newGame;
 	}
-
-	public synchronized int getMenuSelectId() {
+	
+	public int getMenuSelectId() {
 		return this.menuSelectId;
 	}
 	
-	public synchronized void nextMenuItem() {
-		if(this.menuSelectId < MENU_HELP)
-			this.menuSelectId++;
+	public List<Rectangle> getMenu() {
+		return this.menu;
 	}
 	
-	public synchronized void prevMenuItem() {
-		if(this.newGame) {
-			if(this.menuSelectId > MENU_NEW)
-				this.menuSelectId--;
-		}
-		else {
-			if(this.menuSelectId > MENU_CONTINUE)
-				this.menuSelectId--;
-		}
+	public Rectangle getMenu(int id) {
+		return this.menu.get(id);
 	}
 	
-	public synchronized void enterMenuItem() {
+	public void keyNext() {
 		switch(this.menuSelectId) {
 			case MENU_CONTINUE:
-				this.state = STATE_GAME;
+			case MENU_NEW:
+			case MENU_TOP10:
+				break;
+			case MENU_HELP:
+				return;
+			default:
+				this.menuSelectId = MENU_HELP;
+				return;
+		}
+		this.menuSelectId++;
+	}
+	
+	public void keyPrev() {
+		switch(this.menuSelectId) {
+			case MENU_CONTINUE:
+				return;
+			case MENU_NEW:
+				if(this.newGame)
+					return;
+			case MENU_TOP10:
+			case MENU_HELP:
+				break;
+			default:
+				if(this.newGame)
+					this.menuSelectId = MENU_NEW;
+				else
+					this.menuSelectId = MENU_CONTINUE;
+				return;	
+		}
+		this.menuSelectId--;
+	}
+	
+	public void keyEnter() {
+		switch(this.menuSelectId) {
+			case MENU_CONTINUE:
+				if(!this.newGame)
+					this.state = STATE_GAME;
 				break;
 			case MENU_NEW:
 				this.gameNew();
@@ -125,60 +161,107 @@ public class Engine implements Runnable {
 		}
 	}
 	
-	public synchronized void escapeToMenu() {
+	public void keyEsc() {
 		if(!this.newGame && this.state == STATE_GAME)
 			this.menuSelectId = MENU_CONTINUE;
 		this.state = STATE_MENU;
 	}
 	
-	public synchronized int gameGetLife() {
+	public void mouseUp(int x, int y) {
+		Rectangle size = this.menu.get(MENU_CONTINUE);
+		if(size.x > x || size.x + size.width < x)
+			return;
+		int select = (y - size.y) / size.height;
+		if(select != this.menuSelectId)
+			return;
+		switch(select) {
+			case MENU_CONTINUE:
+				if(!this.newGame)
+					this.state = STATE_GAME;
+				break;
+			case MENU_NEW:
+				this.gameNew();
+				this.newGame = false;
+				this.state = STATE_GAME;
+				break;
+			case MENU_TOP10:
+				this.state = STATE_TOP10;
+				break;
+			case MENU_HELP:
+				this.state = STATE_HELP;
+				break;
+		}
+	}
+	
+	public void mouseMove(int x, int y) {
+		Rectangle size = this.menu.get(MENU_CONTINUE);
+		if(size.x > x || size.x + size.width < x)
+			return;
+		switch((y - size.y) / size.height) {
+			case MENU_CONTINUE:
+				if(!this.newGame)
+					this.menuSelectId = MENU_CONTINUE;
+				break;
+			case MENU_NEW:
+				this.menuSelectId = MENU_NEW;
+				break;
+			case MENU_TOP10:
+				this.menuSelectId = MENU_TOP10;
+				break;
+			case MENU_HELP:
+				this.menuSelectId = MENU_HELP;
+				break;
+		}
+	}
+	
+	public int gameGetLife() {
 		return this.gameLife;
 	}
 	
-	public synchronized int gameGetLevel() {
+	public int gameGetLevel() {
 		return this.gameLevel;
 	}
 	
-	public synchronized int gameGetScore() {
+	public int gameGetScore() {
 		return this.gameScore;
 	}
 	
-	public synchronized long gameGetTime() {
+	public long gameGetTime() {
 		return this.gameTime;
 	}
 	
-	public synchronized String gameGetWord() {
+	public String gameGetWord() {
 		return this.gameWord;
 	}
 	
-	public synchronized Collection<Bomb> gameGetBombs() {
+	public Collection<Bomb> gameGetBombs() {
 		return this.gameBombs.values();
 	}
 	
-	private synchronized int gameHowBombs() {
+	private int gameHowBombs() {
 		return this.gameLevel * 2 + 1;
 	}
 	
-	private synchronized int gameHowFast() {
+	private int gameHowFast() {
 		return this.gameLevel * 5 + 10;
 	}
 	
-	private synchronized int gameHowScore() {
+	private int gameHowScore() {
 		return this.gameLevel^2 + 19 * this.gameLevel - 5;
 	}
 	
-	public synchronized void gameWordAdd(char c) {
+	public void gameWordAdd(char c) {
 		String specialChar = ",./;\'[]<>?:\"{}!@#$%^&*()_+|\\-=";
 		if(Character.isLetterOrDigit(c) || specialChar.indexOf(c) != -1)
 			this.gameWord = this.gameWord + c;
 	}
 	
-	public synchronized void gameWordDel() {
+	public void gameWordDel() {
 		if(this.gameWord.length() > 0)
 			this.gameWord = this.gameWord.substring(0, this.gameWord.length() - 1);
 	}
 	
-	public synchronized void gameWordEnter() {
+	public void gameWordEnter() {
 		if(this.gameWord.length() > 0) {
 			if(this.gameBombs.containsKey(this.gameWord)) {
 				this.gameScore++;
@@ -188,7 +271,7 @@ public class Engine implements Runnable {
 		}
 	}
 	
-	private synchronized void gameNew() {
+	private void gameNew() {
 		this.gameLife = GAME_LIFE_MAX;
 		this.gameScore = 0;
 		this.gameTime = 0;
@@ -197,7 +280,7 @@ public class Engine implements Runnable {
 		this.gameBombs = new HashMap<String, Bomb>();
 	}
 	
-	private synchronized void gameCreateBombs() {
+	private void gameCreateBombs() {
 		Random rand = new Random();
 		GC gc = new GC(new Image(this.display, 1, 1));
 		while(this.gameBombs.size() < this.gameHowBombs()) {
@@ -210,7 +293,7 @@ public class Engine implements Runnable {
 		}
 	}
 	
-	private synchronized void game() {
+	private void game() {
 		if(this.gameLevel < GAME_LEVEL_MAX) {
 			if(this.gameScore > this.gameHowScore())
 				this.gameLevel++;
@@ -233,7 +316,7 @@ public class Engine implements Runnable {
 		}
 	}
 	
-	public synchronized void run() {
+	public void run() {
 		long timeStart = System.currentTimeMillis();
 		int time = (int)(timeStart - this.timeLast);
 		if(time < 1000) {
@@ -254,12 +337,12 @@ public class Engine implements Runnable {
 		this.display.timerExec((time < 0 ? 0 : time), this);
 	}
 	
-	public synchronized void start() {
+	public void start() {
 		this.countFrame = 0;
 		this.timeLast = System.currentTimeMillis();
 		this.display.timerExec(0, this);
 	}
-	public synchronized void stop() {
+	public void stop() {
 		if(!this.display.isDisposed())
 			this.display.timerExec(-1, this);
 	}

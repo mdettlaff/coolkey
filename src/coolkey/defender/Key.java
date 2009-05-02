@@ -17,13 +17,13 @@ public class Key implements KeyListener {
 			case Engine.STATE_MENU:
 				switch(ke.keyCode) {
 					case SWT.ARROW_UP:
-						this.engine.prevMenuItem();
+						this.engine.keyPrev();
 						break;
 					case SWT.ARROW_DOWN:
-						this.engine.nextMenuItem();
+						this.engine.keyNext();
 						break;
 					case KEY_ENTER:
-						this.engine.enterMenuItem();
+						this.engine.keyEnter();
 						break;
 				}
 				break;
@@ -36,7 +36,7 @@ public class Key implements KeyListener {
 						this.engine.gameWordDel();
 						break;
 					case SWT.ESC:
-						this.engine.escapeToMenu();
+						this.engine.keyEsc();
 						break;
 					default:
 						this.engine.gameWordAdd(ke.character);
@@ -46,7 +46,7 @@ public class Key implements KeyListener {
 			case Engine.STATE_TOP10:
 			case Engine.STATE_HELP:
 				if(ke.keyCode == SWT.ESC)
-						this.engine.escapeToMenu();
+						this.engine.keyEsc();
 				break;
 		}
 	}
