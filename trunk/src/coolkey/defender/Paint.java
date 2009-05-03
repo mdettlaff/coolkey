@@ -16,6 +16,8 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 
+import coolkey.CoolKey;
+
 public class Paint implements PaintListener {
 	private Display display;
 	private Engine engine;
@@ -25,6 +27,8 @@ public class Paint implements PaintListener {
 	private Image panel;
 	private Image life;
 	private Image bomb;
+	private Image top10;
+	private Image result;
 	private List<Image> menu;
 	
 	public Paint(Display display, Engine engine) {
@@ -36,6 +40,8 @@ public class Paint implements PaintListener {
 		this.panel = new Image(this.display, this.texturePath + "panel.png");
 		this.life = new Image(this.display, this.texturePath + "life.png");
 		this.bomb = new Image(this.display, this.texturePath + "bomb.png");
+		this.top10 = new Image(this.display, this.texturePath + "top10.png");
+		this.result = new Image(this.display, this.texturePath + "result.png");
 		this.menu = new ArrayList<Image>();
 		this.menu.add(Engine.MENU_CONTINUE, new Image(this.display, this.texturePath + "menu_continue.png"));
 		this.menu.add(Engine.MENU_NEW, new Image(this.display, this.texturePath + "menu_new.png"));
@@ -66,10 +72,14 @@ public class Paint implements PaintListener {
 				this.drawScore(pe.gc);
 				break;
 			case Engine.STATE_RESULT:
-				pe.gc.drawString("Result - ESC to exit", 50, 50, true);
+				pe.gc.drawImage(this.result, 170, 50);
+				this.drawResult(pe.gc);
+				pe.gc.drawString("ESC - Powrót do menu", 20, 450, true);
 				break;
 			case Engine.STATE_TOP10:
-				pe.gc.drawString("Top10 - ESC to exit", 50, 50, true);
+				pe.gc.drawImage(this.top10, 95, 50);
+				this.drawTop10(pe.gc);
+				pe.gc.drawString("ESC - Powrót do menu", 20, 450, true);
 				break;
 			case Engine.STATE_HELP:
 				pe.gc.drawString("Help - ESC to exit", 50, 50, true);
@@ -168,5 +178,63 @@ public class Paint implements PaintListener {
 	private void drawScore(GC gc) {
 		String scoreString = String.format("Punkty: %1$04d", this.engine.gameGetScore());
 		gc.drawString(scoreString, Engine.WIDTH - 20 - gc.stringExtent(scoreString).x, 451, true);
+	}
+	
+	private void drawTop10(GC gc) {
+		final int x_pos = 140;
+		final int x_score = 230;
+		final int x_time = 345;
+		final int x_level = 460;
+		final int y = 145;
+		List<Score> highScore = CoolKey.getUser().getHighscore();
+		String strPos = "Poz.";
+		String strScore = "Punkty";
+		String strTime = "Czas";
+		String strLevel = "Poziom";
+		gc.drawString(strPos, x_pos - gc.stringExtent(strPos).x/2, y, true);
+		gc.drawString(strScore, x_score - gc.stringExtent(strScore).x/2, y, true);
+		gc.drawString(strTime, x_time - gc.stringExtent(strTime).x/2, y, true);
+		gc.drawString(strLevel, x_level - gc.stringExtent(strLevel).x/2, y, true);
+		for(int i = 1; i <= Engine.TOP10_RESULT; i++) {
+			strPos = i + ".";
+			try {
+				Score score = highScore.get(i - 1);
+				strScore = String.format("%1$04d", score.getScore()); 
+				strTime = String.format("%1$02d:%2$02d:%3$03d",
+						score.getTime() / 60000,
+						(score.getTime() / 1000) % 60,
+						score.getTime() % 1000);
+				strLevel = String.format("%1$d", score.getLevel());
+			} catch(IndexOutOfBoundsException e) {
+				strScore = "-";
+				strTime = "-";
+				strLevel = "-";
+			}
+			int y_pos = y + i * 22;
+			gc.drawString(strPos, x_pos - gc.stringExtent(strPos).x + 10, y_pos, true);
+			gc.drawString(strScore, x_score - gc.stringExtent(strScore).x/2, y_pos, true);
+			gc.drawString(strTime, x_time - gc.stringExtent(strTime).x/2, y_pos, true);
+			gc.drawString(strLevel, x_level - gc.stringExtent(strLevel).x/2, y_pos, true);
+		}
+	}
+	
+	private void drawResult(GC gc) {
+		final int x = Engine.WIDTH / 2;
+		final int y_score = 200;
+		final int y_time = 222;
+		final int y_level = 244;
+		String strScore = "Punkty";
+		String strTime = "Czas";
+		String strLevel = "Poziom";
+		gc.drawString(strScore, x - gc.stringExtent(strScore).x, y_score, true);
+		gc.drawString(strTime, x -  gc.stringExtent(strTime).x, y_time, true);
+		gc.drawString(strLevel, x -  gc.stringExtent(strLevel).x, y_level, true);
+		gc.drawString(String.format("%1$04d", this.engine.gameGetScore()), x + 10, y_score, true);
+		long time = this.engine.gameGetTime();
+		gc.drawString(String.format("%1$02d:%2$02d:%3$03d",
+				time / 60000,
+				(time / 1000) % 60,
+				time % 1000), x + 10, y_time, true);
+		gc.drawString(String.format("%1$d", this.engine.gameGetLevel()), x + 10, y_level, true);
 	}
 }

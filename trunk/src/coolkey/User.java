@@ -6,6 +6,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
+import coolkey.defender.Score;
+
 /**
  * Dane użytkownika.
  */
@@ -17,7 +19,7 @@ public class User implements Serializable {
 	private String passwordHash;
 	private Config config;
 	private Lesson currentLesson;
-	private List<Integer> highscore;
+	private List<Score> highscore;
 
 	public User(String name, String password) {
 		this.name = name;
@@ -27,7 +29,7 @@ public class User implements Serializable {
 			this.passwordHash = null;
 		}
 		config = new Config();
-		highscore = new ArrayList<Integer>();
+		highscore = new ArrayList<Score>();
 		// domyślna lekcja
 		int minGenTextLines = 10;
 		int minGenTextLength = (minGenTextLines - 1) * (
@@ -123,14 +125,14 @@ public class User implements Serializable {
 	/**
 	 * Uaktualnij wyniki użytkownika w grze edukacyjnej.
 	 */
-	public void setHighscore(List<Integer> highscore) {
+	public void setHighscore(List<Score> highscore) {
 		this.highscore = highscore;
 	}
 
 	/**
 	 * Wyniki użytkownika w grze edukacyjnej.
 	 */
-	public List<Integer> getHighscore() {
+	public List<Score> getHighscore() {
 		return highscore;
 	}
 
