@@ -22,6 +22,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
@@ -59,7 +61,7 @@ public class GUI {
 		int x = bounds.x + (bounds.width - rect.width) / 2;
 		int y = bounds.y + (bounds.height - rect.height) / 2;
 		shell.setLocation(x, y);
-		shell.setSize(780, 580);
+		shell.setSize(932, 580);
 
 		new MenuBar();
 		writingArea = new WritingArea(); // obszar przepisywania
@@ -67,6 +69,17 @@ public class GUI {
 		buttonBar = new ButtonBar();
 		keyboard = new Keyboard();
 
+		shell.getDisplay().addFilter(SWT.KeyDown, new Listener() {
+			public void handleEvent(Event event) {
+				KeyPad.setFocus((char)event.keyCode);
+			}
+		});
+		/*shell.getDisplay().addFilter(SWT.KeyUp, new Listener() {
+			public void handleEvent(Event event) {
+				KeyPad.removeFocus((char)event.keyCode);
+			}
+		});*/
+		
 		shell.open();
 
 		if (!CoolKey.isSoundAvailable()) {
