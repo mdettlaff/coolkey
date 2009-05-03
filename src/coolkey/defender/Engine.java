@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
@@ -36,7 +38,7 @@ public class Engine implements Runnable {
 	
 	public static final int TOP10_RESULT = 10;
 	
-	private final int INTERVAL = 20;
+	private final int INTERVAL = 40;
 	
 	private Display display;
 	private Canvas container;
@@ -57,13 +59,14 @@ public class Engine implements Runnable {
 	private int gameLife;
 	private int gameScore;
 	private long gameTime;
+	private Timer gameTimer;
 	private String gameWord;
 	private Map<String, Bomb> gameBombs;
 	
 	public Engine(Display display, Canvas container) {
 		this.display = display;
 		this.container = container;
-		this.fps = 50.0;
+		this.fps = 25.0;
 		this.showFps = false;
 		this.newGame = true;
 		this.state = STATE_MENU;
@@ -73,6 +76,17 @@ public class Engine implements Runnable {
 		this.menu.add(MENU_NEW, new Rectangle(192, 214, 256, 64));
 		this.menu.add(MENU_TOP10, new Rectangle(192, 278, 256, 64));
 		this.menu.add(MENU_HELP, new Rectangle(192, 342, 256, 64));
+		this.gameTimer = new Timer();
+		this.gameTimer.schedule(new TimerTask () {
+			private long timeBefor = System.currentTimeMillis();
+			public void run() {
+				long timeCurrent = System.currentTimeMillis();
+				if(state == STATE_GAME) {
+					gameTime += timeCurrent - timeBefor;		
+				}
+				timeBefor = timeCurrent;
+			}
+		}, INTERVAL, INTERVAL);
 		this.gameNew();
 	}
 	
@@ -164,8 +178,17 @@ public class Engine implements Runnable {
 	}
 	
 	public void keyEsc() {
-		if(!this.newGame && this.state == STATE_GAME)
-			this.menuSelectId = MENU_CONTINUE;
+		switch(this.state) {
+		case STATE_GAME:
+			if(this.newGame)
+				this.menuSelectId = MENU_NEW;
+			else
+				this.menuSelectId = MENU_CONTINUE;
+			break;
+		case STATE_RESULT:
+			this.menuSelectId = MENU_NEW;
+			break;
+		}
 		this.state = STATE_MENU;
 	}
 	
@@ -287,39 +310,47 @@ public class Engine implements Runnable {
 	}
 	
 	private void gameCreateBombs() {
-		Random rand = new Random();
-		GC gc = new GC(new Image(this.display, 1, 1));
-		while(this.gameBombs.size() < this.gameHowBombs()) {
-			String word = CoolKey.getDictionary().randomWord(this.gameLevel);
-			if(this.gameBombs.containsKey(word))
-				continue;
-			int wordWidth = gc.stringExtent(word).x;
-			int x = (wordWidth - 16)/2 + rand.nextInt(WIDTH - wordWidth - 6);
-			int y = -48 - rand.nextInt(64);
-			Bomb b = new Bomb(word, x, y, this.gameHowFast());
-			this.gameBombs.put(b.getWord(), b);
-		}
+		Thread th = new Thread(new Runnable() {
+			public void run() {
+				Random random = new Random();
+				GC gc = new GC(new Image(display, 1, 1));
+				while(gameBombs.size() < gameHowBombs()) {
+					String word = CoolKey.getDictionary().randomWord(gameLevel);
+					if(gameBombs.containsKey(word))
+						continue;
+					int wordWidth = gc.stringExtent(word).x;
+					int x = (wordWidth - 16)/2 + random.nextInt(WIDTH - wordWidth - 6);
+					int y = -48 - random.nextInt(64);
+					Bomb b = new Bomb(word, x, y, gameHowFast());
+					gameBombs.put(b.getWord(), b);
+				}
+			}
+		}, "gameCreateBombs");
+		if(!th.isAlive())
+			th.start();
 	}
 	
-	private void game() {
-		if(this.gameLevel < GAME_LEVEL_MAX) {
-			if(this.gameScore > this.gameHowScore())
-				this.gameLevel++;
-		}
-		List<String> removeBombs = new ArrayList<String>();
-		for(Bomb b: this.gameGetBombs()) {
-			b.addY(b.getSpeed()/this.fps);
-			if(b.getY() + 48 > GAME_GROUND) {
-				this.gameLife--;
-				removeBombs.add(b.getWord());
-			}
-		}
-		for(String w: removeBombs)
-			this.gameBombs.remove(w);
-		this.gameCreateBombs();
-		if(this.gameLife < 1) {
-			this.state = STATE_RESULT;
-			this.newGame = true;
+	private void action() {
+		switch(this.state) {
+			case STATE_GAME:
+				if(this.gameLevel < GAME_LEVEL_MAX && this.gameScore > this.gameHowScore())
+					this.gameLevel++;
+				List<String> removeBombs = new ArrayList<String>();
+				for(Bomb b: this.gameGetBombs()) {
+					b.addY(b.getSpeed()/this.fps);
+					if(b.getY() + 48 > GAME_GROUND) {
+						this.gameLife--;
+						removeBombs.add(b.getWord());
+					}
+				}
+				for(String w: removeBombs)
+					this.gameBombs.remove(w);
+				this.gameCreateBombs();
+				if(this.gameLife < 1) {
+					this.state = STATE_RESULT;
+					this.newGame = true;
+				}
+				break;
 		}
 	}
 	
@@ -331,17 +362,16 @@ public class Engine implements Runnable {
 		}
 		else {
 			this.fps = this.countFrame * 1000.0 / time;
-			this.countFrame = 0;
+			this.countFrame = 1;
 			this.timeLast += time;
 		}
-		if(this.state == STATE_GAME)
-			this.game();
+		this.action();
 		if(!this.container.isDisposed())
 			this.container.redraw();
 		else
 			this.stop();
 		time = INTERVAL - (int)(System.currentTimeMillis() - timeStart);
-		this.display.timerExec((time < 0 ? 0 : time - 1), this);
+		this.display.timerExec((time < 0 ? 0 : time), this);
 	}
 	
 	public void start() {
@@ -350,6 +380,7 @@ public class Engine implements Runnable {
 		this.display.timerExec(0, this);
 	}
 	public void stop() {
+		this.gameTimer.cancel();
 		if(!this.display.isDisposed())
 			this.display.timerExec(-1, this);
 	}
