@@ -30,11 +30,13 @@ public class Engine implements Runnable {
 	public static final int WIDTH = 640;
 	public static final int HEIGHT = 480;
 	
-	private final int INTERVAL = 20;
-	
 	public static final int GAME_LIFE_MAX = 3;
 	public static final int GAME_LEVEL_MAX = 9;
 	public static final int GAME_GROUND = 416;
+	
+	public static final int TOP10_RESULT = 10;
+	
+	private final int INTERVAL = 20;
 	
 	private Display display;
 	private Canvas container;
@@ -168,6 +170,8 @@ public class Engine implements Runnable {
 	}
 	
 	public void mouseUp(int x, int y) {
+		if(this.state != STATE_MENU)
+			return;
 		Rectangle size = this.menu.get(MENU_CONTINUE);
 		if(size.x > x || size.x + size.width < x)
 			return;
@@ -194,6 +198,8 @@ public class Engine implements Runnable {
 	}
 	
 	public void mouseMove(int x, int y) {
+		if(this.state != STATE_MENU)
+			return;
 		Rectangle size = this.menu.get(MENU_CONTINUE);
 		if(size.x > x || size.x + size.width < x)
 			return;
@@ -285,6 +291,8 @@ public class Engine implements Runnable {
 		GC gc = new GC(new Image(this.display, 1, 1));
 		while(this.gameBombs.size() < this.gameHowBombs()) {
 			String word = CoolKey.getDictionary().randomWord(this.gameLevel);
+			if(this.gameBombs.containsKey(word))
+				continue;
 			int wordWidth = gc.stringExtent(word).x;
 			int x = (wordWidth - 16)/2 + rand.nextInt(WIDTH - wordWidth - 6);
 			int y = -48 - rand.nextInt(64);
@@ -308,8 +316,7 @@ public class Engine implements Runnable {
 		}
 		for(String w: removeBombs)
 			this.gameBombs.remove(w);
-		if(this.gameBombs.size() < this.gameHowBombs())
-			this.gameCreateBombs();
+		this.gameCreateBombs();
 		if(this.gameLife < 1) {
 			this.state = STATE_RESULT;
 			this.newGame = true;
@@ -334,7 +341,7 @@ public class Engine implements Runnable {
 		else
 			this.stop();
 		time = INTERVAL - (int)(System.currentTimeMillis() - timeStart);
-		this.display.timerExec((time < 0 ? 0 : time), this);
+		this.display.timerExec((time < 0 ? 0 : time - 1), this);
 	}
 	
 	public void start() {
