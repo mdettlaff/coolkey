@@ -7,6 +7,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Canvas;
 
+import coolkey.CoolKey;
+
 /**
  * Generuje klawisze klawiatury.
  * @author kd
@@ -406,8 +408,11 @@ public class KeyPad {
 			System.out.println("nie ma przycisku o kodzie: " + keyCode);
 			return;
 		}
-		but.setBackground(GUI.display.getSystemColor(SWT.COLOR_CYAN));
-		
+		if (CoolKey.getCurrentLesson().isMistakeMade()) {
+			but.setBackground(GUI.display.getSystemColor(SWT.COLOR_RED));
+		} else {
+			but.setBackground(GUI.display.getSystemColor(SWT.COLOR_CYAN));
+		}
 	}
 	public static void removeFocus(int keyCode) {
 		Button but = keys.get((int)keyCode);

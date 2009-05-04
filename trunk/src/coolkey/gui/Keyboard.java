@@ -33,16 +33,7 @@ public class Keyboard {
 				gc.setBackground(GUI.display.getSystemColor(SWT.COLOR_WHITE));
 				gc.setForeground(GUI.display.getSystemColor(SWT.COLOR_BLACK));
 				gc.fillRectangle(0, 0, canvasSize.x, canvasSize.y); // tło
-				//gc.drawRoundRectangle(0, 0, canvasSize.x-5, canvasSize.y-5, 20, 20);
-				/*
-				 * Info dla Karola:
-				 * Pamiętaj, że nasz program ma obsługiwać układ QWERTY
-				 * i Dvorak, więc zrób tak, żeby można było łatwo przełączać
-				 * się między tymi układami.
-				 */
-				/*Button q = new Button(canvas, SWT.PUSH);
-				q.setBounds(5, 5, 30, 30);
-				q.setText("q");*/
+
 				if (CoolKey.getCurrentLesson().isMistakeMade()) {
 					/*
 					 * Po popełnieniu błędu przyciski podświetlają się
