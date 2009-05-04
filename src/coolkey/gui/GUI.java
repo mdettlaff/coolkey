@@ -71,14 +71,54 @@ public class GUI {
 
 		shell.getDisplay().addFilter(SWT.KeyDown, new Listener() {
 			public void handleEvent(Event event) {
-				KeyPad.setFocus((char)event.keyCode);
+				System.out.println(event.keyCode);
+				if (event.keyCode == SWT.CONTROL) {
+					KeyPad.setFocus((int)17);
+					KeyPad.setFocus((int)14);
+					return;
+				}
+				if (event.keyCode == SWT.ALT) {
+					KeyPad.setFocus((int)0);
+					KeyPad.setFocus((int)1);
+					return;
+				}
+				if (event.keyCode == SWT.SHIFT) {
+					KeyPad.setFocus((int)16);
+					KeyPad.setFocus((int)18);
+					return;
+				}
+				if (event.keyCode == SWT.CAPS_LOCK) {
+					KeyPad.setFocus((int)20);
+					return;
+				}
+				KeyPad.setFocus(event.keyCode);
 			}
 		});
-		/*shell.getDisplay().addFilter(SWT.KeyUp, new Listener() {
+		shell.getDisplay().addFilter(SWT.KeyUp, new Listener() {
 			public void handleEvent(Event event) {
-				KeyPad.removeFocus((char)event.keyCode);
+				System.out.println(event.keyCode);
+				if (event.keyCode == SWT.CONTROL) {
+					KeyPad.removeFocus((int)17);
+					KeyPad.removeFocus((int)14);
+					return;
+				}
+				if (event.keyCode == SWT.ALT) {
+					KeyPad.removeFocus((int)0);
+					KeyPad.removeFocus((int)1);
+					return;
+				}
+				if (event.keyCode == SWT.SHIFT) {
+					KeyPad.removeFocus((int)16);
+					KeyPad.removeFocus((int)18);
+					return;
+				}
+				if (event.keyCode == SWT.CAPS_LOCK) {
+					KeyPad.removeFocus((int)20);
+					return;
+				}
+				KeyPad.removeFocus(event.keyCode);
 			}
-		});*/
+		});
 		
 		shell.open();
 
