@@ -71,7 +71,6 @@ public class GUI {
 
 		shell.getDisplay().addFilter(SWT.KeyDown, new Listener() {
 			public void handleEvent(Event event) {
-				System.out.println(event.keyCode);
 				if (event.keyCode == SWT.CONTROL) {
 					KeyPad.setFocus((int)17);
 					KeyPad.setFocus((int)14);
@@ -96,7 +95,6 @@ public class GUI {
 		});
 		shell.getDisplay().addFilter(SWT.KeyUp, new Listener() {
 			public void handleEvent(Event event) {
-				System.out.println(event.keyCode);
 				if (event.keyCode == SWT.CONTROL) {
 					KeyPad.removeFocus((int)17);
 					KeyPad.removeFocus((int)14);
