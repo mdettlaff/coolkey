@@ -19,22 +19,32 @@ import org.eclipse.swt.widgets.Display;
 import coolkey.CoolKey;
 
 public class Paint implements PaintListener {
-	private Display display;
-	private Engine engine;
-	private String texturePath;
-	private Image bg;
-	private Image defender;
-	private Image panel;
-	private Image life;
-	private Image bomb;
-	private Image top10;
-	private Image result;
-	private List<Image> menu;
+	private final Display display;
+	private final Engine engine;
+	private final String texturePath;
+	private final Font font8Bold;
+	private final Font font10Bold;
+	private final String formatScore;
+	private final String formatTime;
+	private final String formatLevel;
+	private final Image bg;
+	private final Image defender;
+	private final Image panel;
+	private final Image life;
+	private final Image bomb;
+	private final Image top10;
+	private final Image result;
+	private final List<Image> menu;
 	
 	public Paint(Display display, Engine engine) {
 		this.display = display;
 		this.engine = engine;
 		this.texturePath = "data" + File.separator + "texture" + File.separator;
+		this.font8Bold = new Font(this.display, "", 8, SWT.BOLD);
+		this.font10Bold = new Font(this.display, "", 10, SWT.BOLD);
+		this.formatScore = "%1$04d";
+		this.formatTime = "%1$02d:%2$02d:%3$03d";
+		this.formatLevel = "%1$02d";
 		this.bg = new Image(this.display, this.texturePath + "background.png");
 		this.defender = new Image(this.display, this.texturePath + "defender.png");
 		this.panel = new Image(this.display, this.texturePath + "panel.png");
@@ -50,7 +60,7 @@ public class Paint implements PaintListener {
 	}
 	
 	public void paintControl(PaintEvent pe) {
-		pe.gc.setFont(new Font(this.display, "", 10, SWT.BOLD));
+		pe.gc.setFont(this.font10Bold);
 		pe.gc.setForeground(this.display.getSystemColor(SWT.COLOR_WHITE));
 		pe.gc.drawImage(this.bg, 0, 0);
 		switch(this.engine.getState()) {
@@ -114,7 +124,7 @@ public class Paint implements PaintListener {
 		Font font = gc.getFont();
 		gc.setForeground(this.display.getSystemColor(SWT.COLOR_WHITE));
 		gc.setBackground(this.display.getSystemColor(SWT.COLOR_BLACK));
-		gc.setFont(new Font(this.display, "", 8, SWT.BOLD));
+		gc.setFont(this.font8Bold);
 		for(Bomb b: this.engine.gameGetBombs()) {
 			gc.drawImage(this.bomb, b.getX(), b.getY());
 			Point wordSize = gc.stringExtent(b.getWord());
@@ -141,23 +151,24 @@ public class Paint implements PaintListener {
 	}
 	
 	private void drawWord(GC gc) {
-		Color fg = gc.getForeground();
-		int lineWidth = gc.getLineWidth();
-		int lineStyle = gc.getLineStyle();
+		final int inputWidth = 244;
+		final Color fg = gc.getForeground();
+		final int lineWidth = gc.getLineWidth();
+		final int lineStyle = gc.getLineStyle();
 		gc.setLineWidth(1);
 		gc.setLineStyle(SWT.LINE_DASH);
 		String word = this.engine.gameGetWord();
 		Point wordSize = gc.stringExtent(word);
-		if(wordSize.x > 244) {
+		if(wordSize.x > inputWidth) {
 			int i = 0;
 			int size = 0;
-			while(wordSize.x - size > 244)
+			while(wordSize.x - size > inputWidth)
 				size = gc.stringExtent(word.substring(0, ++i)).x;
 			word = word.substring(i, word.length());
 			wordSize = gc.stringExtent(word);
 		}
 		gc.setForeground(this.display.getSystemColor(SWT.COLOR_GRAY));
-		gc.drawRectangle(195, 426, 250, wordSize.y + 2);
+		gc.drawRectangle(195, 426, inputWidth + 6, wordSize.y + 2);
 		gc.setForeground(fg);
 		gc.drawString(word, (640 - wordSize.x)/2, 427, true);
 		gc.setLineWidth(lineWidth);
@@ -166,17 +177,17 @@ public class Paint implements PaintListener {
 	
 	private void drawTime(GC gc) {
 		long time = this.engine.gameGetTime();
-		String timeString = String.format("%1$02d:%2$02d:%3$03d", time / 60000, (time / 1000) % 60, time % 1000);
+		String timeString = String.format(this.formatTime, time / 60000, (time / 1000) % 60, time % 1000);
 		gc.drawString(timeString, (Engine.WIDTH - gc.stringExtent(timeString).x)/2, 455, true);
 	}
 	
 	private void drawLevel(GC gc) {
-		String levelString = String.format("Poziom: %1$1d", this.engine.gameGetLevel());
+		String levelString = String.format("Poziom: " + this.formatLevel, this.engine.gameGetLevel());
 		gc.drawString(levelString, Engine.WIDTH - 20 - gc.stringExtent(levelString).x, 431, true);
 	}
 	
 	private void drawScore(GC gc) {
-		String scoreString = String.format("Punkty: %1$04d", this.engine.gameGetScore());
+		String scoreString = String.format("Punkty: " + this.formatScore, this.engine.gameGetScore());
 		gc.drawString(scoreString, Engine.WIDTH - 20 - gc.stringExtent(scoreString).x, 451, true);
 	}
 	
@@ -199,12 +210,12 @@ public class Paint implements PaintListener {
 			strPos = i + ".";
 			try {
 				Score score = highScore.get(i - 1);
-				strScore = String.format("%1$04d", score.getScore()); 
-				strTime = String.format("%1$02d:%2$02d:%3$03d",
+				strScore = String.format(this.formatScore, score.getScore()); 
+				strTime = String.format(this.formatTime,
 						score.getTime() / 60000,
 						(score.getTime() / 1000) % 60,
 						score.getTime() % 1000);
-				strLevel = String.format("%1$d", score.getLevel());
+				strLevel = String.format(this.formatLevel, score.getLevel());
 			} catch(IndexOutOfBoundsException e) {
 				strScore = "-";
 				strTime = "-";
@@ -229,12 +240,12 @@ public class Paint implements PaintListener {
 		gc.drawString(strScore, x - gc.stringExtent(strScore).x, y_score, true);
 		gc.drawString(strTime, x -  gc.stringExtent(strTime).x, y_time, true);
 		gc.drawString(strLevel, x -  gc.stringExtent(strLevel).x, y_level, true);
-		gc.drawString(String.format("%1$04d", this.engine.gameGetScore()), x + 10, y_score, true);
+		gc.drawString(String.format(this.formatScore, this.engine.gameGetScore()), x + 10, y_score, true);
 		long time = this.engine.gameGetTime();
-		gc.drawString(String.format("%1$02d:%2$02d:%3$03d",
+		gc.drawString(String.format(this.formatTime,
 				time / 60000,
 				(time / 1000) % 60,
 				time % 1000), x + 10, y_time, true);
-		gc.drawString(String.format("%1$d", this.engine.gameGetLevel()), x + 10, y_level, true);
+		gc.drawString(String.format(this.formatLevel, this.engine.gameGetLevel()), x + 10, y_level, true);
 	}
 }

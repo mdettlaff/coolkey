@@ -33,15 +33,15 @@ public class Engine implements Runnable {
 	public static final int HEIGHT = 480;
 	
 	public static final int GAME_LIFE_MAX = 3;
-	public static final int GAME_LEVEL_MAX = 9;
+	public static final int GAME_LEVEL_MAX = 21;
 	public static final int GAME_GROUND = 416;
 	
 	public static final int TOP10_RESULT = 10;
 	
 	private final int INTERVAL = 40;
 	
-	private Display display;
-	private Canvas container;
+	private final Canvas container;
+	private final Display display;
 	
 	private double fps;
 	private boolean showFps;
@@ -59,13 +59,14 @@ public class Engine implements Runnable {
 	private int gameLife;
 	private int gameScore;
 	private long gameTime;
-	private Timer gameTimer;
 	private String gameWord;
+	private boolean gameWordClear;
 	private Map<String, Bomb> gameBombs;
+	private final Timer gameTimer;
 	
-	public Engine(Display display, Canvas container) {
-		this.display = display;
+	public Engine(Canvas container) {
 		this.container = container;
+		this.display = this.container.getDisplay();
 		this.fps = 25.0;
 		this.showFps = false;
 		this.newGame = true;
@@ -76,7 +77,7 @@ public class Engine implements Runnable {
 		this.menu.add(MENU_NEW, new Rectangle(192, 214, 256, 64));
 		this.menu.add(MENU_TOP10, new Rectangle(192, 278, 256, 64));
 		this.menu.add(MENU_HELP, new Rectangle(192, 342, 256, 64));
-		this.gameTimer = new Timer();
+		this.gameTimer = new Timer("gameTimer");
 		this.gameTimer.schedule(new TimerTask () {
 			private long timeBefor = System.currentTimeMillis();
 			public void run() {
@@ -268,11 +269,11 @@ public class Engine implements Runnable {
 	}
 	
 	private int gameHowBombs() {
-		return this.gameLevel * 2 + 1;
+		return this.gameLevel + 2;
 	}
 	
 	private int gameHowFast() {
-		return this.gameLevel * 5 + 10;
+		return this.gameLevel * 2 + 13;
 	}
 	
 	private int gameHowScore() {
@@ -281,22 +282,31 @@ public class Engine implements Runnable {
 	
 	public void gameWordAdd(char c) {
 		String specialChar = ",./;\'[]<>?:\"{}!@#$%^&*()_+|\\-=";
-		if(Character.isLetterOrDigit(c) || specialChar.indexOf(c) != -1)
+		if(Character.isLetterOrDigit(c) || specialChar.indexOf(c) != -1) {
+			if(this.gameWordClear) {
+				this.gameWord = "";
+				this.gameWordClear = false;
+			}
 			this.gameWord = this.gameWord + c;
+		}
+		this.gameWordEnter();
 	}
 	
 	public void gameWordDel() {
+		if(this.gameWordClear) {
+			this.gameWord = "";
+			this.gameWordClear = false;
+		}
 		if(this.gameWord.length() > 0)
 			this.gameWord = this.gameWord.substring(0, this.gameWord.length() - 1);
+		this.gameWordEnter();
 	}
 	
-	public void gameWordEnter() {
-		if(this.gameWord.length() > 0) {
-			if(this.gameBombs.containsKey(this.gameWord)) {
-				this.gameScore++;
-				this.gameBombs.remove(this.gameWord);
-			}
-			this.gameWord = "";
+	private void gameWordEnter() {
+		if(this.gameBombs.containsKey(this.gameWord)) {
+			this.gameBombs.remove(this.gameWord);
+			this.gameScore++;
+			this.gameWordClear = true;
 		}
 	}
 	
@@ -306,14 +316,16 @@ public class Engine implements Runnable {
 		this.gameTime = 0;
 		this.gameLevel = 1;
 		this.gameWord = "";
+		this.gameWordClear = false;
 		this.gameBombs = new HashMap<String, Bomb>();
 	}
 	
 	private void gameCreateBombs() {
-		Thread th = new Thread(new Runnable() {
+		Thread gameCreateBombsThread = new Thread(new Runnable() {
 			public void run() {
 				Random random = new Random();
-				GC gc = new GC(new Image(display, 1, 1));
+				Image imageTmp = new Image(display, 1, 1);
+				GC gc = new GC(imageTmp);
 				while(gameBombs.size() < gameHowBombs()) {
 					String word = CoolKey.getDictionary().randomWord(gameLevel);
 					if(gameBombs.containsKey(word))
@@ -324,10 +336,11 @@ public class Engine implements Runnable {
 					Bomb b = new Bomb(word, x, y, gameHowFast());
 					gameBombs.put(b.getWord(), b);
 				}
+				gc.dispose();
+				imageTmp.dispose();
 			}
 		}, "gameCreateBombs");
-		if(!th.isAlive())
-			th.start();
+		gameCreateBombsThread.start();
 	}
 	
 	private void action() {
@@ -375,7 +388,7 @@ public class Engine implements Runnable {
 	}
 	
 	public void start() {
-		this.countFrame = 0;
+		this.countFrame = 1;
 		this.timeLast = System.currentTimeMillis();
 		this.display.timerExec(0, this);
 	}
