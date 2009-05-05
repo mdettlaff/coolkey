@@ -29,9 +29,6 @@ public class Key implements KeyListener {
 				break;
 			case Engine.STATE_GAME:
 				switch(ke.keyCode) {
-					case KEY_ENTER:
-						this.engine.gameWordEnter();
-						break;
 					case SWT.BS:
 						this.engine.gameWordDel();
 						break;
