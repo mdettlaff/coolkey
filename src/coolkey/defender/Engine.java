@@ -331,7 +331,7 @@ public class Engine implements Runnable {
 					if(gameBombs.containsKey(word))
 						continue;
 					int wordWidth = gc.stringExtent(word).x;
-					int x = (wordWidth - 16)/2 + random.nextInt(WIDTH - wordWidth - 6);
+					int x = (wordWidth - 16)/2 + random.nextInt(WIDTH - wordWidth - 8);
 					int y = -48 - random.nextInt(64);
 					Bomb b = new Bomb(word, x, y, gameHowFast());
 					gameBombs.put(b.getWord(), b);
@@ -341,6 +341,43 @@ public class Engine implements Runnable {
 			}
 		}, "gameCreateBombs");
 		gameCreateBombsThread.start();
+	}
+	
+	private void top10ScoreAdd() {
+		Thread top10ScoreAddThread = new Thread(new Runnable() {
+			public void run() {
+				List<Score> highscore = CoolKey.getUser().getHighscore();
+				for(int i = 0; i < TOP10_RESULT; i++) {
+					Score score = null;
+					try {
+						score = highscore.get(i);
+					} catch(IndexOutOfBoundsException e) {
+						highscore.add(i, new Score(gameScore, gameTime, gameLevel));
+						CoolKey.getUser().setHighscore(highscore);
+						CoolKey.persistState();
+						return;
+					}
+					if(score.getScore() < gameScore) {
+						highscore.set(i, new Score(gameScore, gameTime, gameLevel));
+						Score scoreTmp = null;
+						for(int j = i + 1; j < TOP10_RESULT; j++) {
+							try {
+								scoreTmp = highscore.get(j);
+							} catch(IndexOutOfBoundsException e) {
+								highscore.add(j, score);
+								break;
+							}
+							highscore.set(j, score);
+							score = scoreTmp;
+						}
+						CoolKey.getUser().setHighscore(highscore);
+						CoolKey.persistState();
+						return;
+					}
+				}
+			}
+		}, "top10ScoreAdd");
+		top10ScoreAddThread.start();
 	}
 	
 	private void action() {
@@ -362,6 +399,7 @@ public class Engine implements Runnable {
 				if(this.gameLife < 1) {
 					this.state = STATE_RESULT;
 					this.newGame = true;
+					this.top10ScoreAdd();
 				}
 				break;
 		}

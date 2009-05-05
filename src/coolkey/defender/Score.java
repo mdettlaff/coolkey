@@ -1,6 +1,9 @@
 package coolkey.defender;
 
-public class Score {
+import java.io.Serializable;
+
+public class Score implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private int score;
 	private long time;
 	private int level;
