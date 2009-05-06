@@ -225,7 +225,7 @@ public class MenuBar {
 					public void handleEvent(Event e) {
 						int minGenTextLines = spinner.getSelection();
 						int minGenTextLength = (minGenTextLines - 1) * (
-								CoolKey.MAX_CHARS_IN_LINE - 2);
+								CoolKey.MAX_CHARS_IN_LINE - 1);
 						CoolKey.setCurrentLesson(new Lesson(
 								Markov.generateMarkovChain(
 										Utils.words(

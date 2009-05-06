@@ -33,7 +33,7 @@ public class User implements Serializable {
 		// domyślna lekcja
 		int minGenTextLines = 10;
 		int minGenTextLength = (minGenTextLines - 1) * (
-				CoolKey.MAX_CHARS_IN_LINE - 4);
+				CoolKey.MAX_CHARS_IN_LINE - 1);
 		setCurrentLesson(new Lesson(Markov.generateMarkovChain(
 				Utils.words(CoolKey.TEXT_DIRECTORY), minGenTextLength)));
 	}

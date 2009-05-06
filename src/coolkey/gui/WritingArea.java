@@ -24,7 +24,7 @@ import coolkey.Sound;
 public class WritingArea {
 	public static final Color COLOR_CORRECTION = new Color(GUI.display, 192, 0, 216);
 
-	private final int MAX_LINES = 10;
+	private final int MAX_LINES = 12;
 	/**
 	 * Maksymalna ilość przepisanych linii jaką widać na ekranie.
 	 */
