@@ -34,6 +34,7 @@ public class Paint implements PaintListener {
 	private final Image bomb;
 	private final Image top10;
 	private final Image result;
+	private final Image explosion;
 	private final List<Image> menu;
 	
 	public Paint(Display display, Engine engine) {
@@ -52,6 +53,7 @@ public class Paint implements PaintListener {
 		this.bomb = new Image(this.display, this.texturePath + "bomb.png");
 		this.top10 = new Image(this.display, this.texturePath + "top10.png");
 		this.result = new Image(this.display, this.texturePath + "result.png");
+		this.explosion = new Image(this.display, this.texturePath + "explosion.png");
 		this.menu = new ArrayList<Image>();
 		this.menu.add(Engine.MENU_CONTINUE, new Image(this.display, this.texturePath + "menu_continue.png"));
 		this.menu.add(Engine.MENU_NEW, new Image(this.display, this.texturePath + "menu_new.png"));
@@ -73,6 +75,7 @@ public class Paint implements PaintListener {
 				this.drawMenuItem(pe.gc, Engine.MENU_HELP);
 				break;
 			case Engine.STATE_GAME:
+				this.drawExplosion(pe.gc);
 				this.drawBombs(pe.gc);
 				pe.gc.drawImage(this.panel, 0, 416);
 				this.drawLife(pe.gc);
@@ -116,6 +119,16 @@ public class Paint implements PaintListener {
 		gc.drawImage(this.menu.get(id),
 				0, 0, size.width, size.height,
 				size.x, size.y, size.width, size.height);
+	}
+	
+	private void drawExplosion(GC gc) {
+		for(Bomb b: this.engine.gameGetBombsExplosion()) {
+			if(b.getExplosionStep() < 4)
+				gc.drawImage(this.bomb, b.getX(), b.getY());
+			gc.drawImage(this.explosion,
+					64 * b.getExplosionStep(), 0, 64, 64,
+					b.getX() - 21, b.getY(), 64, 64);
+		}
 	}
 	
 	private void drawBombs(GC gc) {
@@ -247,5 +260,37 @@ public class Paint implements PaintListener {
 				(time / 1000) % 60,
 				time % 1000), x + 10, y_time, true);
 		gc.drawString(String.format(this.formatLevel, this.engine.gameGetLevel()), x + 10, y_level, true);
+	}
+	
+	public void dispose() {
+		if(!this.font8Bold.isDisposed())
+			this.font8Bold.dispose();
+		if(!this.font10Bold.isDisposed())
+			this.font10Bold.dispose();
+		if(!this.bg.isDisposed())
+			this.bg.dispose();
+		if(!this.defender.isDisposed())
+			this.defender.dispose();
+		if(!this.panel.isDisposed())
+			this.panel.dispose();
+		if(!this.life.isDisposed())
+			this.life.dispose();
+		if(!this.bomb.isDisposed())
+			this.bomb.dispose();
+		if(!this.top10.isDisposed())
+			this.top10.dispose();
+		if(!this.result.isDisposed())
+			this.result.dispose();
+		if(!this.explosion.isDisposed())
+			this.explosion.dispose();
+		if(!this.menu.get(Engine.MENU_CONTINUE).isDisposed())
+			this.menu.get(Engine.MENU_CONTINUE).dispose();
+		if(!this.menu.get(Engine.MENU_NEW).isDisposed())
+			this.menu.get(Engine.MENU_NEW).dispose();
+		if(!this.menu.get(Engine.MENU_TOP10).isDisposed())
+			this.menu.get(Engine.MENU_TOP10).dispose();
+		if(!this.menu.get(Engine.MENU_HELP).isDisposed())
+			this.menu.get(Engine.MENU_HELP).dispose();
+		this.menu.clear();
 	}
 }

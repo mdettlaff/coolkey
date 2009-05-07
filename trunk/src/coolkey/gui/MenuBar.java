@@ -257,14 +257,14 @@ public class MenuBar {
 				Point p = shell.computeSize(Engine.WIDTH, Engine.HEIGHT);
 				shell.setSize(p);
 				shell.setMinimumSize(p);
-				Defender game = new Defender(shell);
-				game.showFps(true);
-				game.start();
+				Defender defender = new Defender(shell);
+				// defender.showFps(true);
+				defender.start();
 				shell.open();
 				while (!shell.isDisposed()){
 					if (!GUI.display.readAndDispatch()) GUI.display.sleep();
 				}
-				game.stop();
+				defender.dispose();
 			}
 		});
 	}
