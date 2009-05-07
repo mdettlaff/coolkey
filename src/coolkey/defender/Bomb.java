@@ -4,12 +4,14 @@ public class Bomb {
 	private String word;
 	private Double x;
 	private Double y;
-	private int speed;
+	private Double explosionStep;
+	private double speed;
 	
-	public Bomb(String word, int x, int y, int speed) {
+	public Bomb(String word, int x, int y, double speed) {
 		this.word = word;
 		this.x = new Double(x);
 		this.y = new Double(y);
+		this.explosionStep = new Double(0.0);
 		this.speed = speed;
 	}
 
@@ -30,7 +32,7 @@ public class Bomb {
 	}
 
 	public void addX(double x) {
-		this.x = this.x + x;
+		this.x += x;
 	}
 	
 	public int getY() {
@@ -42,14 +44,26 @@ public class Bomb {
 	}
 
 	public void addY(double y) {
-		this.y = this.y + y;
+		this.y += y;
 	}
 	
-	public int getSpeed() {
+	public double getSpeed() {
 		return this.speed;
 	}
 
-	public void setSpeed(int speed) {
+	public void setSpeed(double speed) {
 		this.speed = speed;
+	}
+
+	public int getExplosionStep() {
+		return explosionStep.intValue();
+	}
+
+	public void setExplosionStep(int explosionStep) {
+		this.explosionStep = new Double(explosionStep);
+	}
+	
+	public void addExplosionStep(double explosionStep) {
+		this.explosionStep += explosionStep;
 	}
 }
