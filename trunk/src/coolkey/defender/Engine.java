@@ -343,7 +343,9 @@ public class Engine implements Runnable {
 	private synchronized void gameSoundExplosion() {
 		Thread gameSoundExplosionThread = new Thread(new Runnable() {
 			public void run() {
-				CoolKey.getSoundBank().EXPLOSION.play();
+				if (CoolKey.isSoundAvailable()) {
+					CoolKey.getSoundBank().EXPLOSION.play();
+				}
 			}
 		}, "gameSoundExplosion");
 		gameSoundExplosionThread.start();
