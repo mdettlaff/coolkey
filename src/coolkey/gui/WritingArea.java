@@ -1,7 +1,5 @@
 package coolkey.gui;
 
-import javax.sound.sampled.LineUnavailableException;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
@@ -16,7 +14,6 @@ import org.eclipse.swt.widgets.Canvas;
 
 import coolkey.CoolKey;
 import coolkey.LessonResults;
-import coolkey.Sound;
 
 /**
  * Obszar na którym odbywa się przepisywanie.
@@ -35,18 +32,10 @@ public class WritingArea {
 	private final int LINE_HEIGHT = 44;
 
 	private Canvas canvas;
-	private Sound typewriter;
-	private Sound mistake;
 
 	public WritingArea() {
 		canvas = new Canvas(GUI.shell, SWT.BORDER | SWT.DOUBLE_BUFFERED);
 		canvas.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		try {
-			typewriter = new Sound(CoolKey.SOUND_DIRECTORY + "typewriter.wav");
-			mistake = new Sound(CoolKey.SOUND_DIRECTORY + "mistake.wav");
-		} catch (LineUnavailableException e) {
-			CoolKey.setSoundAvailable(false);
-		}
 
 		canvas.addKeyListener(new KeyListener() {
 			@Override
@@ -145,20 +134,20 @@ public class WritingArea {
 					if (CoolKey.isSoundAvailable()
 							&& CoolKey.getUser().getConfig().isSoundOn()
 							&& CoolKey.getCurrentLesson().isStarted()) {
-						typewriter.play();
+						CoolKey.getSoundBank().TYPEWRITER.play();
 					}
 				} else {
 					if (CoolKey.isSoundAvailable()
 							&& CoolKey.getUser().getConfig().isSoundOn()
 							&& CoolKey.getCurrentLesson().isStarted()) {
-						mistake.play();
+						CoolKey.getSoundBank().MISTAKE.play();
 					}
 				}
 			} else if (c == SWT.BS) {
 				if (CoolKey.isSoundAvailable()
 						&& CoolKey.getUser().getConfig().isSoundOn()
 						&& CoolKey.getCurrentLesson().isStarted()) {
-					typewriter.play();
+					CoolKey.getSoundBank().TYPEWRITER.play();
 				}
 				CoolKey.getCurrentLesson().typeBackspace();
 			} else if (!Character.isISOControl(c)) {
@@ -168,12 +157,12 @@ public class WritingArea {
 				if (CoolKey.getCurrentLesson().typeChar(c)) {
 					if (CoolKey.isSoundAvailable()
 							&& CoolKey.getUser().getConfig().isSoundOn()) {
-						typewriter.play();
+						CoolKey.getSoundBank().TYPEWRITER.play();
 					}
 				} else {
 					if (CoolKey.isSoundAvailable()
 							&& CoolKey.getUser().getConfig().isSoundOn()) {
-						mistake.play();
+						CoolKey.getSoundBank().MISTAKE.play();
 					}
 				}
 			}
