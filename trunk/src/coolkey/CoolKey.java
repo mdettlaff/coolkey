@@ -22,6 +22,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sound.sampled.LineUnavailableException;
+
 import coolkey.gui.GUI;
 
 /**
@@ -40,6 +42,7 @@ public class CoolKey {
 	private static Dictionary dictionary = new Dictionary(new File("data"
 			+ File.separator + "dictionary" + File.separator + "pl_dict"));
 	private static boolean isSoundAvailable = true;
+	private static SoundBank soundBank;
 
 	private static List<User> users = new ArrayList<User>();
 	private static Integer currentUserIndex = 0;
@@ -50,6 +53,11 @@ public class CoolKey {
 		restoreState();
 		if (users.size() == 0) {
 			users.add(new User());
+		}
+		try {
+			soundBank = new SoundBank();
+		} catch (LineUnavailableException e) {
+			isSoundAvailable = false;
 		}
 
 		GUI.init();
@@ -108,15 +116,15 @@ public class CoolKey {
 		return dictionary;
 	}
 
+	public static SoundBank getSoundBank() {
+		return soundBank;
+	}
+
 	/**
 	 * Czy karta dźwiękowa jest dostępna.
 	 */
 	public static boolean isSoundAvailable() {
 		return isSoundAvailable;
-	}
-
-	public static void setSoundAvailable(boolean isSoundAvailable) {
-		CoolKey.isSoundAvailable = isSoundAvailable;
 	}
 
 	/**

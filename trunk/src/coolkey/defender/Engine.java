@@ -9,8 +9,6 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javax.sound.sampled.LineUnavailableException;
-
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
@@ -18,7 +16,6 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Display;
 
 import coolkey.CoolKey;
-import coolkey.Sound;
 
 public class Engine implements Runnable {
 	public static final int STATE_MENU = 0;
@@ -346,10 +343,7 @@ public class Engine implements Runnable {
 	private synchronized void gameSoundExplosion() {
 		Thread gameSoundExplosionThread = new Thread(new Runnable() {
 			public void run() {
-				try {
-					Sound explosion = new Sound(CoolKey.SOUND_DIRECTORY + "explosion.wav");
-					explosion.play();
-				} catch (LineUnavailableException e) {}
+				CoolKey.getSoundBank().EXPLOSION.play();
 			}
 		}, "gameSoundExplosion");
 		gameSoundExplosionThread.start();

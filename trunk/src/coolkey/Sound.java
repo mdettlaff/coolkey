@@ -16,17 +16,23 @@ import javax.sound.sampled.UnsupportedAudioFileException;
  */
 public class Sound {
 
-	private File soundFile;
-	private Clip[] clipPool = new Clip[16];
+	private Clip[] clipPool;
 
 	/**
 	 * Tworzy nowy dźwięk.
 	 *
 	 * @param  soundFilePath            Ścieżka do pliku dźwiękowego.
+	 * @param  lines                    Ilość linii (kanałów) zarezerwowanych
+	 *                                  dla dźwięku, tzn. ile razy dźwięk może
+	 *                                  być zmiksowany sam ze sobą.<br>
+	 *                                  Java Sound API udostępnia maksymalnie
+	 *                                  32 otwarte linie na raz.
 	 * @throws LineUnavailableException jeśli karta dźwiękowa jest niedostępna.
 	 */
-	public Sound(String soundFilePath) throws LineUnavailableException {
-		soundFile = new File(soundFilePath);
+	public Sound(String soundFilePath, int lines)
+			throws LineUnavailableException {
+		clipPool = new Clip[lines];
+		File soundFile = new File(soundFilePath);
 		try {
 			for (int i=0; i < clipPool.length; i++) {
 				AudioInputStream audioInputStream =
