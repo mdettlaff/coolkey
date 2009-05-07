@@ -5,7 +5,6 @@
   * Gra edukacyjna
 
 Karol:
-  * Wizualizacja klawiatury (QWERTY i Dvorak)
   * Wykresy na panelu z prawej strony (Graphs.java):
     * Prędkość średnia (wykres)
     * Realna prędkość średnia (wykres)
@@ -16,8 +15,6 @@ Karol:
   * Wykresy statystyk
 
 Michał:
-  * Zarządzanie użytkownikami
-  * Zapamiętywanie ustawień
   * Zapamiętywanie statystyk
   * Test spersonalizowany
   * Kursy i lekcje (QWERTY i Dvorak)
