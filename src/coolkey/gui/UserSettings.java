@@ -30,9 +30,29 @@ public class UserSettings {
 		final Button soundOn = new Button(USShell, SWT.CHECK);
 		soundOn.setSelection(CoolKey.getUser().getConfig().isSoundOn());
 		soundOn.setText("Efekty dźwiękowe");
+
 		final Button showKeyboard = new Button(USShell, SWT.CHECK);
 		showKeyboard.setSelection(CoolKey.getUser().getConfig().isShowKeyboard());
 		showKeyboard.setText("Pokaż klawiaturę");
+
+		// układ klawiatury
+		Composite keybLayComp = new Composite(USShell, SWT.NONE);
+		keybLayComp.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
+		keybLayComp.setLayout(new GridLayout());
+		Group keybLayout = new Group(keybLayComp, SWT.SHADOW_IN);
+		keybLayout.setLayout(new GridLayout());
+		keybLayout.setText("Układ klawiszy");
+		final Button qwerty = new Button(keybLayout, SWT.RADIO);
+		qwerty.setText("QWERTY");
+		qwerty.setSelection(CoolKey.getUser().getConfig().getKeyboardLayout()
+				== Config.QWERTY);
+		qwerty.setEnabled(CoolKey.getUser().getConfig().isShowKeyboard());
+		final Button dvorak = new Button(keybLayout, SWT.RADIO);
+		dvorak.setText("Dvorak");
+		dvorak.setSelection(CoolKey.getUser().getConfig().getKeyboardLayout()
+				== Config.DVORAK);
+		dvorak.setEnabled(CoolKey.getUser().getConfig().isShowKeyboard());
+
 		final Button showGraphs = new Button(USShell, SWT.CHECK);
 		showGraphs.setSelection(CoolKey.getUser().getConfig().isShowGraphs());
 		showGraphs.setText("Pokaż wykresy");
@@ -40,6 +60,7 @@ public class UserSettings {
 		passMistakes.setSelection(CoolKey.getUser().getConfig().isContinueAtMistakes());
 		passMistakes.setText("Przejdź dalej po błędzie");
 
+		// łamanie linii
 		Composite groupComp = new Composite(USShell, SWT.NONE);
 		groupComp.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		groupComp.setLayout(new GridLayout());
@@ -62,6 +83,7 @@ public class UserSettings {
 			eors.setSelection(true);
 		}
 
+		// przyciski na dole
 		Composite butComp = new Composite(USShell, SWT.NONE);
 		butComp.setLayoutData(new GridData(SWT.CENTER, SWT.FILL, false, false, 2, 1));
 		butComp.setLayout(new GridLayout(2, false));
@@ -71,16 +93,24 @@ public class UserSettings {
 		Composite right = new Composite(butComp, SWT.NONE);
 		right.setLayout(new GridLayout());
 		
-		Button okB = new Button(left, SWT.PUSH);
-		okB.setLayoutData(new GridData(SWT.CENTER, SWT.FILL, false, true));
-		okB.setText(" OK ");
-		Button canB = new Button(right, SWT.PUSH);
-		canB.setLayoutData(new GridData(SWT.CENTER, SWT.FILL, false, true));
-		canB.setText(" Anuluj ");
+		Button ok = new Button(left, SWT.PUSH);
+		ok.setLayoutData(new GridData(SWT.CENTER, SWT.FILL, false, true));
+		ok.setText(" OK ");
+		Button cancel = new Button(right, SWT.PUSH);
+		cancel.setLayoutData(new GridData(SWT.CENTER, SWT.FILL, false, true));
+		cancel.setText(" Anuluj ");
 
 		USShell.pack();
 
-		okB.addListener(SWT.Selection, new Listener() {
+		showKeyboard.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event e) {
+				qwerty.setEnabled(!qwerty.isEnabled());
+				dvorak.setEnabled(!dvorak.isEnabled());
+			}
+		});
+
+		ok.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event e) {
 				Config config = CoolKey.getUser().getConfig();
@@ -95,11 +125,19 @@ public class UserSettings {
 				} else if (eors.getSelection()) {
 					config.setLineBreakers("\n ");
 				}
+				if (qwerty.getSelection()) {
+					config.setKeyboardLayout(Config.QWERTY);
+					GUI.keyboard.refresh();
+				} else if (dvorak.getSelection()) {
+					config.setKeyboardLayout(Config.DVORAK);
+					GUI.keyboard.refresh();
+				}
+				CoolKey.persistState();
 				USShell.dispose();
 			}
 		});
 
-		canB.addListener(SWT.Selection, new Listener() {
+		cancel.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event e) {
 				USShell.close();
