@@ -8,17 +8,17 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 
+import coolkey.CoolKey;
+
 /**
  * Wyświetla statystyki użytkownika.
- * 
- * @author kd
- *
  */
 public class Stats {
 	private static Shell statsShell;
-	
+
 	public Stats() {
-		statsShell = new Shell(GUI.shell, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL | SWT.RESIZE );
+		statsShell = new Shell(GUI.shell, SWT.DIALOG_TRIM
+				| SWT.APPLICATION_MODAL | SWT.RESIZE);
 		statsShell.setText("Statystyka");
 		statsShell.setLayout(new FillLayout());
 		
@@ -26,7 +26,6 @@ public class Stats {
 		
 		CTabItem speed = new CTabItem(stats, SWT.NONE);
 		speed.setText("Prędkość  ");
-		
 		CTabItem accuracy = new CTabItem(stats, SWT.NONE);
 		accuracy.setText("Poprawność  ");
 		
@@ -36,15 +35,21 @@ public class Stats {
 		accuracyComp.setLayout(new FillLayout());
 		speed.setControl(speedComp);
 		accuracy.setControl(accuracyComp);
-		
+
 		/*Canvas speedCanv = */new Canvas(speedComp, SWT.BORDER);
 		//TODO canvas statystyk prędkości
 		/*Canvas accCanv = */new Canvas(accuracyComp, SWT.BORDER);
 		//TODO canvas statystyk poprawności
-		
-		statsShell.setSize(250, 220);
+
+		System.out.println("Statystyki prędkości dla poszczególnych znaków:");
+		// Enter to '\r' (powrót karetki)
+		System.out.println(CoolKey.getUser().getStatistics().getCharSpeeds());
+		System.out.println("Statystyki poprawności:");
+		System.out.println(CoolKey.getUser().getStatistics().getCharAccuracies());
+
+		statsShell.setSize(400, 300);
 	}
-	
+
 	public void open() {
 		statsShell.open();
 	}

@@ -20,6 +20,7 @@ public class User implements Serializable {
 	private Config config;
 	private Lesson currentLesson;
 	private List<Score> highscore;
+	private List<LessonResults> resultsList;
 
 	public User(String name, String password) {
 		this.name = name;
@@ -30,6 +31,7 @@ public class User implements Serializable {
 		}
 		config = new Config();
 		highscore = new ArrayList<Score>();
+		resultsList = new ArrayList<LessonResults>();
 		// domyślna lekcja
 		int minGenTextLines = 10;
 		int minGenTextLength = (minGenTextLines - 1) * (
@@ -134,6 +136,14 @@ public class User implements Serializable {
 	 */
 	public List<Score> getHighscore() {
 		return highscore;
+	}
+
+	public void addResults(LessonResults results) {
+		this.resultsList.add(results);
+	}
+
+	public Statistics getStatistics() {
+		return new Statistics(resultsList);
 	}
 
 	@Override

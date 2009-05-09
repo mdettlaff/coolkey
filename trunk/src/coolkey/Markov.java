@@ -1,6 +1,5 @@
 package coolkey;
 
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -24,7 +23,7 @@ public class Markov {
 	{
 		List<String> markovChain = new LinkedList<String>();
 		String markovText = new String(); // tekst, który zwróci metoda
-		Random rand = new Random(new Date().getTime());
+		Random rand = new Random();
 
 		// zaczynamy od słowa z początku zdania
 		List<String> firstWords = new LinkedList<String>(); // początki zdań

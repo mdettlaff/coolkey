@@ -169,6 +169,7 @@ public class WritingArea {
 			if (CoolKey.getCurrentLesson().isFinished()) {
 				LessonResults finalResults =
 					CoolKey.getCurrentLesson().getResults();
+				CoolKey.getUser().addResults(finalResults);
 				GUI.graphs.addFinalResults(finalResults);
 				GUI.graphs.refresh();
 				new ResultsMessage(finalResults);
