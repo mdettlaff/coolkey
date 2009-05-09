@@ -1,22 +1,32 @@
 package coolkey;
 
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Wyniki ćwiczenia polegającego na przepisywaniu.
  */
-public class LessonResults {
+public class LessonResults implements Serializable {
+	private static final long serialVersionUID = 1L;
 
 	private int mistakesCount;
 	private int correctionsCount;
 	private int totalCharsCount;
 	private int writtenCharsCount;
 	private int writingTimeMilliseconds;
+	private Map<Character, Long> charCounts;
+	private Map<Character, Long> charTimes;
+	private Map<Character, Long> charMistakes;
 
 	/**
 	 * Utwórz nowe wyniki dla danej lekcji.
 	 *
 	 * @param lesson Lekcja której będą dotyczyły te wyniki.
 	 */
-	public LessonResults(Lesson lesson) {
+	public LessonResults(Lesson lesson, Map<Character, Long> charCounts,
+			Map<Character, Long> charTimes, Map<Character, Long> charMistakes)
+	{
 		// policz wszystkie znaki do przepisania w lekcji
 		totalCharsCount = 0;
 		for (String line : lesson.getTextLines()) {
@@ -59,6 +69,10 @@ public class LessonResults {
 		}
 		// policz czas pisania
 		writingTimeMilliseconds = lesson.getWritingTimeMilliseconds();
+		// statystyki
+		this.charCounts = new HashMap<Character, Long>(charCounts);
+		this.charTimes = new HashMap<Character, Long>(charTimes);
+		this.charMistakes = new HashMap<Character, Long>(charMistakes);
 	}
 
 	/**
@@ -138,6 +152,18 @@ public class LessonResults {
 			return 100.;
 		}
 		return progress;
+	}
+
+	public Map<Character, Long> getCharCounts() {
+		return charCounts;
+	}
+
+	public Map<Character, Long> getCharTimes() {
+		return charTimes;
+	}
+
+	public Map<Character, Long> getCharMistakes() {
+		return charMistakes;
 	}
 
 	public String toString() {

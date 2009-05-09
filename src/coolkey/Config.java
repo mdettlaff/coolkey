@@ -23,7 +23,7 @@ public class Config implements Serializable {
 		showKeyboard = true;
 		showGraphs = true;
 		continueAtMistakes = true;
-		lineBreakers = "\n";
+		lineBreakers = "\r";
 		keyboardLayout = QWERTY;
 	}
 

@@ -75,7 +75,7 @@ public class UserSettings {
 		final Button eors = new Button(endLine, SWT.RADIO);
 		eors.setText("Enter lub spacja");
 		String lineBreakers = CoolKey.getUser().getConfig().getLineBreakers();
-		if (lineBreakers.equals("\n")) {
+		if (lineBreakers.equals("\r")) {
 			enter.setSelection(true);
 		} else if (lineBreakers.equals(" ")) {
 			spacebar.setSelection(true);
@@ -119,11 +119,11 @@ public class UserSettings {
 				config.setShowGraphs(showGraphs.getSelection());
 				config.setContinueAtMistakes(passMistakes.getSelection());
 				if (enter.getSelection()) {
-					config.setLineBreakers("\n");
+					config.setLineBreakers("\r");
 				} else if (spacebar.getSelection()) {
 					config.setLineBreakers(" ");
 				} else if (eors.getSelection()) {
-					config.setLineBreakers("\n ");
+					config.setLineBreakers("\r ");
 				}
 				if (qwerty.getSelection()) {
 					config.setKeyboardLayout(Config.QWERTY);
