@@ -91,7 +91,9 @@ public class CoolKey {
 	}
 
 	public static void deleteUser(User user) {
-		if (users.indexOf(user) <= currentUserIndex) {
+		if (users.indexOf(user) == currentUserIndex) {
+			currentUserIndex = 0;
+		} else if (users.indexOf(user) < currentUserIndex) {
 			currentUserIndex--;
 		}
 		users.remove(user);
