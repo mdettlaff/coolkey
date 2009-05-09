@@ -1,19 +1,32 @@
 package coolkey;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- * Statystyki prędkości i poprawności dla poszczególnych znaków. Statystyki
- * generowane są na podstawie wyników testów ukończonych przez użytkownika.
+ * Statystyki prędkości i poprawności. Statystyki generowane są na podstawie
+ * wyników testów ukończonych przez użytkownika.
  */
 public class Statistics {
 
+	private List<Double> speeds;
+	private List<Double> realSpeeds;
+	private List<Double> accuracies;
 	private Map<Character, Double> charSpeeds;
 	private Map<Character, Double> charAccuracies;
 
 	public Statistics(List<TestResults> resultsList) {
+		// prędkość i poprawność w kolejnych testach
+		speeds = new ArrayList<Double>();
+		realSpeeds = new ArrayList<Double>();
+		accuracies = new ArrayList<Double>();
+		for (TestResults results : resultsList) {
+			speeds.add(results.getSpeed());
+			realSpeeds.add(results.getRealSpeed());
+			accuracies.add(results.getCorrectness());
+		}
 		// obliczamy prędkość dla poszczególnych znaków
 		Map<Character, Long> totalCharCounts = new HashMap<Character, Long>();
 		Map<Character, Long> totalCharTimes = new HashMap<Character, Long>();
@@ -57,10 +70,38 @@ public class Statistics {
 		}
 	}
 
+	/**
+	 * Prędkość w kolejnych ukończonych testach.
+	 */
+	public List<Double> getSpeeds() {
+		return speeds;
+	}
+
+	/**
+	 * Realna (tzn. nie uwzględniająca błędnie przepisanych znaków) prędkość
+	 * w kolejnych ukończonych testach.
+	 */
+	public List<Double> getRealSpeeds() {
+		return realSpeeds;
+	}
+
+	/**
+	 * Poprawność (w procentach) w kolejnych ukończonych testach.
+	 */
+	public List<Double> getAccuracies() {
+		return accuracies;
+	}
+
+	/**
+	 * Prędkość dla poszczególnych znaków.
+	 */
 	public Map<Character, Double> getCharSpeeds() {
 		return charSpeeds;
 	}
 
+	/**
+	 * Poprawność (w procentach) dla poszczególnych znaków.
+	 */
 	public Map<Character, Double> getCharAccuracies() {
 		return charAccuracies;
 	}
