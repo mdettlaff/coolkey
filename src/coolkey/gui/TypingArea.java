@@ -13,12 +13,12 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Canvas;
 
 import coolkey.CoolKey;
-import coolkey.LessonResults;
+import coolkey.TestResults;
 
 /**
  * Obszar na którym odbywa się przepisywanie.
  */
-public class WritingArea {
+public class TypingArea {
 	public static final Color COLOR_CORRECTION = new Color(GUI.display, 192, 0, 216);
 
 	private final int MAX_LINES = 12;
@@ -33,7 +33,7 @@ public class WritingArea {
 
 	private Canvas canvas;
 
-	public WritingArea() {
+	public TypingArea() {
 		canvas = new Canvas(GUI.shell, SWT.BORDER | SWT.DOUBLE_BUFFERED);
 		canvas.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
@@ -56,26 +56,26 @@ public class WritingArea {
 				gc.setFont(new Font(GUI.display, "Courier New", 10, SWT.NORMAL));
 				gc.fillRectangle(0, 0, canvasSize.x, canvasSize.y); // tło
 				// zakres linii do wyświetlenia
-				int startLine = CoolKey.getCurrentLesson().
+				int startLine = CoolKey.getCurrentTest().
 						getWrittenLines().size() - MAX_TYPING_LINES;
 				if (startLine < 0) {
 					startLine = 0;
 				}
 				int endLine = startLine + MAX_TYPING_LINES - 1;
-				if (endLine > CoolKey.getCurrentLesson().getWrittenLines().size() - 1) {
-					endLine = CoolKey.getCurrentLesson().getWrittenLines().size() - 1;
+				if (endLine > CoolKey.getCurrentTest().getWrittenLines().size() - 1) {
+					endLine = CoolKey.getCurrentTest().getWrittenLines().size() - 1;
 				}
 				// narysuj tekst do przepisania
 				int x = LEFT_MARGIN;
 				int y = TOP_MARGIN_TEXT;
 				for (int i = startLine; i <= endLine; i++) {
-					String line = CoolKey.getCurrentLesson().getTextLines().get(i);
+					String line = CoolKey.getCurrentTest().getTextLines().get(i);
 					gc.drawString(line, x, y);
 					y += LINE_HEIGHT;
 				}
-				for (int i = endLine + 1; i < CoolKey.getCurrentLesson().getTextLines().size()
+				for (int i = endLine + 1; i < CoolKey.getCurrentTest().getTextLines().size()
 						&& i < endLine + 1 + MAX_LINES - 2 * (1 + endLine - startLine); i++) {
-					String line = CoolKey.getCurrentLesson().getTextLines().get(i);
+					String line = CoolKey.getCurrentTest().getTextLines().get(i);
 					gc.drawString(line, x, y);
 					y += LINE_HEIGHT / 2;
 				}
@@ -83,19 +83,19 @@ public class WritingArea {
 				gc.setForeground(GUI.display.getSystemColor(SWT.COLOR_BLUE));
 				y = TOP_MARGIN_WRITTEN;
 				for (int i = startLine; i <= endLine; i++) {
-					String line = CoolKey.getCurrentLesson().getWrittenLines().get(i);
+					String line = CoolKey.getCurrentTest().getWrittenLines().get(i);
 					gc.drawString(line, x, y);
 					y += LINE_HEIGHT;
 				}
 				// narysuj kursor
-				String lastLine = CoolKey.getCurrentLesson().getWrittenLines().get(
-						CoolKey.getCurrentLesson().getWrittenLines().size() - 1);
+				String lastLine = CoolKey.getCurrentTest().getWrittenLines().get(
+						CoolKey.getCurrentTest().getWrittenLines().size() - 1);
 				String cursor = "";
 				for (int i=0; i < lastLine.length(); i++) {
 					cursor += ' ';
 				}
 				cursor += '_';
-				if (CoolKey.getCurrentLesson().isMistakeMade()) {
+				if (CoolKey.getCurrentTest().isMistakeMade()) {
 					gc.setForeground(GUI.display.getSystemColor(SWT.COLOR_RED));
 				}
 				y -= LINE_HEIGHT;
@@ -104,7 +104,7 @@ public class WritingArea {
 				gc.setForeground(COLOR_CORRECTION);
 				y = TOP_MARGIN_WRITTEN;
 				for (int i = startLine; i <= endLine; i++) {
-					String line = CoolKey.getCurrentLesson().getCorrections().get(i);
+					String line = CoolKey.getCurrentTest().getCorrections().get(i);
 					gc.drawString(line, x, y, true);
 					y += LINE_HEIGHT;
 				}
@@ -112,7 +112,7 @@ public class WritingArea {
 				gc.setForeground(GUI.display.getSystemColor(SWT.COLOR_RED));
 				y = TOP_MARGIN_WRITTEN;
 				for (int i = startLine; i <= endLine; i++) {
-					String line = CoolKey.getCurrentLesson().getMistakes().get(i);
+					String line = CoolKey.getCurrentTest().getMistakes().get(i);
 					gc.drawString(line, x, y, true);
 					y += LINE_HEIGHT;
 				}
@@ -128,33 +128,33 @@ public class WritingArea {
 	 * @param c Wpisywany znak.
 	 */
 	public void pressKey(char c) {
-		if (!CoolKey.getCurrentLesson().isFinished()) {
+		if (!CoolKey.getCurrentTest().isFinished()) {
 			if (c == '\r') {
-				if (CoolKey.getCurrentLesson().typeEnter()) {
+				if (CoolKey.getCurrentTest().typeEnter()) {
 					if (CoolKey.isSoundAvailable()
 							&& CoolKey.getUser().getConfig().isSoundOn()
-							&& CoolKey.getCurrentLesson().isStarted()) {
+							&& CoolKey.getCurrentTest().isStarted()) {
 						CoolKey.getSoundBank().TYPEWRITER.play();
 					}
 				} else {
 					if (CoolKey.isSoundAvailable()
 							&& CoolKey.getUser().getConfig().isSoundOn()
-							&& CoolKey.getCurrentLesson().isStarted()) {
+							&& CoolKey.getCurrentTest().isStarted()) {
 						CoolKey.getSoundBank().MISTAKE.play();
 					}
 				}
 			} else if (c == SWT.BS) {
 				if (CoolKey.isSoundAvailable()
 						&& CoolKey.getUser().getConfig().isSoundOn()
-						&& CoolKey.getCurrentLesson().isStarted()) {
+						&& CoolKey.getCurrentTest().isStarted()) {
 					CoolKey.getSoundBank().TYPEWRITER.play();
 				}
-				CoolKey.getCurrentLesson().typeBackspace();
+				CoolKey.getCurrentTest().typeBackspace();
 			} else if (!Character.isISOControl(c)) {
-				if (!CoolKey.getCurrentLesson().isStarted()) {
+				if (!CoolKey.getCurrentTest().isStarted()) {
 					GUI.graphs.reset(); // zaczynamy przepisywanie
 				}
-				if (CoolKey.getCurrentLesson().typeChar(c)) {
+				if (CoolKey.getCurrentTest().typeChar(c)) {
 					if (CoolKey.isSoundAvailable()
 							&& CoolKey.getUser().getConfig().isSoundOn()) {
 						CoolKey.getSoundBank().TYPEWRITER.play();
@@ -166,9 +166,9 @@ public class WritingArea {
 					}
 				}
 			}
-			if (CoolKey.getCurrentLesson().isFinished()) {
-				LessonResults finalResults =
-					CoolKey.getCurrentLesson().getResults();
+			if (CoolKey.getCurrentTest().isFinished()) {
+				TestResults finalResults =
+					CoolKey.getCurrentTest().getResults();
 				CoolKey.getUser().addResults(finalResults);
 				GUI.graphs.addFinalResults(finalResults);
 				GUI.graphs.refresh();
@@ -176,8 +176,8 @@ public class WritingArea {
 			}
 			canvas.redraw();
 			if (!Character.isISOControl(c)
-					&& CoolKey.getCurrentLesson().isPaused()) {
-				CoolKey.getCurrentLesson().pauseUnpause();
+					&& CoolKey.getCurrentTest().isPaused()) {
+				CoolKey.getCurrentTest().pauseUnpause();
 			}
 			GUI.buttonBar.refresh();
 			GUI.keyboard.refresh();

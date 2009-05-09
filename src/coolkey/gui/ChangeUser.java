@@ -164,8 +164,8 @@ public class ChangeUser {
 				if (isPasswordValid[0]) {
 					if (!CoolKey.getUser().equals(CoolKey.getUsers().get(
 							users.getSelectionIndex()))) {
-						if (CoolKey.getCurrentLesson().isStarted()) {
-							CoolKey.getCurrentLesson().restart();
+						if (CoolKey.getCurrentTest().isStarted()) {
+							CoolKey.getCurrentTest().restart();
 						}
 						GUI.graphs.reset();
 					}

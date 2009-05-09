@@ -124,8 +124,8 @@ public class AddUser {
 	    			}
 	    			User newUser = new User(name.getText(), pass);
 	    			if (!CoolKey.getUsers().contains(newUser)) {
-		    			if (CoolKey.getCurrentLesson().isStarted()) {
-		    				CoolKey.getCurrentLesson().restart();
+		    			if (CoolKey.getCurrentTest().isStarted()) {
+		    				CoolKey.getCurrentTest().restart();
 		    			}
 	    				GUI.graphs.reset();
 		    			CoolKey.addUser(newUser);

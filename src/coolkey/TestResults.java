@@ -7,60 +7,60 @@ import java.util.Map;
 /**
  * Wyniki ćwiczenia polegającego na przepisywaniu.
  */
-public class LessonResults implements Serializable {
+public class TestResults implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private int mistakesCount;
 	private int correctionsCount;
 	private int totalCharsCount;
 	private int writtenCharsCount;
-	private int writingTimeMilliseconds;
+	private int typingTimeMilliseconds;
 	private Map<Character, Long> charCounts;
 	private Map<Character, Long> charTimes;
 	private Map<Character, Long> charMistakes;
 
 	/**
-	 * Utwórz nowe wyniki dla danej lekcji.
+	 * Utwórz nowe wyniki dla danego testu.
 	 *
-	 * @param lesson Lekcja której będą dotyczyły te wyniki.
+	 * @param test Test którego będą dotyczyły te wyniki.
 	 */
-	public LessonResults(Lesson lesson, Map<Character, Long> charCounts,
+	public TestResults(TypingTest test, Map<Character, Long> charCounts,
 			Map<Character, Long> charTimes, Map<Character, Long> charMistakes)
 	{
-		// policz wszystkie znaki do przepisania w lekcji
+		// policz wszystkie znaki do przepisania
 		totalCharsCount = 0;
-		for (String line : lesson.getTextLines()) {
+		for (String line : test.getTextLines()) {
 			totalCharsCount += line.length() + 1; // +1 za Enter
 		}
 		// policz wszystkie przepisane znaki (również błędne)
 		writtenCharsCount = 0;
-		for (String line : lesson.getWrittenLines()) {
+		for (String line : test.getWrittenLines()) {
 			writtenCharsCount += line.length();
 		}
-		writtenCharsCount += lesson.getWrittenLines().size() - 1; // za Entery
-		if (lesson.isFinished()) {
+		writtenCharsCount += test.getWrittenLines().size() - 1; // za Entery
+		if (test.isFinished()) {
 			writtenCharsCount++; // +1 za ostatni Enter
 		}
 		// policz błędnie przepisane znaki
 		mistakesCount = 0;
-		for (int j=0; j < lesson.getMistakes().size(); j++) {
-			String line = lesson.getMistakes().get(j);
+		for (int j=0; j < test.getMistakes().size(); j++) {
+			String line = test.getMistakes().get(j);
 			for (int i=0; i < line.length(); i++) {
 				if (line.charAt(i) != ' ') {
 					mistakesCount++;
 				}
 			}
-			if (line.length() != lesson.getTextLines().get(j).length()) {
-				if (j < lesson.getMistakes().size() - 1) {
+			if (line.length() != test.getTextLines().get(j).length()) {
+				if (j < test.getMistakes().size() - 1) {
 					mistakesCount++; // +1 za źle przepisany Enter
-				} else if (lesson.isFinished()) {
+				} else if (test.isFinished()) {
 					mistakesCount++; // +1 za ostatni źle przepisany Enter
 				}
 			}
 		}
 		// policz poprawione znaki
 		correctionsCount = 0;
-		for (String line : lesson.getCorrections()) {
+		for (String line : test.getCorrections()) {
 			for (int i=0; i < line.length(); i++) {
 				if (line.charAt(i) != ' ') {
 					correctionsCount++;
@@ -68,7 +68,7 @@ public class LessonResults implements Serializable {
 			}
 		}
 		// policz czas pisania
-		writingTimeMilliseconds = lesson.getWritingTimeMilliseconds();
+		typingTimeMilliseconds = test.getTypingTimeMilliseconds();
 		// statystyki
 		this.charCounts = new HashMap<Character, Long>(charCounts);
 		this.charTimes = new HashMap<Character, Long>(charTimes);
@@ -80,7 +80,7 @@ public class LessonResults implements Serializable {
 	 */
 	public double getSpeed() {
 		int charsCount = getWrittenCharsCount();
-		double timeMinutes = ((double)writingTimeMilliseconds) / 1000 / 60;
+		double timeMinutes = ((double)typingTimeMilliseconds) / 1000 / 60;
 		return charsCount / timeMinutes;
 	}
 
@@ -89,7 +89,7 @@ public class LessonResults implements Serializable {
 	 */
 	public double getRealSpeed() {
 		int charsCount = getWrittenCharsCount() - getMistakesCount();
-		double timeMinutes = ((double)writingTimeMilliseconds) / 1000 / 60;
+		double timeMinutes = ((double)typingTimeMilliseconds) / 1000 / 60;
 		return charsCount / timeMinutes;
 	}
 
@@ -105,7 +105,7 @@ public class LessonResults implements Serializable {
 	}
 
 	/**
-	 * Ilość wszystkich znaków jakie są do przepisania w lekcji.
+	 * Ilość wszystkich znaków jakie są do przepisania.
 	 */
 	public int getTotalCharsCount() {
 		return totalCharsCount;
@@ -139,12 +139,12 @@ public class LessonResults implements Serializable {
 	 * @return Czas pisania w milisekundach lub <code>-1</code> jeśli
 	 *         nie rozpoczęto jeszcze pisania.
 	 */
-	public int getWritingTimeMilliseconds() {
-		return writingTimeMilliseconds;
+	public int getTypingTimeMilliseconds() {
+		return typingTimeMilliseconds;
 	}
 
 	/**
-	 * Stopień ukończenia lekcji w procentach.
+	 * Stopień ukończenia testu w procentach.
 	 */
 	public double getProgress() {
 		double progress = ((double)writtenCharsCount) / totalCharsCount * 100;
@@ -167,9 +167,9 @@ public class LessonResults implements Serializable {
 	}
 
 	public String toString() {
-		int writingTimeSeconds = getWritingTimeMilliseconds() / 1000;
-		int minutes = writingTimeSeconds / 60;
-		int seconds = writingTimeSeconds % 60;
+		int typingTimeSeconds = getTypingTimeMilliseconds() / 1000;
+		int minutes = typingTimeSeconds / 60;
+		int seconds = typingTimeSeconds % 60;
 		String formatString = "prędkość: %.1f znaków/min\n"
 			+ "realna prędkość: %.1f znaków/min\n"
 			+ "poprawność: %.1f%% (%d błędów)\n"

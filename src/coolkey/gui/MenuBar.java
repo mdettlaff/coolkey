@@ -20,7 +20,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Spinner;
 
 import coolkey.CoolKey;
-import coolkey.Lesson;
+import coolkey.TypingTest;
 import coolkey.Markov;
 import coolkey.Utils;
 import coolkey.defender.Defender;
@@ -172,7 +172,7 @@ public class MenuBar {
 					String text;
 					try {
 						text = Utils.readFileAsString(new File(result));
-						CoolKey.setCurrentLesson(new Lesson(text));
+						CoolKey.setCurrentTest(new TypingTest(text));
 						GUI.refresh();
 					} catch (IOException e) {
 						MessageBox messageBox = new MessageBox(GUI.shell, SWT.ICON_ERROR);
@@ -226,7 +226,7 @@ public class MenuBar {
 						int minGenTextLines = spinner.getSelection();
 						int minGenTextLength = (minGenTextLines - 1) * (
 								CoolKey.MAX_CHARS_IN_LINE - 1);
-						CoolKey.setCurrentLesson(new Lesson(
+						CoolKey.setCurrentTest(new TypingTest(
 								Markov.generateMarkovChain(
 										Utils.words(
 												CoolKey.TEXT_DIRECTORY),
