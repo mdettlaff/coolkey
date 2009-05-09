@@ -21,14 +21,14 @@ public class Stats {
 				| SWT.APPLICATION_MODAL | SWT.RESIZE);
 		statsShell.setText("Statystyka");
 		statsShell.setLayout(new FillLayout());
-		
+
 		CTabFolder stats = new CTabFolder(statsShell, SWT.BORDER | SWT.MULTI);
-		
+
 		CTabItem speed = new CTabItem(stats, SWT.NONE);
 		speed.setText("Prędkość  ");
 		CTabItem accuracy = new CTabItem(stats, SWT.NONE);
 		accuracy.setText("Poprawność  ");
-		
+
 		Composite speedComp = new Composite(stats, SWT.NONE);
 		speedComp.setLayout(new FillLayout());
 		Composite accuracyComp = new Composite(stats, SWT.NONE);
@@ -41,11 +41,19 @@ public class Stats {
 		/*Canvas accCanv = */new Canvas(accuracyComp, SWT.BORDER);
 		//TODO canvas statystyk poprawności
 
-		System.out.println("Statystyki prędkości dla poszczególnych znaków:");
+		System.out.println("Statystyki dla kolejnych ukończonych testów:");
+		System.out.println("Prędkość: "
+				+ CoolKey.getUser().getStatistics().getSpeeds());
+		System.out.println("Realna prędkość: "
+				+ CoolKey.getUser().getStatistics().getRealSpeeds());
+		System.out.println("Poprawność: "
+				+ CoolKey.getUser().getStatistics().getAccuracies());
+		System.out.println("Statystyki dla poszczególnych znaków:");
 		// Enter to '\r' (powrót karetki)
-		System.out.println(CoolKey.getUser().getStatistics().getCharSpeeds());
-		System.out.println("Statystyki poprawności:");
-		System.out.println(CoolKey.getUser().getStatistics().getCharAccuracies());
+		System.out.println("Prędkość: "
+				+ CoolKey.getUser().getStatistics().getCharSpeeds());
+		System.out.println("Poprawność: "
+				+ CoolKey.getUser().getStatistics().getCharAccuracies());
 
 		statsShell.setSize(400, 300);
 	}
