@@ -18,9 +18,9 @@ public class User implements Serializable {
 	private String name;
 	private String passwordHash;
 	private Config config;
-	private Lesson currentLesson;
+	private TypingTest currentTest;
 	private List<Score> highscore;
-	private List<LessonResults> resultsList;
+	private List<TestResults> resultsList;
 
 	public User(String name, String password) {
 		this.name = name;
@@ -31,12 +31,12 @@ public class User implements Serializable {
 		}
 		config = new Config();
 		highscore = new ArrayList<Score>();
-		resultsList = new ArrayList<LessonResults>();
+		resultsList = new ArrayList<TestResults>();
 		// domyślna lekcja
 		int minGenTextLines = 10;
 		int minGenTextLength = (minGenTextLines - 1) * (
 				CoolKey.MAX_CHARS_IN_LINE - 1);
-		setCurrentLesson(new Lesson(Markov.generateMarkovChain(
+		setCurrentTest(new TypingTest(Markov.generateMarkovChain(
 				Utils.words(CoolKey.TEXT_DIRECTORY), minGenTextLength)));
 	}
 
@@ -116,12 +116,12 @@ public class User implements Serializable {
 		return config;
 	}
 
-	public Lesson getCurrentLesson() {
-		return currentLesson;
+	public TypingTest getCurrentTest() {
+		return currentTest;
 	}
 
-	public void setCurrentLesson(Lesson currentLesson) {
-		this.currentLesson = currentLesson;
+	public void setCurrentTest(TypingTest test) {
+		this.currentTest = test;
 	}
 
 	/**
@@ -138,7 +138,7 @@ public class User implements Serializable {
 		return highscore;
 	}
 
-	public void addResults(LessonResults results) {
+	public void addResults(TestResults results) {
 		this.resultsList.add(results);
 	}
 

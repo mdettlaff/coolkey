@@ -13,11 +13,11 @@ public class Statistics {
 	private Map<Character, Double> charSpeeds;
 	private Map<Character, Double> charAccuracies;
 
-	public Statistics(List<LessonResults> resultsList) {
+	public Statistics(List<TestResults> resultsList) {
 		// obliczamy prędkość dla poszczególnych znaków
 		Map<Character, Long> totalCharCounts = new HashMap<Character, Long>();
 		Map<Character, Long> totalCharTimes = new HashMap<Character, Long>();
-		for (LessonResults result : resultsList) {
+		for (TestResults result : resultsList) {
 			for (char c : result.getCharCounts().keySet()) {
 				if (totalCharCounts.containsKey(c)) {
 					totalCharCounts.put(c, totalCharCounts.get(c)
@@ -40,7 +40,7 @@ public class Statistics {
 		}
 		// obliczamy poprawność dla poszczególnych znaków
 		Map<Character, Long> totalCharMistakes = new HashMap<Character, Long>();
-		for (LessonResults result : resultsList) {
+		for (TestResults result : resultsList) {
 			for (char c : result.getCharCounts().keySet()) {
 				if (totalCharMistakes.containsKey(c)) {
 					totalCharMistakes.put(c, totalCharMistakes.get(c)

@@ -136,7 +136,7 @@ public class Keyboard {
 							}
 							if (c == keyChar
 									|| Character.toUpperCase(c) == keyChar) {
-								if (CoolKey.getCurrentLesson().isMistakeMade()) {
+								if (CoolKey.getCurrentTest().isMistakeMade()) {
 									gc.drawImage(keyMistake, x, y);
 								} else {
 									gc.drawImage(keyHighlighted, x, y);
@@ -151,13 +151,13 @@ public class Keyboard {
 							if (c == keyChar
 									|| layout[j].charAt(i+1) == keyChar) {
 								if (c == '|') {
-									if (CoolKey.getCurrentLesson().isMistakeMade()) {
+									if (CoolKey.getCurrentTest().isMistakeMade()) {
 										gc.drawImage(keyLongMistake, x, y);
 									} else {
 										gc.drawImage(keyLongHighlighted, x, y);
 									}
 								} else {
-									if (CoolKey.getCurrentLesson().isMistakeMade()) {
+									if (CoolKey.getCurrentTest().isMistakeMade()) {
 										gc.drawImage(keyMistake, x, y);
 									} else {
 										gc.drawImage(keyHighlighted, x, y);
@@ -180,7 +180,7 @@ public class Keyboard {
 				}
 				// podświetl spację
 				if (nextChar == ' ') {
-					if (CoolKey.getCurrentLesson().isMistakeMade()) {
+					if (CoolKey.getCurrentTest().isMistakeMade()) {
 						gc.drawImage(spaceMistake, SPACE_COORDS.x, SPACE_COORDS.y);
 					} else {
 						gc.drawImage(spaceHighlighted, SPACE_COORDS.x, SPACE_COORDS.y);
@@ -188,7 +188,7 @@ public class Keyboard {
 				}
 				// podświetl Alt Gr
 				if (POLISH_CHARS.indexOf(nextChar) != -1) {
-					if (CoolKey.getCurrentLesson().isMistakeMade()) {
+					if (CoolKey.getCurrentTest().isMistakeMade()) {
 						gc.drawImage(altGrMistake, ALT_GR_COORDS.x, ALT_GR_COORDS.y);
 					} else {
 						gc.drawImage(altGrHighlighted, ALT_GR_COORDS.x, ALT_GR_COORDS.y);
@@ -196,7 +196,7 @@ public class Keyboard {
 				}
 				// podświetl Shift
 				if (isShiftCharacter) {
-					if (CoolKey.getCurrentLesson().isMistakeMade()) {
+					if (CoolKey.getCurrentTest().isMistakeMade()) {
 						if (leftHand) {
 							gc.drawImage(rightShiftMistake,
 									RIGHT_SHIFT_COORDS.x, RIGHT_SHIFT_COORDS.y);
@@ -216,7 +216,7 @@ public class Keyboard {
 				}
 				// podświetl Enter
 				if (nextChar == '\r') {
-					if (CoolKey.getCurrentLesson().isMistakeMade()) {
+					if (CoolKey.getCurrentTest().isMistakeMade()) {
 						gc.drawImage(enterMistake, ENTER_COORDS.x, ENTER_COORDS.y);
 					} else {
 						gc.drawImage(enterHighlighted, ENTER_COORDS.x, ENTER_COORDS.y);
@@ -229,7 +229,7 @@ public class Keyboard {
 	}
 
 	public void refresh() {
-		nextChar = CoolKey.getCurrentLesson().getNextChar();
+		nextChar = CoolKey.getCurrentTest().getNextChar();
 		canvas.redraw();
 	}
 }

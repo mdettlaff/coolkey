@@ -36,7 +36,7 @@ public class GUI {
 	 */
 	public static Shell shell;
 
-	public static WritingArea writingArea;
+	public static TypingArea typingArea;
 	public static ButtonBar buttonBar;
 	public static Keyboard keyboard;
 	public static Graphs graphs;
@@ -62,7 +62,7 @@ public class GUI {
 		shell.setSize(780, 580);
 
 		new MenuBar();
-		writingArea = new WritingArea(); // obszar przepisywania
+		typingArea = new TypingArea(); // obszar przepisywania
 		graphs = new Graphs(); // panel z wykresami po prawej (nowy wątek)
 		buttonBar = new ButtonBar();
 		keyboard = new Keyboard();
@@ -86,14 +86,14 @@ public class GUI {
 			if (!display.readAndDispatch()) display.sleep();
 		}
 		// zamykanie programu
-		if (CoolKey.getCurrentLesson().isStarted()) {
-			CoolKey.getCurrentLesson().restart();
+		if (CoolKey.getCurrentTest().isStarted()) {
+			CoolKey.getCurrentTest().restart();
 		}
 		display.dispose();
 	}
 
 	public static void refresh() {
-		writingArea.refresh();
+		typingArea.refresh();
 		buttonBar.refresh();
 		keyboard.refresh();
 		graphs.refresh();

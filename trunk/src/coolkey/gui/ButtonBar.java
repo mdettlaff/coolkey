@@ -17,7 +17,7 @@ import coolkey.CoolKey;
 public class ButtonBar {
 
 	private Button pause;
-	private Button restartLesson;
+	private Button restartTest;
 
 	public ButtonBar() {
 		Composite comp = new Composite(GUI.shell, SWT.NONE);
@@ -28,21 +28,21 @@ public class ButtonBar {
 		pause.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
-				CoolKey.getCurrentLesson().pauseUnpause();
+				CoolKey.getCurrentTest().pauseUnpause();
 				refresh();
-				GUI.writingArea.setFocus();
+				GUI.typingArea.setFocus();
 			}
 		});
-		// przycisk restartujący lekcję
-		restartLesson = new Button(comp, SWT.PUSH);
-		restartLesson.setText("Zacznij od nowa");
-		restartLesson.addListener(SWT.Selection, new Listener() {
+		// przycisk restartujący test przepisywania
+		restartTest = new Button(comp, SWT.PUSH);
+		restartTest.setText("Zacznij od nowa");
+		restartTest.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
 				boolean wasPaused = true;
-				if (!CoolKey.getCurrentLesson().isPaused()) {
+				if (!CoolKey.getCurrentTest().isPaused()) {
 					wasPaused = false;
-					CoolKey.getCurrentLesson().pauseUnpause(); // zapauzuj
+					CoolKey.getCurrentTest().pauseUnpause(); // zapauzuj
 				}
 				MessageBox confirmation = new MessageBox(GUI.shell,
 						SWT.ICON_QUESTION | SWT.YES | SWT.NO);
@@ -51,13 +51,13 @@ public class ButtonBar {
 						"Czy na pewno chcesz rozpocząć to ćwiczenie od nowa?");
 				int response = confirmation.open();
 				if (response == SWT.YES) {
-					CoolKey.getCurrentLesson().restart();
+					CoolKey.getCurrentTest().restart();
 					GUI.keyboard.refresh();
-					GUI.writingArea.refresh();
+					GUI.typingArea.refresh();
 				} else if (!wasPaused) {
-					CoolKey.getCurrentLesson().pauseUnpause(); // odpauzuj
+					CoolKey.getCurrentTest().pauseUnpause(); // odpauzuj
 				}
-				GUI.writingArea.setFocus();
+				GUI.typingArea.setFocus();
 				refresh();
 			}
 		});
@@ -65,10 +65,10 @@ public class ButtonBar {
 	}
 
 	public void refresh() {
-		if (CoolKey.getCurrentLesson().isStarted()
-				&& !CoolKey.getCurrentLesson().isFinished()) {
+		if (CoolKey.getCurrentTest().isStarted()
+				&& !CoolKey.getCurrentTest().isFinished()) {
 			pause.setEnabled(true);
-			if (!CoolKey.getCurrentLesson().isPaused()) {
+			if (!CoolKey.getCurrentTest().isPaused()) {
 				pause.setText(" Pauza ");
 			} else {
 				pause.setText("Wznów");
@@ -77,6 +77,6 @@ public class ButtonBar {
 			pause.setText(" Pauza ");
 			pause.setEnabled(false);
 		}
-		restartLesson.setEnabled(CoolKey.getCurrentLesson().isStarted());
+		restartTest.setEnabled(CoolKey.getCurrentTest().isStarted());
 	}
 }

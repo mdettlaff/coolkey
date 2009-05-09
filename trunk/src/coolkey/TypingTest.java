@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * Ćwiczenie polegające na przepisywaniu zadanego tekstu.
  */
-public class Lesson implements Serializable {
+public class TypingTest implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private List<String> textLines = new ArrayList<String>();
@@ -33,7 +33,7 @@ public class Lesson implements Serializable {
 	 *
 	 * @param text Tekst do przepisania.
 	 */
-	public Lesson(String text) {
+	public TypingTest(String text) {
 		for (String line : text.replaceAll(" +", " ").replaceAll("\r", "")
 				.trim().split("\n")) {
 			textLines.add(line);
@@ -181,7 +181,7 @@ public class Lesson implements Serializable {
 	}
 
 	/**
-	 * Rozpocznij lekcję od nowa.
+	 * Rozpocznij test od nowa.
 	 */
 	public void restart() {
 		timeStarted = null;
@@ -202,7 +202,7 @@ public class Lesson implements Serializable {
 	}
 
 	/**
-	 * Tekst do przepisania w tej lekcji.
+	 * Tekst do przepisania.
 	 */
 	public List<String> getTextLines() {
 		return textLines;
@@ -267,7 +267,7 @@ public class Lesson implements Serializable {
 	 * @return Czas pisania w milisekundach lub <code>-1</code> jeśli
 	 *         nie rozpoczęto jeszcze pisania.
 	 */
-	public int getWritingTimeMilliseconds() {
+	public int getTypingTimeMilliseconds() {
 		if (timeStarted == null) {
 			return -1;
 		} else {
@@ -276,7 +276,7 @@ public class Lesson implements Serializable {
 				timeElapsed = new Date();
 			}
 			long interval = timeElapsed.getTime() - timeStarted.getTime();
-			// odejmij czas, w którym lekcja była zapauzowana
+			// odejmij czas, w którym test był zapauzowany
 			long pausedInterval = 0;
 			for (int i=0; i < timesPaused.size(); i++) {
 				if (i % 2 == 0) {
@@ -295,10 +295,10 @@ public class Lesson implements Serializable {
 	}
 
 	/**
-	 * Wyniki z tej lekcji (prędkość, poprawność itp.).
+	 * Wyniki testu (prędkość, poprawność, dane statystyczne itp.).
 	 */
-	public LessonResults getResults() {
-		return new LessonResults(this, charCounts, charTimes, charMistakes);
+	public TestResults getResults() {
+		return new TestResults(this, charCounts, charTimes, charMistakes);
 	}
 
 	/**
@@ -329,7 +329,7 @@ public class Lesson implements Serializable {
 				&& isBlockedAtMistake) {
 			return true;
 		}
-		for (String line : CoolKey.getCurrentLesson().getMistakes()) {
+		for (String line : CoolKey.getCurrentTest().getMistakes()) {
 			for (int i=0; i < line.length(); i++) {
 				if (line.charAt(i) != ' ') {
 					return true;
@@ -340,9 +340,9 @@ public class Lesson implements Serializable {
 	}
 
 	/**
-	 * Sprawdź czy lekcja się rozpoczęła.
+	 * Sprawdź czy test się rozpoczął.
 	 *
-	 * @return <code>true</code> jeśli lekcja się rozpoczęła,
+	 * @return <code>true</code> jeśli test się rozpoczął,
 	 *         <code>false</code> w przeciwnym wypadku.
 	 */
 	public boolean isStarted() {
@@ -350,9 +350,9 @@ public class Lesson implements Serializable {
 	}
 
 	/**
-	 * Sprawdź czy lekcja się zakończyła.
+	 * Sprawdź czy test się zakończył.
 	 *
-	 * @return <code>true</code> jeśli lekcja się już zakończyła,
+	 * @return <code>true</code> jeśli test się zakończył,
 	 *         <code>false</code> w przeciwnym wypadku.
 	 */
 	public boolean isFinished() {
@@ -360,7 +360,7 @@ public class Lesson implements Serializable {
 	}
 
 	/**
-	 * Zapauzuj lekcję, lub wznów jeśli jest zapauzowana.
+	 * Zapauzuj test, lub wznów jeśli jest zapauzowany.
 	 */
 	public void pauseUnpause() {
 		isPaused = !isPaused;

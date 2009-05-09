@@ -65,12 +65,12 @@ public class CoolKey {
 		CoolKey.persistState();
 	}
 
-	public static Lesson getCurrentLesson() {
-		return getUser().getCurrentLesson();
+	public static TypingTest getCurrentTest() {
+		return getUser().getCurrentTest();
 	}
 
-	public static void setCurrentLesson(Lesson currentLesson) {
-		getUser().setCurrentLesson(currentLesson);
+	public static void setCurrentTest(TypingTest test) {
+		getUser().setCurrentTest(test);
 	}
 
 	/**
@@ -116,15 +116,15 @@ public class CoolKey {
 		return dictionary;
 	}
 
-	public static SoundBank getSoundBank() {
-		return soundBank;
-	}
-
 	/**
 	 * Czy karta dźwiękowa jest dostępna.
 	 */
 	public static boolean isSoundAvailable() {
 		return isSoundAvailable;
+	}
+
+	public static SoundBank getSoundBank() {
+		return soundBank;
 	}
 
 	/**

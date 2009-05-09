@@ -12,7 +12,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Canvas;
 
 import coolkey.CoolKey;
-import coolkey.LessonResults;
+import coolkey.TestResults;
 
 /**
  * Panel z wykresami po prawej stronie. Wykresy są animowane w osobnym wątku.
@@ -28,7 +28,7 @@ public class Graphs implements Runnable	{
 	private Thread thread;
 	private Canvas canvas;
 
-	private List<LessonResults> resultsList = new ArrayList<LessonResults>();
+	private List<TestResults> resultsList = new ArrayList<TestResults>();
 
 	public Graphs() {
 		canvas = new Canvas(GUI.shell, SWT.BORDER | SWT.DOUBLE_BUFFERED);
@@ -53,11 +53,11 @@ public class Graphs implements Runnable	{
 				gc.drawString("czas: ", 15, 24);
 				gc.drawString("postęp: ", 15, 60);
 				if (resultsList.size() > 0) {
-					LessonResults newestResults = resultsList.get(
+					TestResults newestResults = resultsList.get(
 							resultsList.size() - 1);
 					String progress = String.format("%.0f%%",
 							newestResults.getProgress());
-					int seconds = newestResults.getWritingTimeMilliseconds() / 1000;
+					int seconds = newestResults.getTypingTimeMilliseconds() / 1000;
 					gc.drawString(seconds + "", 15, 40);
 					gc.drawString(progress, 15, 76);
 					String s = "";
@@ -97,15 +97,15 @@ public class Graphs implements Runnable	{
 		if (n > resultsList.size()) {
 			return -1.;
 		}
-		LessonResults resultsOld = resultsList.get(resultsList.size() - n); 
-		LessonResults resultsNew = resultsList.get(resultsList.size() - 1); 
+		TestResults resultsOld = resultsList.get(resultsList.size() - n); 
+		TestResults resultsNew = resultsList.get(resultsList.size() - 1); 
 		int charsCount = resultsNew.getWrittenCharsCount()
 				- resultsOld.getWrittenCharsCount();
 		if (charsCount < 1) {
 			return 0.;
 		}
-		long timeStarted = resultsOld.getWritingTimeMilliseconds();
-		long timeFinished = resultsNew.getWritingTimeMilliseconds();
+		long timeStarted = resultsOld.getTypingTimeMilliseconds();
+		long timeFinished = resultsNew.getTypingTimeMilliseconds();
 		long interval = timeFinished - timeStarted;
 		double timeMinutes = ((double)interval) / 1000 / 60;
 		return charsCount / timeMinutes;
@@ -122,7 +122,7 @@ public class Graphs implements Runnable	{
 	 * Dodaj wyniki do listy wyników. Należy używać tej metody w celu
 	 * ustalenia wyników końcowych, tuż przed zakończeniem testu.
 	 */
-	public void addFinalResults(LessonResults results) {
+	public void addFinalResults(TestResults results) {
 		resultsList.add(results);
 	}
 
@@ -137,10 +137,10 @@ public class Graphs implements Runnable	{
 	public void run() {
 		try {
 			while (!GUI.shell.isDisposed()) {
-				if (CoolKey.getCurrentLesson().isStarted()
-						&& !CoolKey.getCurrentLesson().isPaused()
-						&& !CoolKey.getCurrentLesson().isFinished()) {
-					resultsList.add(CoolKey.getCurrentLesson().getResults());
+				if (CoolKey.getCurrentTest().isStarted()
+						&& !CoolKey.getCurrentTest().isPaused()
+						&& !CoolKey.getCurrentTest().isFinished()) {
+					resultsList.add(CoolKey.getCurrentTest().getResults());
 					GUI.display.asyncExec(new Runnable() {
 						public void run() {
 							refresh();
