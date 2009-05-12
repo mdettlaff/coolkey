@@ -32,7 +32,7 @@ public class Engine implements Runnable {
 	public static final int WIDTH = 640;
 	public static final int HEIGHT = 480;
 	
-	public static final int GAME_LIFE_MAX = 3;
+	public static final int GAME_LIFE_MAX = 5;
 	public static final int GAME_LEVEL_MAX = 21;
 	public static final int GAME_GROUND = 416;
 	public static final double GAME_EXPLOSION_SPEED = 6.6667;
