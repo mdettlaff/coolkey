@@ -48,7 +48,7 @@ public class Keyboard {
 	           ":;qjkxbmwvz"
 	};
 	private final String POLISH_CHARS = "ĄąĆćĘęŁłŃńÓóŚśŻżŹź";
-	private final String POLISH2LATIN_CHARS = "AaCcEeLlNnOoSsZzZz";
+	private final String POLISH2LATIN_CHARS = "AaCcEeLlNnOoSsZzXx";
 	private final Canvas canvas;
 	private final Image blankKeyboard;
 	private final Image keyHighlighted;
