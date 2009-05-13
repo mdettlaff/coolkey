@@ -20,8 +20,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Spinner;
 
 import coolkey.CoolKey;
-import coolkey.TypingTest;
 import coolkey.Markov;
+import coolkey.TypingTest;
 import coolkey.Utils;
 import coolkey.defender.Defender;
 import coolkey.defender.Engine;
@@ -91,8 +91,8 @@ public class MenuBar {
 		lessonsItem.setMenu(lessonsMenu);
 		MenuItem practiseItem = new MenuItem(singleTestMenu, SWT.PUSH);
 		practiseItem.setText("Wprawki");
-		MenuItem ownTextItem = new MenuItem(singleTestMenu, SWT.PUSH);
-		ownTextItem.setText("Test spersonalizowany");
+		MenuItem customTestItem = new MenuItem(singleTestMenu, SWT.PUSH);
+		customTestItem.setText("Test spersonalizowany");
 
 		/* Gra */
 		final MenuItem game = new MenuItem(menu, SWT.CASCADE);
@@ -246,6 +246,13 @@ public class MenuBar {
 
 				shell.pack();
 				shell.open();
+			}
+		});
+		// test spersonalizowany
+		customTestItem.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				new CustomTest();
 			}
 		});
 		// rozpocznij grę

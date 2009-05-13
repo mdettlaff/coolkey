@@ -18,6 +18,18 @@ import coolkey.CoolKey;
  * Wizualizacja klawiatury, z podświetleniem następnego klawisza.
  */
 public class Keyboard {
+	public static final String[] QWERTY = {
+	        "~`!1@2#3$4%5^6&7*8(9)0_-+=",
+	        "qwertyuiop{[}]|\\",
+	        "asdfghjkl:;\"'",
+	        "zxcvbnm<,>.?/"
+	};
+	public static final String[] Dvorak = {
+	        "~`!1@2#3$4%5^6&7*8(9)0{[}]",
+	        "\"'<,>.pyfgcrl?/+=|\\",
+	            "aoeuidhtns_-",
+	           ":;qjkxbmwvz"
+	};
 	private final int CANVAS_HEIGHT = 186;
 	private final int KEY_WIDTH = 37;
 	private final int KEY_HEIGHT = KEY_WIDTH;
@@ -35,18 +47,6 @@ public class Keyboard {
 	private final Point SPACE_COORDS = new Point(148, 148);
 	private final Point ENTER_COORDS = new Point(471, 74);
 	private final Point ALT_GR_COORDS = new Point(370, 148);
-	private final String[] QWERTY = {
-	        "~`!1@2#3$4%5^6&7*8(9)0_-+=",
-	        "qwertyuiop{[}]|\\",
-	        "asdfghjkl:;\"'",
-	        "zxcvbnm<,>.?/"
-	};
-	private final String[] Dvorak = {
-	        "~`!1@2#3$4%5^6&7*8(9)0{[}]",
-	        "\"'<,>.pyfgcrl?/+=|\\",
-	            "aoeuidhtns_-",
-	           ":;qjkxbmwvz"
-	};
 	private final String POLISH_CHARS = "ĄąĆćĘęŁłŃńÓóŚśŻżŹź";
 	private final String POLISH2LATIN_CHARS = "AaCcEeLlNnOoSsZzXx";
 	private final Canvas canvas;
@@ -67,6 +67,7 @@ public class Keyboard {
 	private final Image keyLongMistake;
 
 	private Character nextChar;
+	private boolean isMistakeMade;
 	private boolean leftHand;
 
 	public Keyboard() {
@@ -136,7 +137,7 @@ public class Keyboard {
 							}
 							if (c == keyChar
 									|| Character.toUpperCase(c) == keyChar) {
-								if (CoolKey.getCurrentTest().isMistakeMade()) {
+								if (isMistakeMade) {
 									gc.drawImage(keyMistake, x, y);
 								} else {
 									gc.drawImage(keyHighlighted, x, y);
@@ -151,13 +152,13 @@ public class Keyboard {
 							if (c == keyChar
 									|| layout[j].charAt(i+1) == keyChar) {
 								if (c == '|') {
-									if (CoolKey.getCurrentTest().isMistakeMade()) {
+									if (isMistakeMade) {
 										gc.drawImage(keyLongMistake, x, y);
 									} else {
 										gc.drawImage(keyLongHighlighted, x, y);
 									}
 								} else {
-									if (CoolKey.getCurrentTest().isMistakeMade()) {
+									if (isMistakeMade) {
 										gc.drawImage(keyMistake, x, y);
 									} else {
 										gc.drawImage(keyHighlighted, x, y);
@@ -180,7 +181,7 @@ public class Keyboard {
 				}
 				// podświetl spację
 				if (nextChar == ' ') {
-					if (CoolKey.getCurrentTest().isMistakeMade()) {
+					if (isMistakeMade) {
 						gc.drawImage(spaceMistake, SPACE_COORDS.x, SPACE_COORDS.y);
 					} else {
 						gc.drawImage(spaceHighlighted, SPACE_COORDS.x, SPACE_COORDS.y);
@@ -188,7 +189,7 @@ public class Keyboard {
 				}
 				// podświetl Alt Gr
 				if (POLISH_CHARS.indexOf(nextChar) != -1) {
-					if (CoolKey.getCurrentTest().isMistakeMade()) {
+					if (isMistakeMade) {
 						gc.drawImage(altGrMistake, ALT_GR_COORDS.x, ALT_GR_COORDS.y);
 					} else {
 						gc.drawImage(altGrHighlighted, ALT_GR_COORDS.x, ALT_GR_COORDS.y);
@@ -196,7 +197,7 @@ public class Keyboard {
 				}
 				// podświetl Shift
 				if (isShiftCharacter) {
-					if (CoolKey.getCurrentTest().isMistakeMade()) {
+					if (isMistakeMade) {
 						if (leftHand) {
 							gc.drawImage(rightShiftMistake,
 									RIGHT_SHIFT_COORDS.x, RIGHT_SHIFT_COORDS.y);
@@ -216,7 +217,7 @@ public class Keyboard {
 				}
 				// podświetl Enter
 				if (nextChar == '\r') {
-					if (CoolKey.getCurrentTest().isMistakeMade()) {
+					if (isMistakeMade) {
 						gc.drawImage(enterMistake, ENTER_COORDS.x, ENTER_COORDS.y);
 					} else {
 						gc.drawImage(enterHighlighted, ENTER_COORDS.x, ENTER_COORDS.y);
@@ -230,6 +231,7 @@ public class Keyboard {
 
 	public void refresh() {
 		nextChar = CoolKey.getCurrentTest().getNextChar();
+		isMistakeMade = CoolKey.getCurrentTest().isMistakeMade();
 		canvas.redraw();
 	}
 }
