@@ -12,30 +12,30 @@ import java.io.ObjectOutputStream;
  */
 public class Persistence {
 
-	private File cacheDir;
-	private File usersFile;
-	private File lastUserFile;
+	public File USERS;
+	public File LAST_USER;
+	private File stateDir;
 
 	public Persistence() {
 		String osName = System.getProperty("os.name");
 		if (osName.equalsIgnoreCase("Linux")) {
-			cacheDir = new File(System.getProperty("user.home")
+			stateDir = new File(System.getProperty("user.home")
 					+ File.separator + ".coolkey");
 		} else if (osName.equalsIgnoreCase("Windows XP") ||
 				osName.equalsIgnoreCase("Windows Vista") ||
 				osName.equalsIgnoreCase("Windows 2000") ||
 				osName.equalsIgnoreCase("Windows NT")) {
-			cacheDir = new File(System.getProperty("user.home")
+			stateDir = new File(System.getProperty("user.home")
 					+ File.separator + "CoolKey");
 		} else if (osName.equalsIgnoreCase("Windows 95") ||
 				osName.equalsIgnoreCase("Windows 98")) {
-			cacheDir = new File("data");
+			stateDir = new File("state");
 		} else {
-			cacheDir = new File("data");
+			stateDir = new File("state");
 		}
-		cacheDir.mkdirs();
-		usersFile = new File(cacheDir.getPath() + File.separator + "users");
-		lastUserFile = new File(cacheDir.getPath() + File.separator + "user");
+		stateDir.mkdirs();
+		USERS = new File(stateDir.getPath() + File.separator + "users");
+		LAST_USER = new File(stateDir.getPath() + File.separator + "user");
 	}
 
 	/**
@@ -56,11 +56,11 @@ public class Persistence {
 			return null;
 		} finally {
 			try {
-				if(ois != null)
+				if (ois != null)
 					ois.close();
-				if(fis != null)
+				if (fis != null)
 					fis.close();
-			} catch(Exception e) {}
+			} catch (Exception e) {}
 		}
 	}
 
@@ -84,20 +84,12 @@ public class Persistence {
 			return false;
 		} finally {
 			try {
-				if(oos != null)
+				if (oos != null)
 					oos.close();
-				if(fos != null)
+				if (fos != null)
 					fos.close();
-			} catch(Exception e) {}
+			} catch (Exception e) {}
 		}
 		return true;
-	}
-
-	public File getUsersFile() {
-		return usersFile;
-	}
-
-	public File getLastUserFile() {
-		return lastUserFile;
 	}
 }

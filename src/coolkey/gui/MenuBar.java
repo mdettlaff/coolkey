@@ -176,7 +176,6 @@ public class MenuBar {
 						GUI.refresh();
 					} catch (IOException e) {
 						MessageBox messageBox = new MessageBox(GUI.shell, SWT.ICON_ERROR);
-						messageBox.setText("Błąd");
 						messageBox.setMessage("Nie można otworzyć pliku.");
 						messageBox.open();
 					}

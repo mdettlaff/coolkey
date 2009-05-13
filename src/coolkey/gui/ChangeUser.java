@@ -142,7 +142,7 @@ public class ChangeUser {
 							} else {
 								MessageBox messageBox = new MessageBox(
 										GUI.shell, SWT.ICON_WARNING);
-								messageBox.setText("Ostrzeżenie");
+								messageBox.setText("Hasło");
 								messageBox.setMessage("Podane hasło jest nieprawidłowe.");
 								messageBox.open();
 							}
@@ -224,7 +224,7 @@ public class ChangeUser {
 				if (selectedUser.validatePassword(null)) {
 					MessageBox messageBox = new MessageBox(GUI.shell,
 							SWT.ICON_INFORMATION);
-					messageBox.setText("Informacja");
+					messageBox.setText("Hasło");
 					messageBox.setMessage("Ten profil nie jest zabezpieczony hasłem.");
 					messageBox.open();
 				} else {
@@ -263,14 +263,14 @@ public class ChangeUser {
 									newPassword.getText())) {
 								MessageBox messageBox = new MessageBox(GUI.shell,
 										SWT.ICON_INFORMATION);
-								messageBox.setText("Informacja");
+								messageBox.setText("Hasło");
 								messageBox.setMessage("Hasło zostało zmienione.");
 								messageBox.open();
 								changePassword.close();
 							} else {
 								MessageBox messageBox = new MessageBox(GUI.shell,
 										SWT.ICON_WARNING);
-								messageBox.setText("Ostrzeżenie");
+								messageBox.setText("Hasło");
 								messageBox.setMessage("Podane aktualne hasło jest nieprawidłowe.");
 								messageBox.open();
 							}
