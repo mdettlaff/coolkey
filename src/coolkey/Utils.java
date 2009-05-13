@@ -4,9 +4,11 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -37,6 +39,57 @@ public class Utils {
 			ioe.printStackTrace();
 		}
 		return corpus;
+	}
+
+	/**
+	 * Filtruje podaną listę słów ze względu na podane znaki.
+	 *
+	 * @param  words  Lista słów do przefiltrowania.
+	 * @param  filter Lista znaków, z których co najmniej jeden musi wystąpić
+	 *                w wynikowej liście. Wyjątek: słowa występujące
+	 *                na początku lub na końcu zdania (zakończone kropką).
+	 * @return        Nowa lista słów, powstała przez przefiltrowanie
+	 *                oryginalnej, lub oryginalna lista, jeśli za filtr
+	 *                podano <code>null</code>.
+	 */
+	public static List<String> filter(List<String> words, String filter) {
+		if (filter == null) {
+			return words;
+		}
+		List<String> filteredWords = new ArrayList<String>();
+		filteredWords.add(words.get(0));
+		for (int i=1; i < words.size(); i++) {
+			boolean filterMatches = false;
+			for (int j=0; j < filter.length(); j++) {
+				if (words.get(i).indexOf(filter.charAt(j)) != -1) {
+					filterMatches = true;
+				}
+			}
+			if (words.get(i).endsWith(".")) {
+				filteredWords.add("" + words.get(i));
+				if (i < words.size() - 1) {
+					i++;
+					filteredWords.add("" + words.get(i));
+				}
+				continue;
+			}
+			if (filterMatches) {
+				filteredWords.add("" + words.get(i));
+			}
+		}
+		return filteredWords;
+	}
+
+	/**
+	 * Łączy reprezentacje napisowe elementów kolekcji w jeden napis
+	 * za pomocą podanego separatora.
+	 */
+	public static String join(Collection<?> collection, String separator) {
+		String s = "";
+		for (Object item : collection) {
+			s += item.toString() + separator;
+		}
+		return s.substring(0, s.length() - separator.length());
 	}
 
 	/**
@@ -79,5 +132,14 @@ public class Utils {
 		}
 		reader.close();
 		return fileData.toString();
+	}
+}
+
+/**
+ * Filtr sprawdzający, czy podane pliki mają rozszerzenie txt.
+ */
+class TextfileFilter implements FilenameFilter {
+	public boolean accept(File dir, String name) {
+		return name.toLowerCase().endsWith(".txt");
 	}
 }

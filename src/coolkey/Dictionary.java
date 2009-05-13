@@ -3,6 +3,7 @@ package coolkey;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,14 +43,14 @@ public class Dictionary {
 	}
 
 	/**
-	 * Zwróć losowo wybrane słowo ze słownika.
+	 * Zwraca losowo wybrane słowo ze słownika.
 	 */
 	public String randomWord() {
 		return words[random.nextInt(words.length)];
 	}
 
 	/**
-	 * Zwróć losowo wybrane słowo o zadanej długości.
+	 * Zwraca losowo wybrane słowo o zadanej długości.
 	 *
 	 * @return Słowo o zadanej długości. Jeśli słownik nie zawiera słowa
 	 *         o podanej długości, zwraca <code>null</code>.
@@ -61,5 +62,36 @@ public class Dictionary {
 		} else {
 			return null;
 		}
+	}
+
+	/**
+	 * Zwraca ze słownika listę słów z możliwie dużą ilością wystąpień znaków
+	 * z podanego napisu.
+	 *
+	 * @return Podzbiór słownika, lub cały słownik, jeśli za argument podano
+	 *         <code>null</code>.
+	 */
+	public List<String> words(String filter) {
+		if (filter == null) {
+			return Arrays.asList(words);
+		}
+		List<String> filteredWords = new ArrayList<String>();
+		for (String word : words) {
+			int filterMatchesCount = 0;
+			for (int i=0; i < filter.length(); i++) {
+				for (int j=0; j < word.length(); j++) {
+					if (filter.charAt(i) == word.charAt(j)) {
+						filterMatchesCount++;
+					}
+				}
+			}
+			if (word.length() < 5 && filterMatchesCount > 0
+					|| word.length() < 7 && filterMatchesCount > 1
+					|| word.length() < 10 && filterMatchesCount > 2
+					|| filterMatchesCount > 3) {
+				filteredWords.add(word);
+			}
+		}
+		return filteredWords;
 	}
 }
