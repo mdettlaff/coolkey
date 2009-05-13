@@ -133,8 +133,8 @@ public class CoolKey {
 	 * Zapisuje stan programu na dysk.
 	 */
 	public static void persistState() {
-		Persistence.write(persistence.getUsersFile(), users);
-		Persistence.write(persistence.getLastUserFile(), currentUserIndex);
+		Persistence.write(persistence.USERS, users);
+		Persistence.write(persistence.LAST_USER, currentUserIndex);
 	}
 
 	/**
@@ -144,13 +144,13 @@ public class CoolKey {
 	private static void restoreState() {
 		// wczytaj dane użytkowników
 		List<User> usersRead = (ArrayList<User>) Persistence.read(
-				persistence.getUsersFile());
+				persistence.USERS);
 		if (usersRead != null) {
 			users = usersRead;
 		}
 		// wczytaj indeks ostatnio wybranego użytkownika
 		Integer indexRead = (Integer) Persistence.read(
-				persistence.getLastUserFile());
+				persistence.LAST_USER);
 		if (indexRead != null) {
 			currentUserIndex = indexRead;
 		}

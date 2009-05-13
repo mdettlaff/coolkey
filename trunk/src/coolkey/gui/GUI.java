@@ -72,7 +72,7 @@ public class GUI {
 		if (!CoolKey.isSoundAvailable()) {
 			MessageBox messageBox = new MessageBox(GUI.shell,
 					SWT.ICON_WARNING);
-			messageBox.setText("Ostrzeżenie");
+			messageBox.setText("Karta dźwiękowa");
 			messageBox.setMessage("Karta dźwiękowa jest niedostępna.\n\n"
 					+ "Sprawdź czy nie jest ona zajęta przez inny program.");
 			messageBox.open();
