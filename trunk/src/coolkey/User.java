@@ -37,7 +37,7 @@ public class User implements Serializable {
 		int minGenTextLength = (minGenTextLines - 1) * (
 				CoolKey.MAX_CHARS_IN_LINE - 1);
 		setCurrentTest(new TypingTest(Markov.generateMarkovChain(
-				Utils.words(CoolKey.TEXT_DIRECTORY), minGenTextLength)));
+				Utils.words(CoolKey.TEXT_NORM_DIRECTORY), minGenTextLength)));
 	}
 
 	/**

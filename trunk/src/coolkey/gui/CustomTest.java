@@ -131,8 +131,8 @@ public class CustomTest {
 		    			messageBox.open();
 		    			return;
 					}
-					List<String> filteredWords = CoolKey.getDictionary().words(
-							filter);
+					List<String> filteredWords =
+						CoolKey.getDictionary().wordsContaining(filter);
 					if (filteredWords.size() == 0) {
 		    			MessageBox messageBox = new MessageBox(GUI.shell, SWT.ICON_ERROR);
 		    			messageBox.setText("Generator słów");
@@ -156,7 +156,7 @@ public class CustomTest {
 		    			return;
 					}
 					List<String> filteredWords = Utils.filter(
-							Utils.words(CoolKey.TEXT_DIRECTORY), filter);
+							Utils.words(CoolKey.TEXT_NORM_DIRECTORY), filter);
 					int minGenTextLength = (minGenTextLines - 1) * (
 							CoolKey.MAX_CHARS_IN_LINE - 1);
 					CoolKey.setCurrentTest(new TypingTest(

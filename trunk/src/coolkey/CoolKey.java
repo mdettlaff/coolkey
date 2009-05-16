@@ -27,12 +27,14 @@ import javax.sound.sampled.LineUnavailableException;
 import coolkey.gui.GUI;
 
 /**
- * Główna klasa programu CoolKey.
+ * Klasa główna programu CoolKey.
  */
 public class CoolKey {
 
 	public static final String TEXT_DIRECTORY = "data" + File.separator
 			+ "text" + File.separator;
+	public static final String TEXT_NORM_DIRECTORY = TEXT_DIRECTORY
+			+ "normal" + File.separator;
 	public static final String SOUND_DIRECTORY = "data" + File.separator
 			+ "sound" + File.separator;
 	public static final int MAX_CHARS_IN_LINE = 65;

@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -15,6 +14,8 @@ import java.util.List;
  * Zawiera różnego rodzaju użyteczne metody statyczne.
  */
 public class Utils {
+	public static final TextfileFilter TEXTFILE_FILTER = new TextfileFilter();
+
 	private Utils() {}
 
 	/**
@@ -22,7 +23,7 @@ public class Utils {
 	 * listy słów.
 	 */
 	public static List<String> words(String txtDirectory) {
-		File[] files = new File(txtDirectory).listFiles(new TextfileFilter());
+		File[] files = new File(txtDirectory).listFiles(TEXTFILE_FILTER);
 		List<String> corpus = new ArrayList<String>();
 		try {
 			for (File file : files) {
@@ -45,14 +46,15 @@ public class Utils {
 	 * Filtruje podaną listę słów ze względu na podane znaki.
 	 *
 	 * @param  words  Lista słów do przefiltrowania.
-	 * @param  filter Lista znaków, z których co najmniej jeden musi wystąpić
-	 *                w wynikowej liście. Wyjątek: słowa występujące
-	 *                na początku lub na końcu zdania (zakończone kropką).
+	 * @param  filter Lista znaków. W każdym słowie w wynikowej liście musi
+	 *                wystąpić co najmniej jeden znak z tej listy znaków.<br>
+	 *                Wyjątek: słowa występujące na początku lub na końcu
+	 *                zdania (zakończone kropką).
 	 * @return        Nowa lista słów, powstała przez przefiltrowanie
 	 *                oryginalnej, lub oryginalna lista, jeśli za filtr
 	 *                podano <code>null</code>.
 	 */
-	public static List<String> filter(List<String> words, String filter) {
+	public static List<String> filter(List<String> words, CharSequence filter) {
 		if (filter == null) {
 			return words;
 		}
@@ -132,14 +134,5 @@ public class Utils {
 		}
 		reader.close();
 		return fileData.toString();
-	}
-}
-
-/**
- * Filtr sprawdzający, czy podane pliki mają rozszerzenie txt.
- */
-class TextfileFilter implements FilenameFilter {
-	public boolean accept(File dir, String name) {
-		return name.toLowerCase().endsWith(".txt");
 	}
 }
