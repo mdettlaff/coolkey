@@ -1,7 +1,10 @@
 package coolkey.gui;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Properties;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
@@ -26,9 +29,27 @@ import coolkey.Utils;
 import coolkey.defender.Defender;
 import coolkey.defender.Engine;
 
+/**
+ * Pasek menu.
+ */
 public class MenuBar {
 
+	/**
+	 * Przypisanie tytułów do nazw plików tekstowych.
+	 */
+	private Properties textTitles;
+
 	public MenuBar() {
+		textTitles = new Properties();
+		try {
+			FileInputStream fis =
+				new FileInputStream(CoolKey.TEXT_DIRECTORY + "titles.xml");
+			textTitles.loadFromXML(fis);
+			fis.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 		Menu menu = new Menu(GUI.shell, SWT.BAR);
 
 		/* Menu Użytkownik */
@@ -45,7 +66,6 @@ public class MenuBar {
 		settingsItem.setText("&Ustawienia");
 		final MenuItem statsItem = new MenuItem(userMenu, SWT.PUSH);
 		statsItem.setText("&Statystyka");
-		//exportMenuItem.setAccelerator(SWT.CTRL+'E');
 		new MenuItem(userMenu, SWT.SEPARATOR);
 		final MenuItem exitMenuItem = new MenuItem(userMenu, SWT.PUSH);
 		exitMenuItem.setText("&Zakończ");
@@ -60,30 +80,41 @@ public class MenuBar {
 		continueItem.setText("Następna lekcja");
 		final MenuItem newCourseItem = new MenuItem(courseMenu, SWT.PUSH);
 		newCourseItem.setText("Rozpocznij nowy kurs");
-		final MenuItem coursesManagerItem = new MenuItem(courseMenu, SWT.PUSH);
-		coursesManagerItem.setText("Zarządzanie kursami");
+		final MenuItem courseManagerItem = new MenuItem(courseMenu, SWT.PUSH);
+		courseManagerItem.setText("Zarządzanie kursami");
 
 		/* Pojedynczy test */
 		final MenuItem singleTest = new MenuItem(menu, SWT.CASCADE);
 		singleTest.setText("&Pojedynczy test");
-
+		// teksty literackie
 		final Menu singleTestMenu = new Menu(GUI.shell, SWT.DROP_DOWN);
 		singleTest.setMenu(singleTestMenu);
-		MenuItem poemTextItem = new MenuItem(singleTestMenu, SWT.CASCADE);
-		poemTextItem.setText("Teksty literackie");
-		Menu poemTextMenu = new Menu(singleTestMenu);
-		final MenuItem standardItem = new MenuItem(poemTextMenu, SWT.PUSH);
-		standardItem.setText("Standardowe");
-		final MenuItem specItem = new MenuItem(poemTextMenu, SWT.PUSH);
-		specItem.setText("Specjalistyczne");
-		final MenuItem poemItem = new MenuItem(poemTextMenu, SWT.PUSH);
-		poemItem.setText("Poezja");
-		poemTextItem.setMenu(poemTextMenu);
+		MenuItem preparedTextItem = new MenuItem(singleTestMenu, SWT.CASCADE);
+		preparedTextItem.setText("Teksty literackie");
+		Menu preparedTextMenu = new Menu(singleTestMenu);
+		preparedTextItem.setMenu(preparedTextMenu);
+		final MenuItem normalItem = new MenuItem(preparedTextMenu, SWT.CASCADE);
+		normalItem.setText("Standardowe");
+		Menu normalMenu = new Menu(singleTestMenu);
+		normalItem.setMenu(normalMenu);
+		textsSubmenu(normalMenu, CoolKey.TEXT_DIRECTORY + "normal");
+		final MenuItem hardItem = new MenuItem(preparedTextMenu, SWT.CASCADE);
+		hardItem.setText("Specjalistyczne");
+		Menu hardMenu = new Menu(singleTestMenu);
+		hardItem.setMenu(hardMenu);
+		textsSubmenu(hardMenu, CoolKey.TEXT_DIRECTORY + "hard");
+		final MenuItem verseItem = new MenuItem(preparedTextMenu, SWT.CASCADE);
+		verseItem.setText("Wiersze");
+		Menu verseMenu = new Menu(singleTestMenu);
+		verseItem.setMenu(verseMenu);
+		textsSubmenu(verseMenu, CoolKey.TEXT_DIRECTORY + "verse");
+
 		MenuItem fileTextItem = new MenuItem(singleTestMenu, SWT.PUSH);
 		fileTextItem.setText("Tekst z pliku");
 		MenuItem autoTextItem = new MenuItem(singleTestMenu, SWT.PUSH);
 		autoTextItem.setText("Automatycznie wygenerowany tekst");
 		MenuItem lessonsItem = new MenuItem(singleTestMenu, SWT.CASCADE);
+		// lekcje
 		lessonsItem.setText("Lekcje");
 		Menu lessonsMenu = new Menu(singleTestMenu);
 		final MenuItem lesson1Item = new MenuItem(lessonsMenu, SWT.PUSH);
@@ -105,7 +136,7 @@ public class MenuBar {
 
 		/* Pomoc */
 		final MenuItem help = new MenuItem(menu, SWT.CASCADE);
-		help.setText("&Pomoc");
+		help.setText("P&omoc");
 
 		final Menu helpMenu = new Menu(GUI.shell, SWT.DROP_DOWN);
 		help.setMenu(helpMenu);
@@ -146,7 +177,7 @@ public class MenuBar {
 				System.exit(0);
 			}
 		});
-		coursesManagerItem.addListener(SWT.Selection, new Listener() {
+		courseManagerItem.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
 				CourseManager cmShell = new CourseManager();
 				cmShell.open();
@@ -228,7 +259,7 @@ public class MenuBar {
 						CoolKey.setCurrentTest(new TypingTest(
 								Markov.generateMarkovChain(
 										Utils.words(
-												CoolKey.TEXT_DIRECTORY),
+												CoolKey.TEXT_NORM_DIRECTORY),
 												minGenTextLength)));
 						GUI.refresh();
 						shell.dispose();
@@ -273,5 +304,30 @@ public class MenuBar {
 				defender.dispose();
 			}
 		});
+	}
+
+	private void textsSubmenu(Menu menu, String txtDirectory) {
+		File[] files = new File(txtDirectory).listFiles(
+				Utils.TEXTFILE_FILTER);
+		Arrays.sort(files);
+		for (File file : files) {
+			final String text;
+			try {
+				text = Utils.readFileAsString(file, "UTF-8");
+				MenuItem textItem = new MenuItem(menu, SWT.PUSH);
+				String title = textTitles.getProperty(file.getName());
+				title = title == null ? "Nieznany plik tekstowy" : title;
+				textItem.setText(title);
+				textItem.addListener(SWT.Selection, new Listener() {
+					@Override
+					public void handleEvent(Event arg0) {
+						CoolKey.setCurrentTest(new TypingTest(text));
+						GUI.refresh();
+					}
+				});
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }

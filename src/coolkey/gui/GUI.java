@@ -28,6 +28,9 @@ import org.eclipse.swt.widgets.Shell;
 
 import coolkey.CoolKey;
 
+/**
+ * Klasa główna graficznego interfejsu użytkownika programu CoolKey.
+ */
 public class GUI {
 
 	public static Display display;

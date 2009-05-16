@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<comment>Tytuły tekstów do przepisywania</comment>
+
+	<entry key="tekst01.txt">Ernest Hemingway "Powrót żołnierza", fragment 1</entry>
+	<entry key="tekst02.txt">Ernest Hemingway "Powrót żołnierza", fragment 2</entry>
+	<entry key="tekst03.txt">Ernest Hemingway "Che ti dice la patria?", fragment</entry>
+	<entry key="tekst04.txt">Ernest Hemingway "W innej krainie", fragment</entry>
+	<entry key="tekst05.txt">Alistair MacLean "Przełęcz złamanego serca", fragment 1</entry>
+	<entry key="tekst05b.txt">Alistair MacLean "Przełęcz złamanego serca", fragment 2</entry>
+	<entry key="tekst06.txt">Alistair MacLean "Przełęcz złamanego serca", fragment 3</entry>
+	<entry key="tekst07.txt">Alistair MacLean "Przełęcz złamanego serca", fragment 4</entry>
+	<entry key="tekst07b.txt">Alistair MacLean "Przełęcz złamanego serca", fragment 5</entry>
+	<entry key="tekst08.txt">M.K. Gandhi "Autobiografia", fragment</entry>
+	<entry key="tekst09.txt">Roman Polański "Roman" (autobiografia), fragment 1</entry>
+	<entry key="tekst10.txt">Roman Polański "Roman" (autobiografia), fragment 2</entry>
+	<entry key="tekst11.txt">Roman Polański "Roman" (autobiografia), fragment 3</entry>
+	<entry key="tekst12.txt">Roman Polański "Roman" (autobiografia), fragment 4</entry>
+	<entry key="tekst12b.txt">Roman Polański "Roman" (autobiografia), fragment 5</entry>
+	<entry key="tekst13.txt">Aldous Huxley "Nowy wspaniały świat", fragment</entry>
+	<entry key="tekst14.txt">Fallout, twórczość fanowska</entry>
+	<entry key="tekst15.txt">"Secret Service Kompendium 1", Kombat, fragment 1</entry>
+	<entry key="tekst16.txt">"Secret Service Kompendium 1", Kombat, fragment 2</entry>
+	<entry key="tekst16b.txt">"Secret Service Kompendium 1", Kombat, fragment 3</entry>
+	<entry key="tekst17.txt">Tadeusz Dołęga Mostowicz "Złota Maska", fragment 1</entry>
+	<entry key="tekst18.txt">Juliusz Verne "Tajemnicza Wyspa", fragment 1</entry>
+	<entry key="tekst18b.txt">Juliusz Verne "Tajemnicza Wyspa", fragment 2</entry>
+	<entry key="tekst19.txt">Juliusz Verne "Tajemnicza Wyspa", fragment 3</entry>
+	<entry key="tekst20.txt">Juliusz Verne "Tajemnicza Wyspa", fragment 4</entry>
+	<entry key="tekst20b.txt">Juliusz Verne "Tajemnicza Wyspa", fragment 5</entry>
+	<entry key="tekst21.txt">Juliusz Verne "Tajemnicza Wyspa", fragment 6</entry>
+	<entry key="tekst22.txt">Juliusz Verne "Tajemnicza Wyspa", fragment 7</entry>
+	<entry key="tekst23.txt">Robert Punt "Wolnoamerykanka", fragment 1</entry>
+	<entry key="tekst24.txt">Robert Punt "Wolnoamerykanka", fragment 2</entry>
+	<entry key="tekst24b.txt">Robert Punt "Wolnoamerykanka", fragment 3</entry>
+	<entry key="tekst25.txt">Robert Punt "Wolnoamerykanka", fragment 4</entry>
+	<entry key="tekst25b.txt">Robert Punt "Wolnoamerykanka", fragment 5</entry>
+	<entry key="tekst26.txt">Nicholas Monsarrat "Okrutne morze", fragment 1</entry>
+	<entry key="tekst26b.txt">Nicholas Monsarrat "Okrutne morze", fragment 2"</entry>
+	<entry key="tekst27.txt">Nicholas Monsarrat "Okrutne morze", fragment 3"</entry>
+	<entry key="tekst27b.txt">Nicholas Monsarrat "Okrutne morze", fragment 4"</entry>
+	<entry key="tekst28.txt">Nicholas Monsarrat "Okrutne morze", fragment 5"</entry>
+	<entry key="tekst28b.txt">Nicholas Monsarrat "Okrutne morze", fragment 6"</entry>
+	<entry key="tekst29.txt">Nicholas Monsarrat "Okrutne morze", fragment 7"</entry>
+	<entry key="tekst29b.txt">Nicholas Monsarrat "Okrutne morze", fragment 8"</entry>
+	<entry key="tekst30.txt">Nicholas Monsarrat "Okrutne morze", fragment 9"</entry>
+	<entry key="tekst30b.txt">Nicholas Monsarrat "Okrutne morze", fragment 10"</entry>
+	<entry key="tekst31.txt">Krzysztof Śmiatacz, fragment opowiadania</entry>
+	<entry key="tekst32.txt">Jerzy Jarzębski "Z przyszłych dziejów rozumu", fragment</entry>
+	<entry key="tekst33.txt">Stanisław Lem "Dzienniki gwiazdowe, podróż XXII", fragment</entry>
+	<entry key="tekst34.txt">Action Mag, fragment opowiadania</entry>
+	<entry key="tekst35.txt">Action Mag, fragment opowiadania</entry>
+	<entry key="tekst36.txt">Esensja, fragment opowiadania</entry>
+	<entry key="tekst37.txt">Esensja, fragment opowiadania</entry>
+
+	<entry key="dvorak_config.txt">Konfiguracja układu Dvoraka, Wikipedia</entry>
+	<entry key="python.txt">Operatory logiczne w Pythonie, Wikipedia</entry>
+
+	<entry key="anczyc.txt">Wł. L. Anczyc "Wiersz do Króla Pruskiego"</entry>
+	<entry key="mickiewicz1a.txt">Adam Mickiewicz "Świtezianka", fragment 1</entry>
+	<entry key="mickiewicz1b.txt">Adam Mickiewicz "Świtezianka", fragment 2</entry>
+	<entry key="mickiewicz2.txt">Adam Mickiewicz "Pchła i rabin"</entry>
+</properties>

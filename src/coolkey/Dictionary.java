@@ -66,12 +66,12 @@ public class Dictionary {
 
 	/**
 	 * Zwraca ze słownika listę słów z możliwie dużą ilością wystąpień znaków
-	 * z podanego napisu.
+	 * z podanego zbioru znaków.
 	 *
 	 * @return Podzbiór słownika, lub cały słownik, jeśli za argument podano
 	 *         <code>null</code>.
 	 */
-	public List<String> words(String filter) {
+	public List<String> wordsContaining(CharSequence filter) {
 		if (filter == null) {
 			return Arrays.asList(words);
 		}
