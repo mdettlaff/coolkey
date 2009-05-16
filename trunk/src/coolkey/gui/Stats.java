@@ -1,7 +1,5 @@
 package coolkey.gui;
 
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
@@ -13,6 +11,7 @@ import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
@@ -50,24 +49,33 @@ public class Stats {
 		CTabFolder stats = new CTabFolder(statsShell, SWT.BORDER | SWT.MULTI);
 
 		CTabItem speed = new CTabItem(stats, SWT.NONE);
-		speed.setText("Prędkość  ");
+		speed.setText("Poszczególne testy  ");
 		CTabItem accuracy = new CTabItem(stats, SWT.NONE);
-		accuracy.setText("Poprawność  ");
+		accuracy.setText("Poszczególne znaki ");
 
 		Composite speedComp = new Composite(stats, SWT.NONE);
 		speedComp.setLayout(new GridLayout(1, false));
 		Composite accuracyComp = new Composite(stats, SWT.NONE);
-		accuracyComp.setLayout(new FillLayout());
+		accuracyComp.setLayout(new GridLayout(1, false));
 		speed.setControl(speedComp);
 		accuracy.setControl(accuracyComp);
 		
-		Group speedType = new Group(speedComp, SWT.SHADOW_IN);
-		speedType.setLayout(new GridLayout());
-		speedType.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-		final Button speedTest = new Button(speedType, SWT.RADIO);
-		speedTest.setText("Szybkość dla poszczególnych testów");
-		speedTest.setSelection(true);
-		Button speedKeys = new Button(speedType, SWT.RADIO);
+		Group speedTypeTests = new Group(speedComp, SWT.SHADOW_IN);
+		speedTypeTests.setLayout(new GridLayout());
+		speedTypeTests.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		final Button accTests = new Button(speedTypeTests, SWT.RADIO);
+		accTests.setText("Poprawność dla poszczególnych testów");
+		accTests.setSelection(true);
+		Button speedTests = new Button(speedTypeTests, SWT.RADIO);
+		speedTests.setText("Szybkość dla poszczególnych testów");
+		
+		Group statsTypeKeys = new Group(accuracyComp, SWT.SHADOW_IN);
+		statsTypeKeys.setLayout(new GridLayout());
+		statsTypeKeys.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		final Button accKeys = new Button(statsTypeKeys, SWT.RADIO);
+		accKeys.setText("Poprawność dla poszczególnych liter");
+		accKeys.setSelection(true);
+		Button speedKeys = new Button(statsTypeKeys, SWT.RADIO);
 		speedKeys.setText("Szybkość dla poszczególnych liter");
 		
 		final Canvas speedCanv = new Canvas(speedComp, SWT.BORDER);
@@ -86,14 +94,22 @@ public class Stats {
 				int x=20;	//początkowy odstęp od lewej
 				int inc = canvasSize.x / CoolKey.getUser().getStatistics().getSpeeds().size()-2; //odstęp między słupkami
 				
-				if (speedTest.getSelection()) {
+				if (!accTests.getSelection()) {
 					/*
 					 * Osie i etykiety
 					 */
-					gc.drawLine(5, 5, LEFT_MARGIN, canvasSize.y-BOTTOM_MARGIN);		//oś x 
+					gc.drawLine(5, 5, LEFT_MARGIN, canvasSize.y-BOTTOM_MARGIN);		//oś y 
 					gc.drawString("znak/min", 7, 5);
-					gc.drawLine(LEFT_MARGIN, canvasSize.y-BOTTOM_MARGIN, canvasSize.x-10, canvasSize.y-BOTTOM_MARGIN);	//oś y 
-					gc.drawString("Test", canvasSize.x-30, canvasSize.y-30);	
+					gc.drawLine(LEFT_MARGIN, canvasSize.y-BOTTOM_MARGIN, canvasSize.x-10, canvasSize.y-BOTTOM_MARGIN);	//oś x 
+					gc.drawString("Test", canvasSize.x-30, canvasSize.y-30);
+					
+					/*
+					 * Skala
+					 */
+					//TODO niech ktos mi powie czemu to nie rysuje 200 kresek poziomych ?
+					for (int j=200; j<=0; j--) {
+						gc.drawLine(LEFT_MARGIN, j, canvasSize.x-LEFT_MARGIN, j);
+					}
 					
 					/*
 					 * Legenda
@@ -142,34 +158,27 @@ public class Stats {
 						x+=inc;
 					}
 				} else {
-					
-					Font font = new Font(GUI.display,"Arial",7, SWT.None);
-					gc.setFont(font);
-					gc.drawLine(5, 5, LEFT_MARGIN, canvasSize.y-BOTTOM_MARGIN2);		//oś x 
-					gc.drawString("Prędkość", 7, 5);
-					gc.drawLine(LEFT_MARGIN, canvasSize.y-BOTTOM_MARGIN2, canvasSize.x-10, canvasSize.y-BOTTOM_MARGIN2);	//oś y 
-					inc = canvasSize.x / CoolKey.getUser().getStatistics().getCharSpeeds().size();
-
-					Map<Character, Double> charSpeeds = CoolKey.getUser().getStatistics().getCharSpeeds();
-					TreeSet<Character> chars = new TreeSet<Character>(charSpeeds.keySet());
-				    for (Character c : chars) {
-				        double speed = charSpeeds.get(c);
-				        gc.setBackground(GUI.display.getSystemColor(SWT.COLOR_RED));
-						Rectangle rec = new Rectangle(x, canvasSize.y-(int)speed-BOTTOM_MARGIN2, 8, (int)speed);
+					gc.drawLine(LEFT_MARGIN, 5, LEFT_MARGIN, canvasSize.y-BOTTOM_MARGIN);		//oś y
+					gc.drawLine(LEFT_MARGIN, canvasSize.y-BOTTOM_MARGIN, canvasSize.x-10, canvasSize.y-BOTTOM_MARGIN); //oś x
+					gc.drawString("Poprawność %", 7, 5);  //etykieta y
+					gc.drawString("Test", canvasSize.x-30, canvasSize.y-30); //etykieta x	
+					int y;
+					inc = canvasSize.x / CoolKey.getUser().getStatistics().getAccuracies().size();
+					List<Double> testsSpeeds = CoolKey.getUser().getStatistics().getAccuracies();
+					for (double s : testsSpeeds) {
+						y = canvasSize.y-(int)s*3-BOTTOM_MARGIN;
+						gc.setBackground(GUI.display.getSystemColor(SWT.COLOR_RED));
+						Rectangle rec = new Rectangle(x, y, 20, (int)s*3);
 						gc.fillRectangle(rec);
-
+	
+						Font font = new Font(GUI.display,"Arial",8, SWT.None);
 						gc.setBackground(GUI.display.getSystemColor(SWT.COLOR_WHITE));
-						gc.drawString(String.format("%.2f", speed), x-10, canvasSize.y-(int)speed-BOTTOM_MARGIN2-30);
-						if (c == ' ')
-							gc.drawString("spac.", x, canvasSize.y-BOTTOM_MARGIN2+3, true);
-						else if (c == '\r')
-							gc.drawString("ent.", x, canvasSize.y-BOTTOM_MARGIN2+3, true);
-						else
-							gc.drawString(c.toString(), x, canvasSize.y-BOTTOM_MARGIN2+3);
-						x += inc;
+						final Image speedText = GraphicsUtils.createRotatedText(String.format("%.2f", s) + "%", font, gc.getForeground(), gc.getBackground(), SWT.UP);
+						gc.drawImage(speedText, x, y-40);
+						x+=inc;
 				    }
-				    gc.dispose();
 				}
+				gc.dispose();
 			}
 		});
 		
@@ -181,32 +190,67 @@ public class Stats {
 				gc.setForeground(GUI.display.getSystemColor(SWT.COLOR_BLACK));
 				gc.fillRectangle(0, 0, canvasSize.x, canvasSize.y); // tło
 				
+				int inc = canvasSize.x / CoolKey.getUser().getStatistics().getCharAccuracies().size();
 				int x=20;
-				int y=10;
+				int y;
 				
-				Font font = new Font(GUI.display,"Arial",7, SWT.None);
-				gc.setFont(font);
-				gc.drawLine(LEFT_MARGIN2, 5, LEFT_MARGIN2, canvasSize.y-BOTTOM_MARGIN2);		//oś x 
-				int inc = canvasSize.y / CoolKey.getUser().getStatistics().getCharAccuracies().size();
+				if (accKeys.getSelection()) {
+				
+					Font font = new Font(GUI.display,"Arial",7, SWT.None);
+					gc.setFont(font);
+					gc.drawLine(LEFT_MARGIN, 5, LEFT_MARGIN, canvasSize.y-BOTTOM_MARGIN2);		//oś y
+					gc.drawLine(LEFT_MARGIN, canvasSize.y-BOTTOM_MARGIN2, canvasSize.x-10, canvasSize.y-BOTTOM_MARGIN2); //oś x
+					gc.drawString("Poprawność", 7, 5);
+					
+					Map<Character, Double> charAccuracies = CoolKey.getUser().getStatistics().getCharAccuracies();
+					TreeSet<Character> chars = new TreeSet<Character>(charAccuracies.keySet());
+					for (Character c : chars) {
+						double accuracy = charAccuracies.get(c);
+						y = canvasSize.y-(int)accuracy*3-BOTTOM_MARGIN2;
+						gc.setBackground(GUI.display.getSystemColor(SWT.COLOR_RED));
+						Rectangle rec = new Rectangle(x, y, 8, (int)accuracy*3);
+						gc.fillRectangle(rec);
+	
+						gc.setBackground(GUI.display.getSystemColor(SWT.COLOR_WHITE));
+						final Image speedText = GraphicsUtils.createRotatedText(String.format("%.2f", accuracy)+"%", font, gc.getForeground(), gc.getBackground(), SWT.UP);
+						gc.drawImage(speedText, x-2, y-40);
+						
+						if (c == ' ')
+							gc.drawString("spac.", x, canvasSize.y-BOTTOM_MARGIN2+3, true);
+						else if (c == '\r')
+							gc.drawString("ent.", x, canvasSize.y-BOTTOM_MARGIN2+3, true);
+						else
+							gc.drawString(c.toString(), x, canvasSize.y-BOTTOM_MARGIN2+3, true);
+						x+=inc;
+				    }
+				}  else {
+					Font font = new Font(GUI.display,"Arial",7, SWT.None);
+					gc.setFont(font);
+					gc.drawLine(5, 5, LEFT_MARGIN, canvasSize.y-BOTTOM_MARGIN2);		//oś x 
+					gc.drawString("Prędkość", 7, 5);
+					gc.drawLine(LEFT_MARGIN, canvasSize.y-BOTTOM_MARGIN2, canvasSize.x-10, canvasSize.y-BOTTOM_MARGIN2);	//oś y 
+					inc = canvasSize.x / CoolKey.getUser().getStatistics().getCharSpeeds().size();
 
-				Map<Character, Double> charAccuracies = CoolKey.getUser().getStatistics().getCharAccuracies();
-				TreeSet<Character> chars = new TreeSet<Character>(charAccuracies.keySet());
-				for (Character c : chars) {
-					double accuracy = charAccuracies.get(c);
-					gc.setBackground(GUI.display.getSystemColor(SWT.COLOR_RED));
-					Rectangle rec = new Rectangle(LEFT_MARGIN2+1, y, (int)accuracy, 8 );
-					gc.fillRectangle(rec);
+					Map<Character, Double> charSpeeds = CoolKey.getUser().getStatistics().getCharSpeeds();
+					TreeSet<Character> chars = new TreeSet<Character>(charSpeeds.keySet());
+				    for (Character c : chars) {
+				        double speed = charSpeeds.get(c);
+				        gc.setBackground(GUI.display.getSystemColor(SWT.COLOR_BLUE));
+						Rectangle rec = new Rectangle(x, canvasSize.y-(int)speed-BOTTOM_MARGIN2, 8, (int)speed);
+						gc.fillRectangle(rec);
 
-					gc.setBackground(GUI.display.getSystemColor(SWT.COLOR_WHITE));
-					gc.drawString((String.format("%.2f", accuracy))+"%", LEFT_MARGIN2 + (int)accuracy+10, y);
-					if (c == ' ')
-						gc.drawString("spac.", 5, y, true);
-					else if (c == '\r')
-						gc.drawString("ent.", 5, y, true);
-					else
-						gc.drawString(c.toString(), 5, y);
-					y+=inc;
-			    }
+						gc.setBackground(GUI.display.getSystemColor(SWT.COLOR_WHITE));
+						final Image speedText = GraphicsUtils.createRotatedText(String.format("%.2f", speed), font, gc.getForeground(), gc.getBackground(), SWT.UP);
+						gc.drawImage(speedText, x-1, canvasSize.y-(int)speed-BOTTOM_MARGIN2-30);
+						if (c == ' ')
+							gc.drawString("spac.", x, canvasSize.y-BOTTOM_MARGIN2+3, true);
+						else if (c == '\r')
+							gc.drawString("ent.", x, canvasSize.y-BOTTOM_MARGIN2+3, true);
+						else
+							gc.drawString(c.toString(), x, canvasSize.y-BOTTOM_MARGIN2+3);
+						x += inc;
+				    }
+				}
 			    gc.dispose();
 			}
 		});
@@ -227,16 +271,24 @@ public class Stats {
 
 		statsShell.setSize(400, 300);
 		
-		speedTest.addListener(SWT.Selection, new Listener() {
+		accTests.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event e) {
 				speedCanv.redraw();
-				statsShell.setSize(760, 600);
+			}
+		});
+		speedTests.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event e) {
+				speedCanv.redraw();
+			}
+		});
+		accKeys.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event e) {
+				accCanv.redraw();
 			}
 		});
 		speedKeys.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event e) {
-				speedCanv.redraw();
-				statsShell.setSize(GUI.display.getBounds().width, 600);
+				accCanv.redraw();
 			}
 		});
 	}
