@@ -1,8 +1,10 @@
 package coolkey.gui;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeSet;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
@@ -146,26 +148,25 @@ public class Stats {
 					gc.drawLine(5, 5, LEFT_MARGIN, canvasSize.y-BOTTOM_MARGIN2);		//oś x 
 					gc.drawString("Prędkość", 7, 5);
 					gc.drawLine(LEFT_MARGIN, canvasSize.y-BOTTOM_MARGIN2, canvasSize.x-10, canvasSize.y-BOTTOM_MARGIN2);	//oś y 
-					Map<Character, Double> litery = CoolKey.getUser().getStatistics().getCharSpeeds();
 					inc = canvasSize.x / CoolKey.getUser().getStatistics().getCharSpeeds().size();
-					
-					Iterator it = litery.entrySet().iterator();
-				    while (it.hasNext()) {
-				        Map.Entry<Character, Double> pair = (Map.Entry<Character, Double>)it.next();
-				        double speed = (Double)pair.getValue();
+
+					Map<Character, Double> charSpeeds = CoolKey.getUser().getStatistics().getCharSpeeds();
+					TreeSet<Character> chars = new TreeSet<Character>(charSpeeds.keySet());
+				    for (Character c : chars) {
+				        double speed = charSpeeds.get(c);
 				        gc.setBackground(GUI.display.getSystemColor(SWT.COLOR_RED));
 						Rectangle rec = new Rectangle(x, canvasSize.y-(int)speed-BOTTOM_MARGIN2, 8, (int)speed);
 						gc.fillRectangle(rec);
-						
+
 						gc.setBackground(GUI.display.getSystemColor(SWT.COLOR_WHITE));
 						gc.drawString(String.format("%.2f", speed), x-10, canvasSize.y-(int)speed-BOTTOM_MARGIN2-30);
-						if (pair.getKey() == ' ')
+						if (c == ' ')
 							gc.drawString("spac.", x, canvasSize.y-BOTTOM_MARGIN2+3, true);
-						else if (pair.getKey() == '\r')
+						else if (c == '\r')
 							gc.drawString("ent.", x, canvasSize.y-BOTTOM_MARGIN2+3, true);
 						else
-							gc.drawString(pair.getKey().toString(), x, canvasSize.y-BOTTOM_MARGIN2+3);
-						x+=inc;
+							gc.drawString(c.toString(), x, canvasSize.y-BOTTOM_MARGIN2+3);
+						x += inc;
 				    }
 				    gc.dispose();
 				}
@@ -186,25 +187,24 @@ public class Stats {
 				Font font = new Font(GUI.display,"Arial",7, SWT.None);
 				gc.setFont(font);
 				gc.drawLine(LEFT_MARGIN2, 5, LEFT_MARGIN2, canvasSize.y-BOTTOM_MARGIN2);		//oś x 
-				Map<Character, Double> litery = CoolKey.getUser().getStatistics().getCharAccuracies();
 				int inc = canvasSize.y / CoolKey.getUser().getStatistics().getCharAccuracies().size();
-				
-				Iterator it = litery.entrySet().iterator();
-			    while (it.hasNext()) {
-			        Map.Entry<Character, Double> pair = (Map.Entry<Character, Double>)it.next();
-			        double speed = (Double)pair.getValue();
-			        gc.setBackground(GUI.display.getSystemColor(SWT.COLOR_RED));
-					Rectangle rec = new Rectangle(LEFT_MARGIN2+1, y, (int)speed, 8 );
+
+				Map<Character, Double> charAccuracies = CoolKey.getUser().getStatistics().getCharAccuracies();
+				TreeSet<Character> chars = new TreeSet<Character>(charAccuracies.keySet());
+				for (Character c : chars) {
+					double accuracy = charAccuracies.get(c);
+					gc.setBackground(GUI.display.getSystemColor(SWT.COLOR_RED));
+					Rectangle rec = new Rectangle(LEFT_MARGIN2+1, y, (int)accuracy, 8 );
 					gc.fillRectangle(rec);
-					
+
 					gc.setBackground(GUI.display.getSystemColor(SWT.COLOR_WHITE));
-					gc.drawString((String.format("%.2f", speed))+"%", LEFT_MARGIN2 + (int)speed+10, y);
-					if (pair.getKey() == ' ')
+					gc.drawString((String.format("%.2f", accuracy))+"%", LEFT_MARGIN2 + (int)accuracy+10, y);
+					if (c == ' ')
 						gc.drawString("spac.", 5, y, true);
-					else if (pair.getKey() == '\r')
+					else if (c == '\r')
 						gc.drawString("ent.", 5, y, true);
 					else
-						gc.drawString(pair.getKey().toString(), 5, y);
+						gc.drawString(c.toString(), 5, y);
 					y+=inc;
 			    }
 			    gc.dispose();
