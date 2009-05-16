@@ -32,6 +32,7 @@ import coolkey.CoolKey;
 public class Stats {
 	private static Shell statsShell;
 	private final int LEFT_MARGIN = 5;
+	private final int LEFT_MARGIN2 = 30;
 	private final int BOTTOM_MARGIN = 10;
 	private final int BOTTOM_MARGIN2 = 20;
 	private final int LEGEND_WIDTH = 150;
@@ -69,8 +70,8 @@ public class Stats {
 		
 		final Canvas speedCanv = new Canvas(speedComp, SWT.BORDER);
 		speedCanv.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		/*Canvas accCanv = */new Canvas(accuracyComp, SWT.BORDER);
-		//TODO canvas statystyk poprawności
+		final Canvas accCanv = new Canvas(accuracyComp, SWT.BORDER);
+		accCanv.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
 		speedCanv.addPaintListener(new PaintListener() {
 			public void paintControl(PaintEvent pe) {
@@ -140,7 +141,7 @@ public class Stats {
 					}
 				} else {
 					
-					Font font = new Font(GUI.display,"Arial",8, SWT.None);
+					Font font = new Font(GUI.display,"Arial",7, SWT.None);
 					gc.setFont(font);
 					gc.drawLine(5, 5, LEFT_MARGIN, canvasSize.y-BOTTOM_MARGIN2);		//oś x 
 					gc.drawString("Prędkość", 7, 5);
@@ -153,7 +154,7 @@ public class Stats {
 				        Map.Entry<Character, Double> pair = (Map.Entry<Character, Double>)it.next();
 				        double speed = (Double)pair.getValue();
 				        gc.setBackground(GUI.display.getSystemColor(SWT.COLOR_RED));
-						Rectangle rec = new Rectangle(x, canvasSize.y-(int)speed-BOTTOM_MARGIN2, 10, (int)speed);
+						Rectangle rec = new Rectangle(x, canvasSize.y-(int)speed-BOTTOM_MARGIN2, 8, (int)speed);
 						gc.fillRectangle(rec);
 						
 						gc.setBackground(GUI.display.getSystemColor(SWT.COLOR_WHITE));
@@ -168,6 +169,45 @@ public class Stats {
 				    }
 				    gc.dispose();
 				}
+			}
+		});
+		
+		accCanv.addPaintListener(new PaintListener() {
+			public void paintControl(PaintEvent pe) {
+				GC gc = pe.gc;
+				Point canvasSize = accCanv.getSize();
+				gc.setBackground(GUI.display.getSystemColor(SWT.COLOR_WHITE));
+				gc.setForeground(GUI.display.getSystemColor(SWT.COLOR_BLACK));
+				gc.fillRectangle(0, 0, canvasSize.x, canvasSize.y); // tło
+				
+				int x=20;
+				int y=10;
+				
+				Font font = new Font(GUI.display,"Arial",7, SWT.None);
+				gc.setFont(font);
+				gc.drawLine(LEFT_MARGIN2, 5, LEFT_MARGIN2, canvasSize.y-BOTTOM_MARGIN2);		//oś x 
+				Map<Character, Double> litery = CoolKey.getUser().getStatistics().getCharAccuracies();
+				int inc = canvasSize.y / CoolKey.getUser().getStatistics().getCharAccuracies().size();
+				
+				Iterator it = litery.entrySet().iterator();
+			    while (it.hasNext()) {
+			        Map.Entry<Character, Double> pair = (Map.Entry<Character, Double>)it.next();
+			        double speed = (Double)pair.getValue();
+			        gc.setBackground(GUI.display.getSystemColor(SWT.COLOR_RED));
+					Rectangle rec = new Rectangle(LEFT_MARGIN2+1, y, (int)speed, 8 );
+					gc.fillRectangle(rec);
+					
+					gc.setBackground(GUI.display.getSystemColor(SWT.COLOR_WHITE));
+					gc.drawString((String.format("%.2f", speed))+"%", LEFT_MARGIN2 + (int)speed+10, y);
+					if (pair.getKey() == ' ')
+						gc.drawString("spac.", 5, y, true);
+					else if (pair.getKey() == '\r')
+						gc.drawString("ent.", 5, y, true);
+					else
+						gc.drawString(pair.getKey().toString(), 5, y);
+					y+=inc;
+			    }
+			    gc.dispose();
 			}
 		});
 		
