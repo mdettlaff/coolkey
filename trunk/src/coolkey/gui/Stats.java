@@ -11,7 +11,6 @@ import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
@@ -33,7 +32,6 @@ import coolkey.CoolKey;
 public class Stats {
 	private static Shell statsShell;
 	private final int LEFT_MARGIN = 5;
-	private final int LEFT_MARGIN2 = 30;
 	private final int BOTTOM_MARGIN = 10;
 	private final int BOTTOM_MARGIN2 = 20;
 	private final int LEGEND_WIDTH = 150;
@@ -171,10 +169,8 @@ public class Stats {
 						Rectangle rec = new Rectangle(x, y, 20, (int)s*3);
 						gc.fillRectangle(rec);
 	
-						Font font = new Font(GUI.display,"Arial",8, SWT.None);
 						gc.setBackground(GUI.display.getSystemColor(SWT.COLOR_WHITE));
-						final Image speedText = GraphicsUtils.createRotatedText(String.format("%.2f", s) + "%", font, gc.getForeground(), gc.getBackground(), SWT.UP);
-						gc.drawImage(speedText, x, y-40);
+						GraphicsUtils.drawVerticalText(String.format("%.2f", s) + "%", x, y-40, gc, SWT.UP);
 						x+=inc;
 				    }
 				}
@@ -212,8 +208,7 @@ public class Stats {
 						gc.fillRectangle(rec);
 	
 						gc.setBackground(GUI.display.getSystemColor(SWT.COLOR_WHITE));
-						final Image speedText = GraphicsUtils.createRotatedText(String.format("%.2f", accuracy)+"%", font, gc.getForeground(), gc.getBackground(), SWT.UP);
-						gc.drawImage(speedText, x-2, y-40);
+						GraphicsUtils.drawVerticalText(String.format("%.2f", accuracy) + "%", x-2, y-40, gc, SWT.UP);
 						
 						if (c == ' ')
 							gc.drawString("spac.", x, canvasSize.y-BOTTOM_MARGIN2+3, true);
@@ -240,8 +235,7 @@ public class Stats {
 						gc.fillRectangle(rec);
 
 						gc.setBackground(GUI.display.getSystemColor(SWT.COLOR_WHITE));
-						final Image speedText = GraphicsUtils.createRotatedText(String.format("%.2f", speed), font, gc.getForeground(), gc.getBackground(), SWT.UP);
-						gc.drawImage(speedText, x-1, canvasSize.y-(int)speed-BOTTOM_MARGIN2-30);
+						GraphicsUtils.drawVerticalText(String.format("%.2f", speed), x-1, canvasSize.y-(int)speed-BOTTOM_MARGIN2-30, gc, SWT.UP);
 						if (c == ' ')
 							gc.drawString("spac.", x, canvasSize.y-BOTTOM_MARGIN2+3, true);
 						else if (c == '\r')
