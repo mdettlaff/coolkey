@@ -304,6 +304,13 @@ public class MenuBar {
 				defender.dispose();
 			}
 		});
+		// informacje o programie
+		aboutItem.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event arg0) {
+				new About();
+			}
+		});
 	}
 
 	private void textsSubmenu(Menu menu, String txtDirectory) {
