@@ -10,6 +10,7 @@ public class SoundBank {
 	public final Sound TYPEWRITER;
 	public final Sound MISTAKE;
 	public final Sound EXPLOSION;
+	public final Sound EXPLOSION2;
 	//public final Sound CRUMBLE;
 
 	/**
@@ -23,6 +24,7 @@ public class SoundBank {
 		TYPEWRITER = new Sound(CoolKey.SOUND_DIRECTORY + "typewriter.wav", 12);
 		MISTAKE = new Sound(CoolKey.SOUND_DIRECTORY + "mistake.wav", 12);
 		EXPLOSION = new Sound(CoolKey.SOUND_DIRECTORY + "explosion.wav", 3);
+		EXPLOSION2 = new Sound(CoolKey.SOUND_DIRECTORY + "explosion2.wav", 3);
 		//CRUMBLE = new Sound(CoolKey.SOUND_DIRECTORY + "crumble.wav", 5);
 	}
 }
