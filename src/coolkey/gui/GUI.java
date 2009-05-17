@@ -18,7 +18,10 @@
 
 package coolkey.gui;
 
+import java.io.File;
+
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
@@ -44,6 +47,8 @@ public class GUI {
 	public static Keyboard keyboard;
 	public static Graphs graphs;
 
+	private static Image icon;
+
 	private GUI() {}
 
 	/**
@@ -52,7 +57,10 @@ public class GUI {
 	public static void init() {
 		display = new Display();
 		shell = new Shell(display);
+		icon = new Image(display, "data" + File.separator + "images"
+				+ File.separator + "icons" + File.separator + "coolkey.png");
 		shell.setText("CoolKey 0.1");
+		shell.setImage(icon);
 		shell.setLayout(new GridLayout(2, false));
 
 		/* Wyśrodkowanie shella */

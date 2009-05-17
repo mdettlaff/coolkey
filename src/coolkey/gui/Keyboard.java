@@ -50,6 +50,8 @@ public class Keyboard {
 	private final String POLISH_CHARS = "ĄąĆćĘęŁłŃńÓóŚśŻżŹź";
 	private final String POLISH2LATIN_CHARS = "AaCcEeLlNnOoSsZzXx";
 	private final Canvas canvas;
+	private final String IMAGES_DIR = "data" + File.separator + "images"
+			+ File.separator + "keyboard" + File.separator;
 	private final Image blankKeyboard;
 	private final Image keyHighlighted;
 	private final Image keyMistake;
@@ -75,36 +77,21 @@ public class Keyboard {
 		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1);
 		gd.heightHint = CANVAS_HEIGHT;
 		canvas.setLayoutData(gd);
-		blankKeyboard = new Image(GUI.display, "data" + File.separator
-				+ "images" + File.separator + "keyboard.png");
-		keyHighlighted = new Image(GUI.display, "data" + File.separator
-				+ "images" + File.separator + "key_highlighted.png");
-		keyMistake = new Image(GUI.display, "data" + File.separator
-				+ "images" + File.separator + "key_mistake.png");
-		leftShiftHighlighted = new Image(GUI.display, "data" + File.separator
-				+ "images" + File.separator + "left_shift_highlighted.png");
-		leftShiftMistake = new Image(GUI.display, "data" + File.separator
-				+ "images" + File.separator + "left_shift_mistake.png");
-		rightShiftHighlighted = new Image(GUI.display, "data" + File.separator
-				+ "images" + File.separator + "right_shift_highlighted.png");
-		rightShiftMistake = new Image(GUI.display, "data" + File.separator
-				+ "images" + File.separator + "right_shift_mistake.png");
-		enterHighlighted = new Image(GUI.display, "data" + File.separator
-				+ "images" + File.separator + "enter_highlighted.png");
-		enterMistake = new Image(GUI.display, "data" + File.separator
-				+ "images" + File.separator + "enter_mistake.png");
-		spaceHighlighted = new Image(GUI.display, "data" + File.separator
-				+ "images" + File.separator + "space_highlighted.png");
-		spaceMistake = new Image(GUI.display, "data" + File.separator
-				+ "images" + File.separator + "space_mistake.png");
-		altGrHighlighted = new Image(GUI.display, "data" + File.separator
-				+ "images" + File.separator + "altgr_highlighted.png");
-		altGrMistake = new Image(GUI.display, "data" + File.separator
-				+ "images" + File.separator + "altgr_mistake.png");
-		keyLongHighlighted = new Image(GUI.display, "data" + File.separator
-				+ "images" + File.separator + "key_long_highlighted.png");
-		keyLongMistake = new Image(GUI.display, "data" + File.separator
-				+ "images" + File.separator + "key_long_mistake.png");
+		blankKeyboard = new Image(GUI.display, IMAGES_DIR + "keyboard.png");
+		keyHighlighted = new Image(GUI.display, IMAGES_DIR + "key_highlighted.png");
+		keyMistake = new Image(GUI.display, IMAGES_DIR + "key_mistake.png");
+		leftShiftHighlighted = new Image(GUI.display, IMAGES_DIR + "left_shift_highlighted.png");
+		leftShiftMistake = new Image(GUI.display, IMAGES_DIR + "left_shift_mistake.png");
+		rightShiftHighlighted = new Image(GUI.display, IMAGES_DIR + "right_shift_highlighted.png");
+		rightShiftMistake = new Image(GUI.display, IMAGES_DIR + "right_shift_mistake.png");
+		enterHighlighted = new Image(GUI.display, IMAGES_DIR + "enter_highlighted.png");
+		enterMistake = new Image(GUI.display, IMAGES_DIR + "enter_mistake.png");
+		spaceHighlighted = new Image(GUI.display, IMAGES_DIR + "space_highlighted.png");
+		spaceMistake = new Image(GUI.display, IMAGES_DIR + "space_mistake.png");
+		altGrHighlighted = new Image(GUI.display, IMAGES_DIR + "altgr_highlighted.png");
+		altGrMistake = new Image(GUI.display, IMAGES_DIR + "altgr_mistake.png");
+		keyLongHighlighted = new Image(GUI.display, IMAGES_DIR + "key_long_highlighted.png");
+		keyLongMistake = new Image(GUI.display, IMAGES_DIR + "key_long_mistake.png");
 
 		canvas.addPaintListener(new PaintListener() {
 			public void paintControl(PaintEvent pe) {

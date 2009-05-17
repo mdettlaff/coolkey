@@ -135,4 +135,45 @@ public class Utils {
 		reader.close();
 		return fileData.toString();
 	}
+
+	/**
+	 * Otwiera link w domyślnej przeglądarce systemu operacyjnego.
+	 */
+	public static void openInExternalBrowser(String url) {
+		final String WIN_PATH = "rundll32";
+		final String WIN_FLAG = "url.dll,FileProtocolHandler";
+		final String UNIX_PATH = "firefox";
+		String cmd = null;
+
+		try {
+			if (System.getProperty("os.name").startsWith("Windows")) {
+				cmd = WIN_PATH + " " + WIN_FLAG + " " + url;
+				Runtime.getRuntime().exec(cmd);
+			} else {
+				// Domyślnie próbuję odpalić w Firefoksie.
+				// Wysyłam komendę (cmd) i sprawdzam wartość na wyjściu.
+				// Jeśli jest 0 to działa jeśli nie to trzeba odpalić
+				// inną przeglądarkę.
+				cmd = UNIX_PATH + " " + url;
+				Process p = Runtime.getRuntime().exec(cmd);
+				
+				try	{
+					// Czekam na 0 - jeśli jest 0 to działa,
+					// jeśli nie to próbuję inaczej.
+					int exitCode = p.waitFor();
+					if (exitCode != 0) {
+						// nie udało się, próbuję z Operą
+						cmd = "opera" + " " + url;
+						p = Runtime.getRuntime().exec(cmd);
+					}
+				} catch(InterruptedException x) {
+					System.err.println("Error bringing up browser, cmd='" + cmd + "'");
+					System.err.println("Caught: " + x);
+				}
+			}
+		} catch(IOException e) {
+			System.err.println("Could not invoke browser, command=" + cmd);
+			e.printStackTrace();
+		}
+	}
 }
