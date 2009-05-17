@@ -88,6 +88,8 @@ public class Stats {
 				gc.setBackground(GUI.display.getSystemColor(SWT.COLOR_WHITE));
 				gc.setForeground(GUI.display.getSystemColor(SWT.COLOR_BLACK));
 				gc.fillRectangle(0, 0, canvasSize.x, canvasSize.y); // tło
+				Font font = new Font(GUI.display,"Arial",8, SWT.None);
+				gc.setFont(font);
 
 				int x=20;	//początkowy odstęp od lewej
 				int inc = canvasSize.x / CoolKey.getUser().getStatistics().getSpeeds().size()-2; //odstęp między słupkami
@@ -96,16 +98,22 @@ public class Stats {
 					/*
 					 * Osie i etykiety
 					 */
-					gc.drawLine(5, 5, LEFT_MARGIN, canvasSize.y-BOTTOM_MARGIN);		//oś y 
-					gc.drawString("znak/min", 7, 5);
+					gc.drawLine(LEFT_MARGIN, 5, LEFT_MARGIN, canvasSize.y-BOTTOM_MARGIN);		//oś y 
+					gc.drawString("znak/min", 25, 5);
 					gc.drawLine(LEFT_MARGIN, canvasSize.y-BOTTOM_MARGIN, canvasSize.x-10, canvasSize.y-BOTTOM_MARGIN);	//oś x 
 					gc.drawString("Test", canvasSize.x-30, canvasSize.y-30);
 					
 					/*
 					 * Skala
 					 */
-					//TODO niech ktos mi powie czemu to nie rysuje 200 kresek poziomych ?
-					for (int j=200; j<=0; j--) {
+					int skala=100;
+					for (int j=canvasSize.y-BOTTOM_MARGIN-100; j>=40; j-=100) {
+						//gc.drawLine(LEFT_MARGIN, j-1, canvasSize.x-LEFT_MARGIN, j-1);
+						gc.drawLine(LEFT_MARGIN, j, canvasSize.x-LEFT_MARGIN, j);
+						gc.drawString(Integer.toString(skala), x-13, j-12, true);
+						skala+=100;
+					}
+					for (int j=canvasSize.y-BOTTOM_MARGIN-50; j>=40; j-=50) {
 						gc.drawLine(LEFT_MARGIN, j, canvasSize.x-LEFT_MARGIN, j);
 					}
 					
@@ -124,6 +132,7 @@ public class Stats {
 					/*
 					 * Prędkość.
 					 */
+					x=40;
 					List<Double> speeds = CoolKey.getUser().getStatistics().getSpeeds();
 					for (int i=0; i<speeds.size(); i++) {
 						double speed = speeds.get(i);
@@ -143,7 +152,7 @@ public class Stats {
 					/*
 					 * Prędkość realna. (analogicznie do wyżej)
 					 */
-					x = 20;
+					x = 40;
 					gc.setForeground(GUI.display.getSystemColor(SWT.COLOR_BLUE));
 					speeds = CoolKey.getUser().getStatistics().getRealSpeeds();
 					for (int i=0; i<speeds.size(); i++) {
@@ -156,21 +165,42 @@ public class Stats {
 						x+=inc;
 					}
 				} else {
+					/* Poprawność */
 					gc.drawLine(LEFT_MARGIN, 5, LEFT_MARGIN, canvasSize.y-BOTTOM_MARGIN);		//oś y
-					gc.drawLine(LEFT_MARGIN, canvasSize.y-BOTTOM_MARGIN, canvasSize.x-10, canvasSize.y-BOTTOM_MARGIN); //oś x
+					gc.drawLine(LEFT_MARGIN, canvasSize.y-BOTTOM_MARGIN, canvasSize.x-LEFT_MARGIN, canvasSize.y-BOTTOM_MARGIN); //oś x
 					gc.drawString("Poprawność %", 7, 5);  //etykieta y
-					gc.drawString("Test", canvasSize.x-30, canvasSize.y-30); //etykieta x	
+					gc.drawString("Test", canvasSize.x-30, canvasSize.y-20); //etykieta x
+					/*
+					 *  Skala
+					 */
+					int skala=20;
+					for (int j=canvasSize.y-BOTTOM_MARGIN-60; skala<=100; j-=60) {
+						gc.drawLine(LEFT_MARGIN, j-1, canvasSize.x-LEFT_MARGIN, j-1);
+						gc.drawLine(LEFT_MARGIN, j, canvasSize.x-LEFT_MARGIN, j);
+						gc.drawString(Integer.toString(skala), x-13, j-12, true);
+						skala+=20;
+					}
+					skala=5;
+					for (int j=canvasSize.y-BOTTOM_MARGIN-15; skala<100; j-=15) {
+						gc.drawLine(LEFT_MARGIN, j, canvasSize.x-LEFT_MARGIN, j);
+						skala+=5;
+					}
+					
 					int y;
+					x = 30;
 					inc = canvasSize.x / CoolKey.getUser().getStatistics().getAccuracies().size();
 					List<Double> testsSpeeds = CoolKey.getUser().getStatistics().getAccuracies();
-					for (double s : testsSpeeds) {
+					gc.setForeground(GUI.display.getSystemColor(SWT.COLOR_RED));
+					for (int i=0; i<testsSpeeds.size(); i++) {
+						double s = testsSpeeds.get(i);
 						y = canvasSize.y-(int)s*3-BOTTOM_MARGIN;
 						gc.setBackground(GUI.display.getSystemColor(SWT.COLOR_RED));
-						Rectangle rec = new Rectangle(x, y, 20, (int)s*3);
-						gc.fillRectangle(rec);
-	
+						gc.fillOval(x-3, y-3, 6, 6);
+						if (i>0) {
+							gc.drawLine(x, y+1, x-inc, canvasSize.y-testsSpeeds.get(i-1).intValue()*3-BOTTOM_MARGIN+1);
+						}	
 						gc.setBackground(GUI.display.getSystemColor(SWT.COLOR_WHITE));
-						GraphicsUtils.drawVerticalText(String.format("%.2f", s) + "%", x, y-40, gc, SWT.UP);
+						gc.drawString(String.format("%.2f", s) + "%", x-10, y-30);
 						x+=inc;
 				    }
 				}
@@ -225,6 +255,20 @@ public class Stats {
 					gc.drawString("Prędkość", 7, 5);
 					gc.drawLine(LEFT_MARGIN, canvasSize.y-BOTTOM_MARGIN2, canvasSize.x-10, canvasSize.y-BOTTOM_MARGIN2);	//oś y 
 					inc = canvasSize.x / CoolKey.getUser().getStatistics().getCharSpeeds().size();
+					/*
+					 *  Skala
+					 */
+					int skala=100;
+					for (int j=canvasSize.y-BOTTOM_MARGIN-100; j>=50; j-=100) {
+						gc.drawLine(LEFT_MARGIN, j-1, canvasSize.x-LEFT_MARGIN, j-1);
+						gc.drawLine(LEFT_MARGIN, j, canvasSize.x-LEFT_MARGIN, j);
+						gc.drawString(Integer.toString(skala), x-13, j-12, true);
+						skala+=100;
+					}
+					
+					for (int j=canvasSize.y-BOTTOM_MARGIN-50; j>=50; j-=50 ) {
+						gc.drawLine(LEFT_MARGIN, j, canvasSize.x-LEFT_MARGIN, j);
+					}
 
 					Map<Character, Double> charSpeeds = CoolKey.getUser().getStatistics().getCharSpeeds();
 					TreeSet<Character> chars = new TreeSet<Character>(charSpeeds.keySet());
