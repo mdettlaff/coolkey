@@ -28,6 +28,7 @@ public class Engine implements Runnable {
 	public static final int MENU_NEW = 1;
 	public static final int MENU_TOP10 = 2;
 	public static final int MENU_HELP = 3;
+	public static final int MENU_ESC = 4;
 	
 	public static final int WIDTH = 640;
 	public static final int HEIGHT = 480;
@@ -35,7 +36,7 @@ public class Engine implements Runnable {
 	public static final int GAME_LIFE_MAX = 5;
 	public static final int GAME_LEVEL_MAX = 21;
 	public static final int GAME_GROUND = 416;
-	public static final double GAME_EXPLOSION_SPEED = 6.6667;
+	public static final double GAME_EXPLOSION_SPEED = 10.0;
 	
 	public static final int TOP10_RESULT = 10;
 	
@@ -54,6 +55,7 @@ public class Engine implements Runnable {
 	private int state;
 	
 	private int menuSelectId;
+	private boolean menuEscSelect;
 	private List<Rectangle> menu;
 	
 	private int gameLevel;
@@ -74,11 +76,13 @@ public class Engine implements Runnable {
 		this.newGame = true;
 		this.state = STATE_MENU;
 		this.menuSelectId = MENU_NEW;
+		this.menuEscSelect = false;
 		this.menu = new ArrayList<Rectangle>();
 		this.menu.add(MENU_CONTINUE, new Rectangle(192, 150, 256, 64));
 		this.menu.add(MENU_NEW, new Rectangle(192, 214, 256, 64));
 		this.menu.add(MENU_TOP10, new Rectangle(192, 278, 256, 64));
 		this.menu.add(MENU_HELP, new Rectangle(192, 342, 256, 64));
+		this.menu.add(MENU_ESC, new Rectangle(592, 432, 32, 32));
 		this.gameTimer = new Timer("gameTimer");
 		this.gameNew();
 	}
@@ -105,6 +109,10 @@ public class Engine implements Runnable {
 	
 	public synchronized int getMenuSelectId() {
 		return this.menuSelectId;
+	}
+	
+	public synchronized boolean getMenuEscSelect() {
+		return this.menuEscSelect;
 	}
 	
 	public synchronized List<Rectangle> getMenu() {
@@ -186,52 +194,80 @@ public class Engine implements Runnable {
 	}
 	
 	public synchronized void mouseUp(int x, int y) {
-		if(this.state != STATE_MENU)
-			return;
-		Rectangle size = this.menu.get(MENU_CONTINUE);
-		if(size.x > x || size.x + size.width < x)
-			return;
-		int select = (y - size.y) / size.height;
-		if(select != this.menuSelectId)
-			return;
-		switch(select) {
-			case MENU_CONTINUE:
-				if(!this.newGame)
-					this.state = STATE_GAME;
+		switch(this.state) {
+			case STATE_MENU:
+				Rectangle size = this.menu.get(MENU_CONTINUE);
+				if(size.x > x || size.x + size.width < x)
+					return;
+				int select = (y - size.y) / size.height;
+				if(select != this.menuSelectId)
+					return;
+				switch(select) {
+					case MENU_CONTINUE:
+						if(!this.newGame)
+							this.state = STATE_GAME;
+						break;
+					case MENU_NEW:
+						this.gameNew();
+						this.newGame = false;
+						this.state = STATE_GAME;
+						break;
+					case MENU_TOP10:
+						this.state = STATE_TOP10;
+						break;
+					case MENU_HELP:
+						this.state = STATE_HELP;
+						break;
+				}
 				break;
-			case MENU_NEW:
-				this.gameNew();
-				this.newGame = false;
-				this.state = STATE_GAME;
-				break;
-			case MENU_TOP10:
-				this.state = STATE_TOP10;
-				break;
-			case MENU_HELP:
-				this.state = STATE_HELP;
+			case STATE_GAME:
+			case STATE_RESULT:
+			case STATE_TOP10:
+			case STATE_HELP:
+				Rectangle escSize = this.menu.get(MENU_ESC);
+				if(escSize.x <= x && escSize.x + escSize.width >= x &&
+					escSize.y <= y && escSize.y + escSize.height >= y) {
+					this.menuEscSelect = false;
+					if(this.state == STATE_RESULT)
+						this.menuSelectId = MENU_NEW;
+					this.state = STATE_MENU;
+				}
 				break;
 		}
 	}
 	
 	public synchronized void mouseMove(int x, int y) {
-		if(this.state != STATE_MENU)
-			return;
-		Rectangle size = this.menu.get(MENU_CONTINUE);
-		if(size.x > x || size.x + size.width < x)
-			return;
-		switch((y - size.y) / size.height) {
-			case MENU_CONTINUE:
-				if(!this.newGame)
-					this.menuSelectId = MENU_CONTINUE;
+		switch(this.state) {
+			case STATE_MENU:
+				Rectangle menuSize = this.menu.get(MENU_CONTINUE);
+				if(menuSize.x > x || menuSize.x + menuSize.width < x)
+					return;
+				switch((y - menuSize.y) / menuSize.height) {
+					case MENU_CONTINUE:
+						if(!this.newGame)
+							this.menuSelectId = MENU_CONTINUE;
+						break;
+					case MENU_NEW:
+						this.menuSelectId = MENU_NEW;
+						break;
+					case MENU_TOP10:
+						this.menuSelectId = MENU_TOP10;
+						break;
+					case MENU_HELP:
+						this.menuSelectId = MENU_HELP;
+						break;
+				}
 				break;
-			case MENU_NEW:
-				this.menuSelectId = MENU_NEW;
-				break;
-			case MENU_TOP10:
-				this.menuSelectId = MENU_TOP10;
-				break;
-			case MENU_HELP:
-				this.menuSelectId = MENU_HELP;
+			case STATE_GAME:
+			case STATE_RESULT:
+			case STATE_TOP10:
+			case STATE_HELP:
+				Rectangle escSize = this.menu.get(MENU_ESC);
+				if(escSize.x <= x && escSize.x + escSize.width >= x &&
+					escSize.y <= y && escSize.y + escSize.height >= y)
+					this.menuEscSelect = true;
+				else
+					this.menuEscSelect = false;
 				break;
 		}
 	}
@@ -254,6 +290,10 @@ public class Engine implements Runnable {
 	
 	public synchronized String gameGetWord() {
 		return this.gameWord;
+	}
+	
+	public synchronized boolean gameGetWordClear() {
+		return this.gameWordClear;
 	}
 	
 	public synchronized Collection<Bomb> gameGetBombs() {
@@ -300,6 +340,8 @@ public class Engine implements Runnable {
 	
 	private synchronized void gameWordEnter() {
 		if(this.gameBombs.containsKey(this.gameWord)) {
+			this.gameBombsExplosion.add(this.gameBombs.get(this.gameWord));
+			this.gameSoundExplosion2();
 			this.gameBombs.remove(this.gameWord);
 			this.gameScore++;
 			this.gameWordClear = true;
@@ -343,11 +385,20 @@ public class Engine implements Runnable {
 	private synchronized void gameSoundExplosion() {
 		Thread gameSoundExplosionThread = new Thread(new Runnable() {
 			public void run() {
-				if (CoolKey.isSoundAvailable()) {
+				if(CoolKey.isSoundAvailable())
 					CoolKey.getSoundBank().EXPLOSION.play();
-				}
 			}
 		}, "gameSoundExplosion");
+		gameSoundExplosionThread.start();
+	}
+	
+	private synchronized void gameSoundExplosion2() {
+		Thread gameSoundExplosionThread = new Thread(new Runnable() {
+			public void run() {
+				if(CoolKey.isSoundAvailable())
+					CoolKey.getSoundBank().EXPLOSION2.play();
+			}
+		}, "gameSoundExplosion2");
 		gameSoundExplosionThread.start();
 	}
 	
@@ -412,9 +463,9 @@ public class Engine implements Runnable {
 				}
 				this.gameCreateBombs();
 				if(this.gameLife < 1) {
-					this.state = STATE_RESULT;
-					this.newGame = true;
 					this.top10ScoreAdd();
+					this.newGame = true;
+					this.state = STATE_RESULT;
 				}
 				break;
 		}
