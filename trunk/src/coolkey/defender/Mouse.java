@@ -20,11 +20,7 @@ public class Mouse implements MouseListener {
 	}
 	
 	public void mouseUp(MouseEvent me) {
-		switch(this.engine.getState()) {
-			case Engine.STATE_MENU:
-				if(me.button == this.MOUSE_BUTTON1)
-					this.engine.mouseUp(me.x, me.y);
-				break;
-		}
+		if(me.button == this.MOUSE_BUTTON1)
+			this.engine.mouseUp(me.x, me.y);
 	}
 }
