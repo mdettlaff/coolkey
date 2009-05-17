@@ -108,7 +108,6 @@ public class Stats {
 					 */
 					int skala=100;
 					for (int j=canvasSize.y-BOTTOM_MARGIN-100; j>=40; j-=100) {
-						//gc.drawLine(LEFT_MARGIN, j-1, canvasSize.x-LEFT_MARGIN, j-1);
 						gc.drawLine(LEFT_MARGIN, j, canvasSize.x-LEFT_MARGIN, j);
 						gc.drawString(Integer.toString(skala), x-13, j-12, true);
 						skala+=100;
@@ -159,6 +158,8 @@ public class Stats {
 						double speed2 = speeds.get(i);
 						gc.setBackground(GUI.display.getSystemColor(SWT.COLOR_BLUE));
 						gc.fillOval(x-3, canvasSize.y-(int)speed2-BOTTOM_MARGIN-3, 6, 6);
+						gc.setBackground(GUI.display.getSystemColor(SWT.COLOR_WHITE));
+						gc.drawString(String.format("%.2f", speed2), x-13, canvasSize.y-(int)speed2-BOTTOM_MARGIN+15);
 						if (i>0) {
 							gc.drawLine(x, canvasSize.y-(int)speed2-BOTTOM_MARGIN+1, x-inc, canvasSize.y-speeds.get(i-1).intValue()-BOTTOM_MARGIN+1);
 						}
@@ -173,21 +174,22 @@ public class Stats {
 					/*
 					 *  Skala
 					 */
-					int skala=20;
-					for (int j=canvasSize.y-BOTTOM_MARGIN-60; skala<=100; j-=60) {
-						gc.drawLine(LEFT_MARGIN, j-1, canvasSize.x-LEFT_MARGIN, j-1);
-						gc.drawLine(LEFT_MARGIN, j, canvasSize.x-LEFT_MARGIN, j);
-						gc.drawString(Integer.toString(skala), x-13, j-12, true);
-						skala+=20;
-					}
-					skala=5;
+					gc.setForeground(GUI.display.getSystemColor(SWT.COLOR_GRAY));
+					int skala=5;
 					for (int j=canvasSize.y-BOTTOM_MARGIN-15; skala<100; j-=15) {
 						gc.drawLine(LEFT_MARGIN, j, canvasSize.x-LEFT_MARGIN, j);
 						skala+=5;
 					}
-					
+					gc.setForeground(GUI.display.getSystemColor(SWT.COLOR_BLACK));
+					skala=20;
+					for (int j=canvasSize.y-BOTTOM_MARGIN-60; skala<=100; j-=60) {
+						gc.drawLine(LEFT_MARGIN, j, canvasSize.x-LEFT_MARGIN, j);
+						gc.drawString(Integer.toString(skala), x-13, j-12, true);
+						skala+=20;
+					}
+										
 					int y;
-					x = 30;
+					x = 35;
 					inc = canvasSize.x / CoolKey.getUser().getStatistics().getAccuracies().size();
 					List<Double> testsSpeeds = CoolKey.getUser().getStatistics().getAccuracies();
 					gc.setForeground(GUI.display.getSystemColor(SWT.COLOR_RED));
@@ -258,16 +260,16 @@ public class Stats {
 					/*
 					 *  Skala
 					 */
+					gc.setForeground(GUI.display.getSystemColor(SWT.COLOR_GRAY));
+					for (int j=canvasSize.y-BOTTOM_MARGIN-50; j>=50; j-=50 ) {
+						gc.drawLine(LEFT_MARGIN, j, canvasSize.x-LEFT_MARGIN, j);
+					}
+					gc.setForeground(GUI.display.getSystemColor(SWT.COLOR_BLACK));
 					int skala=100;
 					for (int j=canvasSize.y-BOTTOM_MARGIN-100; j>=50; j-=100) {
-						gc.drawLine(LEFT_MARGIN, j-1, canvasSize.x-LEFT_MARGIN, j-1);
 						gc.drawLine(LEFT_MARGIN, j, canvasSize.x-LEFT_MARGIN, j);
 						gc.drawString(Integer.toString(skala), x-13, j-12, true);
 						skala+=100;
-					}
-					
-					for (int j=canvasSize.y-BOTTOM_MARGIN-50; j>=50; j-=50 ) {
-						gc.drawLine(LEFT_MARGIN, j, canvasSize.x-LEFT_MARGIN, j);
 					}
 
 					Map<Character, Double> charSpeeds = CoolKey.getUser().getStatistics().getCharSpeeds();
