@@ -91,8 +91,11 @@ public class Stats {
 				Font font = new Font(GUI.display,"Arial",8, SWT.None);
 				gc.setFont(font);
 
+				int inc;
 				int x=20;	//początkowy odstęp od lewej
-				int inc = canvasSize.x / CoolKey.getUser().getStatistics().getSpeeds().size()-2; //odstęp między słupkami
+				if (CoolKey.getUser().getStatistics().getSpeeds().size() != 0)
+					inc = canvasSize.x / CoolKey.getUser().getStatistics().getSpeeds().size()-2; //odstęp między słupkami
+				else inc = 20;
 				
 				if (!accTests.getSelection()) {
 					/*
@@ -190,7 +193,8 @@ public class Stats {
 										
 					int y;
 					x = 35;
-					inc = canvasSize.x / CoolKey.getUser().getStatistics().getAccuracies().size();
+					if (CoolKey.getUser().getStatistics().getAccuracies().size()!=0)
+						inc = canvasSize.x / CoolKey.getUser().getStatistics().getAccuracies().size();
 					List<Double> testsSpeeds = CoolKey.getUser().getStatistics().getAccuracies();
 					gc.setForeground(GUI.display.getSystemColor(SWT.COLOR_RED));
 					for (int i=0; i<testsSpeeds.size(); i++) {
@@ -218,7 +222,9 @@ public class Stats {
 				gc.setForeground(GUI.display.getSystemColor(SWT.COLOR_BLACK));
 				gc.fillRectangle(0, 0, canvasSize.x, canvasSize.y); // tło
 				
-				int inc = canvasSize.x / CoolKey.getUser().getStatistics().getCharAccuracies().size();
+				int inc=20;
+				if (CoolKey.getUser().getStatistics().getCharAccuracies().size()!=0)
+					inc = canvasSize.x / CoolKey.getUser().getStatistics().getCharAccuracies().size();
 				int x=20;
 				int y;
 				
@@ -256,7 +262,8 @@ public class Stats {
 					gc.drawLine(5, 5, LEFT_MARGIN, canvasSize.y-BOTTOM_MARGIN2);		//oś x 
 					gc.drawString("Prędkość", 7, 5);
 					gc.drawLine(LEFT_MARGIN, canvasSize.y-BOTTOM_MARGIN2, canvasSize.x-10, canvasSize.y-BOTTOM_MARGIN2);	//oś y 
-					inc = canvasSize.x / CoolKey.getUser().getStatistics().getCharSpeeds().size();
+					if (CoolKey.getUser().getStatistics().getCharSpeeds().size()!=0)
+						inc = canvasSize.x / CoolKey.getUser().getStatistics().getCharSpeeds().size();
 					/*
 					 *  Skala
 					 */
