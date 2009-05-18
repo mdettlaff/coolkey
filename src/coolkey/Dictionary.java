@@ -65,24 +65,33 @@ public class Dictionary {
 	}
 
 	/**
+	 * Zwraca z podanego zbioru słów listę słów z możliwie dużą ilością
+	 * wystąpień znaków z podanego zbioru znaków.
+	 *
+	 * @return Podzbiór słownika, lub cały słownik, jeśli za argument podano
+	 *         <code>null</code>.
+	 */
+	public List<String> wordsContaining(String filter) {
+		return wordsContaining(filter, words);
+	}
+
+	/**
 	 * Zwraca ze słownika listę słów z możliwie dużą ilością wystąpień znaków
 	 * z podanego zbioru znaków.
 	 *
 	 * @return Podzbiór słownika, lub cały słownik, jeśli za argument podano
 	 *         <code>null</code>.
 	 */
-	public List<String> wordsContaining(CharSequence filter) {
+	public static List<String> wordsContaining(String filter, String[] words) {
 		if (filter == null) {
 			return Arrays.asList(words);
 		}
 		List<String> filteredWords = new ArrayList<String>();
 		for (String word : words) {
 			int filterMatchesCount = 0;
-			for (int i=0; i < filter.length(); i++) {
-				for (int j=0; j < word.length(); j++) {
-					if (filter.charAt(i) == word.charAt(j)) {
-						filterMatchesCount++;
-					}
+			for (int i=0; i < word.length(); i++) {
+				if (filter.indexOf(word.charAt(i)) != -1) {
+					filterMatchesCount++;
 				}
 			}
 			if (word.length() < 5 && filterMatchesCount > 0
@@ -93,5 +102,25 @@ public class Dictionary {
 			}
 		}
 		return filteredWords;
+	}
+
+	/**
+	 * Zwraca listę słów składających się wyłącznie z podanych liter.
+	 */
+	public List<String> wordsConsistingOf(String chars) {
+		List<String> matches = new ArrayList<String>();
+		for (String word : words) {
+			boolean isMatching = true;
+			for (int i=0; i < word.length(); i++) {
+				if (chars.indexOf(word.charAt(i)) == -1) {
+					isMatching = false;
+					break;
+				}
+			}
+			if (isMatching) {
+				matches.add(word);
+			}
+		}
+		return matches;
 	}
 }
