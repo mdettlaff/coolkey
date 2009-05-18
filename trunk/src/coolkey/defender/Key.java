@@ -4,14 +4,27 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 
+/**
+ * Klasa obsługująca zdarzenia na klawiaturze.
+ */
 public class Key implements KeyListener {
+	/**
+	 * Stała zdefiniowana jako klawisz Enter.
+	 */
 	private final int KEY_ENTER = 13;
+	/**
+	 * Uchwyt do mechanizmu gry.
+	 */
 	private	 Engine engine;
 	
+	/**
+	 * Tworzy nowy obiekt obsługujący zdarzenia na klawiaturze.
+	 * @param engine uchwyt do mechanizmu gry
+	 */
 	public Key(Engine engine) {
 		this.engine = engine;
 	}
-	
+
 	public void keyPressed(KeyEvent ke) {
 		switch(this.engine.getState()) {
 			case Engine.STATE_MENU:
