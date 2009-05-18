@@ -22,7 +22,7 @@ public class Graphs implements Runnable	{
 	private final int CANVAS_WIDTH = 195;
 	private final int SLEEP_TIME = 1000;
 	private final int MARGIN_TOP = 20;
-	private final int MARGIN_LEFT = 5;
+	private final int MARGIN_LEFT = 20;
 	/**
 	 * Przedział czasu, z którego obliczana jest prędkość chwilowa.
 	 */
@@ -51,17 +51,22 @@ public class Graphs implements Runnable	{
 	
 				/* skala */
 				int skala=500;
-				gc.setForeground(GUI.display.getSystemColor(SWT.COLOR_GRAY));
 				for (int j=MARGIN_TOP+20; j<=140; j+=20) {
-					gc.drawLine(MARGIN_LEFT, j, canvasSize.x-MARGIN_LEFT, j);
-					gc.drawString(Integer.toString(skala), MARGIN_LEFT+2, j-10, true);
+					gc.setForeground(GUI.display.getSystemColor(SWT.COLOR_GRAY));
+					gc.drawLine(MARGIN_LEFT-2, j, canvasSize.x-MARGIN_LEFT, j);
+					gc.setForeground(GUI.display.getSystemColor(SWT.COLOR_BLACK));
+					if (skala == 0) {
+						gc.drawString(Integer.toString(skala), MARGIN_LEFT-9, j-5, true);
+						continue;
+					}	
+					gc.drawString(Integer.toString(skala), MARGIN_LEFT-19, j-5, true);
 					skala-=100;
 				}
 				gc.setForeground(GUI.display.getSystemColor(SWT.COLOR_BLACK));
 				/* Osie */
-				gc.drawLine(MARGIN_LEFT, MARGIN_TOP, MARGIN_LEFT, MARGIN_TOP+120);		//oś y 
+				gc.drawLine(MARGIN_LEFT, MARGIN_TOP, MARGIN_LEFT, MARGIN_TOP+122);		//oś y 
 				//gc.drawString("znak/min", 25, 5);
-				gc.drawLine(MARGIN_LEFT, MARGIN_TOP+120, canvasSize.x-MARGIN_LEFT, MARGIN_TOP+120);	//oś x 
+				gc.drawLine(MARGIN_LEFT-2, MARGIN_TOP+120, canvasSize.x-MARGIN_LEFT, MARGIN_TOP+120);	//oś x 
 				
 				//gc.drawString("czas: ", 15, 24);
 				//gc.drawString("postęp: ", 15, 60);
@@ -93,17 +98,26 @@ public class Graphs implements Runnable	{
 					System.out.println('\n' + s);
 					
 					/*wykres*/
-					int x=15;
+					int x=MARGIN_LEFT+1;
 					int y=120+MARGIN_TOP;
-					int inc=(canvasSize.x-10)/resultsList.size();
+					int inc=(canvasSize.x-40)/resultsList.size();
+					if (inc == 0) {
+						inc++;
+					}
 					gc.setForeground(GUI.display.getSystemColor(SWT.COLOR_GREEN));
-					for (int i=0; i<resultsList.size(); i++) {
-						TestResults result = resultsList.get(i);
-						double speed = result.getSpeed();
-						if (i>0) {
-							gc.drawLine(x, y-(int)speed/5, x-inc, y-(int)(resultsList.get(i-1).getSpeed()/5));
-							gc.drawLine(x, (y-(int)speed/5)-1, x-inc, (y-(int)(resultsList.get(i-1).getSpeed()/5))-1);
-						}
+					
+					/* Pierwszy element z tablicy wyników */
+					TestResults result = resultsList.get(0);
+					double speed = result.getSpeed();
+					gc.drawLine(inc+x, y-(int)speed/5, x, y-(int)speed/5);
+					gc.drawLine(inc+x, (y-(int)speed/5)-1, x, (y-(int)speed/5)-1);
+					x += inc;
+					
+					for (int i=(resultsList.size() < 159 ? 1 : resultsList.size()-159); i<resultsList.size(); i++) {
+						result = resultsList.get(i);
+						speed = result.getSpeed();
+						gc.drawLine(x+inc, y-(int)speed/5, x, y-(int)(resultsList.get(i-1).getSpeed()/5));
+						gc.drawLine(x+inc, (y-(int)speed/5)-1, x, (y-(int)(resultsList.get(i-1).getSpeed()/5))-1);	//pogrubiona linia
 						x+=inc;
 					}
 				}
