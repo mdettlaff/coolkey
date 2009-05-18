@@ -23,6 +23,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Spinner;
 
 import coolkey.CoolKey;
+import coolkey.Lesson;
 import coolkey.Markov;
 import coolkey.TypingTest;
 import coolkey.Utils;
@@ -120,8 +121,45 @@ public class MenuBar {
 		final MenuItem lesson1Item = new MenuItem(lessonsMenu, SWT.PUSH);
 		lesson1Item.setText("Lekcja 1: asdf");
 		lessonsItem.setMenu(lessonsMenu);
-		MenuItem practiseItem = new MenuItem(singleTestMenu, SWT.PUSH);
-		practiseItem.setText("Wprawki");
+		// wprawki
+		MenuItem practiceItem = new MenuItem(singleTestMenu, SWT.CASCADE);
+		practiceItem.setText("Wprawki");
+		Menu practiceMenu = new Menu(singleTestMenu);
+		practiceItem.setMenu(practiceMenu);
+		String[] QWERTY = { "qwertyuiop", "asdfghjkl;", "zxcvbnm,./" };
+        String[] Dvorak = { "',.pyfgcrl", "aoeuidhtns", ";qjkxbmwvz" };
+		final String LETTERS = QWERTY[0] + QWERTY[1] + QWERTY[2];
+		// wprawki - QWERTY
+		practiceMenuItem(practiceMenu, "QWERTY, palce małe",
+				LETTERS, "qazp;/");
+		practiceMenuItem(practiceMenu, "QWERTY, palce serdeczne",
+				LETTERS, "wsxol.");
+		practiceMenuItem(practiceMenu, "QWERTY, palce środkowe",
+				LETTERS, "edcik,");
+		practiceMenuItem(practiceMenu, "QWERTY, palce wskazujące",
+				LETTERS, "rfvtgbyhnujm");
+		practiceMenuItem(practiceMenu, "QWERTY, górny rząd",
+				QWERTY[0] + QWERTY[1], QWERTY[0]);
+		practiceMenuItem(practiceMenu, "QWERTY, środkowy rząd",
+				QWERTY[1], QWERTY[1]);
+		practiceMenuItem(practiceMenu, "QWERTY, dolny rząd",
+				QWERTY[1] + QWERTY[2], QWERTY[2]);
+		// wprawki - Dvorak
+		practiceMenuItem(practiceMenu, "Dvorak, palce małe",
+				LETTERS, "'a;lsz");
+		practiceMenuItem(practiceMenu, "Dvorak, palce serdeczne",
+				LETTERS, ",oqrnv");
+		practiceMenuItem(practiceMenu, "Dvorak, palce środkowe",
+				LETTERS, ".ejctw");
+		practiceMenuItem(practiceMenu, "Dvorak, palce wskazujące",
+				LETTERS, "pukyixfdbghm");
+		practiceMenuItem(practiceMenu, "Dvorak, górny rząd",
+				Dvorak[0] + Dvorak[1], Dvorak[0]);
+		practiceMenuItem(practiceMenu, "Dvorak, środkowy rząd",
+				Dvorak[1], Dvorak[1]);
+		practiceMenuItem(practiceMenu, "Dvorak, dolny rząd",
+				Dvorak[1] + Dvorak[2], Dvorak[2]);
+		// test spersonalizowany
 		MenuItem customTestItem = new MenuItem(singleTestMenu, SWT.PUSH);
 		customTestItem.setText("Test spersonalizowany");
 
@@ -172,7 +210,7 @@ public class MenuBar {
 			}
 		});
 		exitMenuItem.addListener(SWT.Selection, new Listener() {
-			public void handleEvent(Event e) {
+			public void handleEvent(Event event) {
 				CoolKey.persistState();
 				System.exit(0);
 			}
@@ -252,7 +290,7 @@ public class MenuBar {
 
 				Listener generate = new Listener() {
 					@Override
-					public void handleEvent(Event e) {
+					public void handleEvent(Event event) {
 						int minGenTextLines = spinner.getSelection();
 						int minGenTextLength = (minGenTextLines - 1) * (
 								CoolKey.MAX_CHARS_IN_LINE - 1);
@@ -270,7 +308,7 @@ public class MenuBar {
 
 				cancel.addListener(SWT.Selection, new Listener() {
 					@Override
-					public void handleEvent(Event e) {
+					public void handleEvent(Event event) {
 						shell.close();
 					}
 				});
@@ -307,7 +345,7 @@ public class MenuBar {
 		// informacje o programie
 		aboutItem.addListener(SWT.Selection, new Listener() {
 			@Override
-			public void handleEvent(Event arg0) {
+			public void handleEvent(Event event) {
 				new About();
 			}
 		});
@@ -327,7 +365,7 @@ public class MenuBar {
 				textItem.setText(title);
 				textItem.addListener(SWT.Selection, new Listener() {
 					@Override
-					public void handleEvent(Event arg0) {
+					public void handleEvent(Event event) {
 						CoolKey.setCurrentTest(new TypingTest(text));
 						GUI.refresh();
 					}
@@ -336,5 +374,21 @@ public class MenuBar {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	private void practiceMenuItem(Menu menu, String title,
+			String allowedChars, String practicedChars) {
+		final String AC = allowedChars;
+		final String PC = practicedChars;
+		MenuItem textItem = new MenuItem(menu, SWT.PUSH);
+		textItem.setText(title);
+		textItem.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				String text = new Lesson(AC, PC).getText();
+				CoolKey.setCurrentTest(new TypingTest(text));
+				GUI.refresh();
+			}
+		});
 	}
 }
