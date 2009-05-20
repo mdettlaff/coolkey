@@ -93,6 +93,7 @@ public class Graphs implements Runnable	{
 					int seconds = newestResults.getTypingTimeMilliseconds() / 1000;
 					gc.drawString("Prędkość średnia (ogólnie): " + String.format("%.1f", newestResults.getSpeed()), MARGIN_LEFT, 5);
 					gc.drawString("Prędkość średnia (faktycznie): " + String.format("%.1f", newestResults.getRealSpeed()), MARGIN_LEFT, 5+MARGIN_TOP2);
+					gc.drawString("Prędkość chwilowa: " + String.format("%.1f", newestResults.getSpeed()), MARGIN_LEFT, 5+MARGIN_TOP3);
 					//gc.drawString(seconds + "", 15, 40);
 					//gc.drawString(progress, 15, 76);
 					String s = "";
@@ -144,6 +145,16 @@ public class Graphs implements Runnable	{
 						gc.setForeground(GUI.display.getSystemColor(SWT.COLOR_RED));
 						gc.drawLine(x+(int)inc, y-(int)sample/5+MARGIN_TOP2, x, y-(int)(resultsList.get(i-1).getRealSpeed()/5)+MARGIN_TOP2);
 						gc.drawLine(x+(int)inc, (y-(int)sample/5)-1+MARGIN_TOP2, x, (y-(int)(resultsList.get(i-1).getRealSpeed()/5))-1+MARGIN_TOP2);
+						x+=inc;
+					}
+					inc = 2;
+					x=MARGIN_LEFT+1;
+					for (int i=(resultsList.size() < 79 ? 1 : resultsList.size()-(78*(resultsList.size()/78)-1)); i<resultsList.size(); i++) {
+						result = resultsList.get(i);
+						sample = result.getSpeed();
+						gc.setForeground(GUI.display.getSystemColor(SWT.COLOR_BLUE));
+						gc.drawLine(x+(int)inc, y-(int)sample/5+MARGIN_TOP3, x, y-(int)(resultsList.get(i-1).getSpeed()/5)+MARGIN_TOP3);
+						gc.drawLine(x+(int)inc, (y-(int)sample/5)-1+MARGIN_TOP3, x, (y-(int)(resultsList.get(i-1).getSpeed()/5))-1+MARGIN_TOP3);	//pogrubiona linia
 						x+=inc;
 					}
 				}
