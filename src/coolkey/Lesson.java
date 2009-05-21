@@ -3,6 +3,9 @@ package coolkey;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Lekcja ucząca danych znaków będąca częścią kursu.
+ */
 public class Lesson {
 
 	/**
