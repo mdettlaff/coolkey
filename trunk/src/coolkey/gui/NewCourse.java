@@ -49,9 +49,11 @@ public class NewCourse {
 						courses.getSelectionIndex()));
 				GUI.menuBar.getContinueCourseItem().setEnabled(true);
 				CoolKey.setCurrentTest(new TypingTest(CoolKey.getUser()
-						.getCurrentCourse().getCurrentLesson().getText()));
+						.getCurrentCourse().getCurrentLesson().getText(),
+						true));
 				newCourseShell.close();
 				GUI.refresh();
+				GUI.showLessonInstructions();
 			}
 		});
 	}

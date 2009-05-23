@@ -23,6 +23,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Spinner;
 
 import coolkey.CoolKey;
+import coolkey.CourseFactory;
 import coolkey.Lesson;
 import coolkey.Markov;
 import coolkey.TypingTest;
@@ -118,13 +119,50 @@ public class MenuBar {
 		fileTextItem.setText("Tekst z pliku");
 		MenuItem autoTextItem = new MenuItem(singleTestMenu, SWT.PUSH);
 		autoTextItem.setText("Automatycznie wygenerowany tekst");
-		MenuItem lessonsItem = new MenuItem(singleTestMenu, SWT.CASCADE);
-		// lekcje
-		lessonsItem.setText("Lekcje");
-		Menu lessonsMenu = new Menu(singleTestMenu);
-		final MenuItem lesson1Item = new MenuItem(lessonsMenu, SWT.PUSH);
-		lesson1Item.setText("Lekcja 1: asdf");
-		lessonsItem.setMenu(lessonsMenu);
+		// lekcje QWERTY
+		MenuItem qwertyLessonsItem = new MenuItem(singleTestMenu, SWT.CASCADE);
+		qwertyLessonsItem.setText("Lekcje QWERTY");
+		Menu qwertyLessonsMenu = new Menu(singleTestMenu);
+		for (final Lesson lesson : CourseFactory.qwertyLessons()) {
+			final MenuItem lessonItem = new MenuItem(qwertyLessonsMenu, SWT.PUSH);
+			lessonItem.setText(lesson.getName());
+			qwertyLessonsItem.setMenu(qwertyLessonsMenu);
+			lessonItem.addListener(SWT.Selection, new Listener() {
+				@Override
+				public void handleEvent(Event event) {
+					String text = lesson.getText();
+					CoolKey.setCurrentTest(new TypingTest(text, false));
+					GUI.refresh();
+			    	int style = SWT.ICON_INFORMATION;
+			    	MessageBox messageBox = new MessageBox(GUI.shell, style);
+			    	messageBox.setText("Instrukcja");
+			    	messageBox.setMessage(lesson.getInstructions());
+			    	messageBox.open();
+				}
+			});
+		}
+		// lekcje Dvorak
+		MenuItem dvorakLessonsItem = new MenuItem(singleTestMenu, SWT.CASCADE);
+		dvorakLessonsItem.setText("Lekcje Dvorak");
+		Menu dvorakLessonsMenu = new Menu(singleTestMenu);
+		for (final Lesson lesson : CourseFactory.dvorakLessons()) {
+			final MenuItem lessonItem = new MenuItem(dvorakLessonsMenu, SWT.PUSH);
+			lessonItem.setText(lesson.getName());
+			dvorakLessonsItem.setMenu(dvorakLessonsMenu);
+			lessonItem.addListener(SWT.Selection, new Listener() {
+				@Override
+				public void handleEvent(Event event) {
+					String text = lesson.getText();
+					CoolKey.setCurrentTest(new TypingTest(text, false));
+					GUI.refresh();
+			    	int style = SWT.ICON_INFORMATION;
+			    	MessageBox messageBox = new MessageBox(GUI.shell, style);
+			    	messageBox.setText("Instrukcja");
+			    	messageBox.setMessage(lesson.getInstructions());
+			    	messageBox.open();
+				}
+			});
+		}
 		// wprawki
 		MenuItem practiceItem = new MenuItem(singleTestMenu, SWT.CASCADE);
 		practiceItem.setText("Wprawki");
@@ -235,8 +273,10 @@ public class MenuBar {
 			@Override
 			public void handleEvent(Event event) {
 				CoolKey.setCurrentTest(new TypingTest(CoolKey.getUser()
-						.getCurrentCourse().getCurrentLesson().getText()));
+						.getCurrentCourse().getCurrentLesson().getText(),
+						true));
 				GUI.refresh();
+				GUI.showLessonInstructions();
 			}
 		});
 		// załaduj plik tekstowy
@@ -253,7 +293,7 @@ public class MenuBar {
 					String text;
 					try {
 						text = Utils.readFileAsString(new File(result));
-						CoolKey.setCurrentTest(new TypingTest(text));
+						CoolKey.setCurrentTest(new TypingTest(text, false));
 						GUI.refresh();
 					} catch (IOException e) {
 						MessageBox messageBox = new MessageBox(GUI.shell, SWT.ICON_ERROR);
@@ -310,7 +350,7 @@ public class MenuBar {
 								Markov.generateMarkovChain(
 										Utils.words(
 												CoolKey.TEXT_NORM_DIRECTORY),
-												minGenTextLength)));
+												minGenTextLength), false));
 						GUI.refresh();
 						shell.dispose();
 					}
@@ -378,7 +418,7 @@ public class MenuBar {
 				textItem.addListener(SWT.Selection, new Listener() {
 					@Override
 					public void handleEvent(Event event) {
-						CoolKey.setCurrentTest(new TypingTest(text));
+						CoolKey.setCurrentTest(new TypingTest(text, false));
 						GUI.refresh();
 					}
 				});
@@ -390,14 +430,15 @@ public class MenuBar {
 
 	private void practiceMenuItem(Menu menu, String title,
 			String allowedChars, String practicedChars) {
-		final Lesson lesson = new Lesson(title, allowedChars, practicedChars);
+		final Lesson lesson =
+			new Lesson(allowedChars, practicedChars, title, "");
 		MenuItem textItem = new MenuItem(menu, SWT.PUSH);
 		textItem.setText(lesson.getName());
 		textItem.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
 				String text = lesson.getText();
-				CoolKey.setCurrentTest(new TypingTest(text));
+				CoolKey.setCurrentTest(new TypingTest(text, false));
 				GUI.refresh();
 			}
 		});

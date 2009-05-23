@@ -33,7 +33,9 @@ public class Course implements Serializable {
 	}
 
 	public void goToNextLesson() {
-		currentLessonIndex++;
+		if (currentLessonIndex < lessons.size() - 1) {
+			currentLessonIndex++;
+		}
 	}
 
 	public String getName() {

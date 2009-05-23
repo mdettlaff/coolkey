@@ -22,6 +22,7 @@ public class TypingTest implements Serializable {
 	private boolean isPaused;
 	private List<Date> timesPaused;
 	private boolean isBlockedAtMistake;
+	private boolean isPartOfCourse;
 	// dane do statystyk
 	private long lastCharTimestamp;
 	private Map<Character, Long> charCounts;
@@ -31,9 +32,10 @@ public class TypingTest implements Serializable {
 	/**
 	 * Nowe ćwiczenie polegające na przepisaniu podanego tekstu.
 	 *
-	 * @param text Tekst do przepisania.
+	 * @param text           Tekst do przepisania.
+	 * @param isPartOfCourse Czy to ćwiczenie stanowi część kursu.
 	 */
-	public TypingTest(String text) {
+	public TypingTest(String text, boolean isPartOfCourse) {
 		for (String line : text.replaceAll(" +", " ").replaceAll("\r", "")
 				.trim().split("\n")) {
 			textLines.add(line);
@@ -63,6 +65,7 @@ public class TypingTest implements Serializable {
 		charCounts = new HashMap<Character, Long>();
 		charTimes = new HashMap<Character, Long>();
 		charMistakes = new HashMap<Character, Long>();
+		this.isPartOfCourse = isPartOfCourse;
 	}
 
 	/**
@@ -298,7 +301,8 @@ public class TypingTest implements Serializable {
 	 * Wyniki testu (prędkość, poprawność, dane statystyczne itp.).
 	 */
 	public TestResults getResults() {
-		return new TestResults(this, charCounts, charTimes, charMistakes);
+		return new TestResults(this, charCounts, charTimes, charMistakes,
+				isPartOfCourse);
 	}
 
 	/**
