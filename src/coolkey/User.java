@@ -18,6 +18,8 @@ public class User implements Serializable {
 	private String name;
 	private String passwordHash;
 	private Config config;
+	private List<Course> courses;
+	private int currentCourseIndex;
 	private TypingTest currentTest;
 	private List<Score> highscore;
 	private List<TestResults> resultsList;
@@ -32,12 +34,12 @@ public class User implements Serializable {
 		config = new Config();
 		highscore = new ArrayList<Score>();
 		resultsList = new ArrayList<TestResults>();
-		// domyślna lekcja
-		int minGenTextLines = 10;
-		int minGenTextLength = (minGenTextLines - 1) * (
-				CoolKey.MAX_CHARS_IN_LINE - 1);
-		setCurrentTest(new TypingTest(Markov.generateMarkovChain(
-				Utils.words(CoolKey.TEXT_NORM_DIRECTORY), minGenTextLength)));
+		courses = new ArrayList<Course>();
+		courses.add(CourseFactory.allCourses().get(0)); // domyślny kurs
+		currentCourseIndex = 0;
+		// domyślna lekcja, z domyślnego kursu
+		setCurrentTest(new TypingTest(
+				getCurrentCourse().getCurrentLesson().getText()));
 	}
 
 	/**
@@ -144,6 +146,42 @@ public class User implements Serializable {
 
 	public Statistics getStatistics() {
 		return new Statistics(resultsList);
+	}
+
+	public void addCourse(Course course) {
+		courses.add(course);
+		currentCourseIndex = courses.size() - 1;
+	}
+
+	public void deleteCourse(int courseIndex) {
+		if (courseIndex <= currentCourseIndex) {
+			currentCourseIndex--;
+		}
+		courses.remove(courseIndex);
+		if (currentCourseIndex == -1 && courses.size() > 0) {
+			currentCourseIndex = 0;
+		}
+	}
+
+	public void selectCourse(int courseIndex) {
+		currentCourseIndex = courseIndex;
+	}
+
+	/**
+	 * Zwraca aktualnie wybrany kurs.
+	 *
+	 * @return Aktualny kurs lub <code>null</code>, jeśli użytkownik nie ma
+	 *         żadnych kursów.
+	 */
+	public Course getCurrentCourse() {
+		if (currentCourseIndex < 0) {
+			return null;
+		}
+		return courses.get(currentCourseIndex);
+	}
+
+	public List<Course> getCourses() {
+		return courses;
 	}
 
 	@Override

@@ -39,6 +39,7 @@ public class MenuBar {
 	 * Przypisanie tytułów do nazw plików tekstowych.
 	 */
 	private Properties textTitles;
+	private final MenuItem continueItem;
 
 	public MenuBar() {
 		textTitles = new Properties();
@@ -77,8 +78,11 @@ public class MenuBar {
 
 		final Menu courseMenu = new Menu(GUI.shell, SWT.DROP_DOWN);
 		course.setMenu(courseMenu);
-		final MenuItem continueItem = new MenuItem(courseMenu, SWT.PUSH);
-		continueItem.setText("Następna lekcja");
+		continueItem = new MenuItem(courseMenu, SWT.PUSH);
+		continueItem.setText("Kontynuuj aktualny kurs");
+		if (CoolKey.getUser().getCourses().size() == 0) {
+			continueItem.setEnabled(false);
+		}
 		final MenuItem newCourseItem = new MenuItem(courseMenu, SWT.PUSH);
 		newCourseItem.setText("Rozpocznij nowy kurs");
 		final MenuItem courseManagerItem = new MenuItem(courseMenu, SWT.PUSH);
@@ -225,6 +229,14 @@ public class MenuBar {
 			public void handleEvent(Event event) {
 				UserSettings usShell = new UserSettings();
 				usShell.open();
+			}
+		});
+		continueItem.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				CoolKey.setCurrentTest(new TypingTest(CoolKey.getUser()
+						.getCurrentCourse().getCurrentLesson().getText()));
+				GUI.refresh();
 			}
 		});
 		// załaduj plik tekstowy
@@ -378,17 +390,24 @@ public class MenuBar {
 
 	private void practiceMenuItem(Menu menu, String title,
 			String allowedChars, String practicedChars) {
-		final String AC = allowedChars;
-		final String PC = practicedChars;
+		final Lesson lesson = new Lesson(title, allowedChars, practicedChars);
 		MenuItem textItem = new MenuItem(menu, SWT.PUSH);
-		textItem.setText(title);
+		textItem.setText(lesson.getName());
 		textItem.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
-				String text = new Lesson(AC, PC).getText();
+				String text = lesson.getText();
 				CoolKey.setCurrentTest(new TypingTest(text));
 				GUI.refresh();
 			}
 		});
+	}
+
+	public MenuItem getContinueCourseItem() {
+		return continueItem;
+	}
+
+	public void refresh() {
+		continueItem.setEnabled(CoolKey.getUser().getCourses().size() > 0);
 	}
 }
