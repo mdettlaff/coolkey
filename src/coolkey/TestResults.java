@@ -15,6 +15,7 @@ public class TestResults implements Serializable {
 	private int totalCharsCount;
 	private int writtenCharsCount;
 	private int typingTimeMilliseconds;
+	private boolean isPartOfCourse;
 	private Map<Character, Long> charCounts;
 	private Map<Character, Long> charTimes;
 	private Map<Character, Long> charMistakes;
@@ -25,8 +26,9 @@ public class TestResults implements Serializable {
 	 * @param test Test którego będą dotyczyły te wyniki.
 	 */
 	public TestResults(TypingTest test, Map<Character, Long> charCounts,
-			Map<Character, Long> charTimes, Map<Character, Long> charMistakes)
-	{
+			Map<Character, Long> charTimes, Map<Character, Long> charMistakes,
+			boolean isPartOfCourse) {
+		this.isPartOfCourse = isPartOfCourse;
 		// policz wszystkie znaki do przepisania
 		totalCharsCount = 0;
 		for (String line : test.getTextLines()) {
@@ -164,6 +166,13 @@ public class TestResults implements Serializable {
 
 	public Map<Character, Long> getCharMistakes() {
 		return charMistakes;
+	}
+
+	/**
+	 * Czy test z którego zostały obliczone wyniki jest częścią kursu.
+	 */
+	public boolean isPartOfCourse() {
+		return isPartOfCourse;
 	}
 
 	public String toString() {

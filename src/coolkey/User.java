@@ -39,7 +39,7 @@ public class User implements Serializable {
 		currentCourseIndex = 0;
 		// domyślna lekcja, z domyślnego kursu
 		setCurrentTest(new TypingTest(
-				getCurrentCourse().getCurrentLesson().getText()));
+				getCurrentCourse().getCurrentLesson().getText(), true));
 	}
 
 	/**

@@ -51,7 +51,8 @@ public class CourseManager {
 				}
 				CoolKey.getUser().selectCourse(courses.getSelectionIndex());
 				CoolKey.setCurrentTest(new TypingTest(CoolKey.getUser()
-						.getCurrentCourse().getCurrentLesson().getText()));
+						.getCurrentCourse().getCurrentLesson().getText(),
+						true));
 				CMShell.close();
 				GUI.refresh();
 			}

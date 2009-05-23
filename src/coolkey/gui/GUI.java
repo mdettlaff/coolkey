@@ -104,6 +104,15 @@ public class GUI {
 		display.dispose();
 	}
 
+	public static void showLessonInstructions() {
+    	int style = SWT.ICON_INFORMATION;
+    	MessageBox messageBox = new MessageBox(GUI.shell, style);
+    	messageBox.setText("Instrukcja");
+    	messageBox.setMessage(CoolKey.getUser().getCurrentCourse()
+    			.getCurrentLesson().getInstructions());
+    	messageBox.open();
+	}
+
 	public static void refresh() {
 		menuBar.refresh();
 		typingArea.refresh();

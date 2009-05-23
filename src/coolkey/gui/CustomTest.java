@@ -122,7 +122,7 @@ public class CustomTest {
 								text.charAt(i) == ' ' ? filter.length() - 1
 										: filter.length()));
 					}
-					CoolKey.setCurrentTest(new TypingTest(text));
+					CoolKey.setCurrentTest(new TypingTest(text, false));
 				} else if (words.getSelection()) {
 					if (!chars.getText().matches("^\\p{javaLetter}*$")) {
 		    			MessageBox messageBox = new MessageBox(GUI.shell, SWT.ICON_ERROR);
@@ -146,7 +146,7 @@ public class CustomTest {
 						text += filteredWords.get(random.nextInt(
 								filteredWords.size())) + ' ';
 					}
-					CoolKey.setCurrentTest(new TypingTest(text));
+					CoolKey.setCurrentTest(new TypingTest(text, false));
 				} else if (sentences.getSelection()) {
 					if (!chars.getText().matches("^\\p{javaLetter}*$")) {
 		    			MessageBox messageBox = new MessageBox(GUI.shell, SWT.ICON_ERROR);
@@ -161,7 +161,7 @@ public class CustomTest {
 							CoolKey.MAX_CHARS_IN_LINE - 1);
 					CoolKey.setCurrentTest(new TypingTest(
 						Markov.generateMarkovChain(
-								filteredWords, minGenTextLength)));
+								filteredWords, minGenTextLength), false));
 				}
 				GUI.refresh();
 				shell.dispose();
