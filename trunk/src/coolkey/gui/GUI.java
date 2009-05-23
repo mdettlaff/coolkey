@@ -42,6 +42,7 @@ public class GUI {
 	 */
 	public static Shell shell;
 
+	public static MenuBar menuBar;
 	public static TypingArea typingArea;
 	public static ButtonBar buttonBar;
 	public static Keyboard keyboard;
@@ -72,7 +73,7 @@ public class GUI {
 		shell.setLocation(x, y);
 		shell.setSize(780, 580);
 
-		new MenuBar();
+		menuBar = new MenuBar();
 		typingArea = new TypingArea(); // obszar przepisywania
 		graphs = new Graphs(); // panel z wykresami po prawej (nowy wątek)
 		buttonBar = new ButtonBar();
@@ -104,6 +105,7 @@ public class GUI {
 	}
 
 	public static void refresh() {
+		menuBar.refresh();
 		typingArea.refresh();
 		buttonBar.refresh();
 		keyboard.refresh();

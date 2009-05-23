@@ -1,31 +1,33 @@
 package coolkey;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Random;
 
 /**
  * Lekcja ucząca danych znaków będąca częścią kursu.
  */
-public class Lesson {
+public class Lesson implements Serializable {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Schemat do ćwiczenia z dwoma nowymi znakami.
 	 */
 	private static final String PATTERN_2_CHARS =
 		"000 111 000 111 000 111 000 111 000 111 000 111 000 111 000 111\n" +
-		"010 010 101 101 010 101 000 111 000 111 101 010 101 101 010 010\n" +
+		"010 010 101 101 010 101 000 111 000 111 101 010 101 101 010 010\n"/* +
 		"0 1 0 1 00 11 00 11 01 01 10 10 01 01 10 10 1010 0101 1010 0101\n" +
 		"000 111 000 111 010 010 101 101 001 110 001 110 011 100 011 011\n" +
-		"01 01 01 01 10 10 10 10 00 00 00 00 11 11 11 11 010 010 101 101\n";
+		"01 01 01 01 10 10 10 10 00 00 00 00 11 11 11 11 010 010 101 101\n"*/;
 	/**
 	 * Schemat do ćwiczenia z czterema nowymi znakami.
 	 */
 	private static final String PATTERN_4_CHARS =
 		"000 111 222 333 000 111 222 333 333 222 111 000 333 222 111 000\n" +
-		"010 020 030 010 020 030 101 121 131 202 212 232 303 313 323 030\n" +
+		"010 020 030 010 020 030 101 121 131 202 212 232 303 313 323 030\n"/* +
 		"030 020 010 131 121 101 232 212 202 323 313 303 121 323 020 131\n" +
 		"010 121 232 010 121 232 101 212 323 232 121 010 323 212 101 303\n" +
-		"3030 3131 3232 0101 0202 0303 3010 3020 0301 0302 1030 3010 203\n";
+		"3030 3131 3232 0101 0202 0303 3010 3020 0301 0302 1030 3010 203\n"*/;
 	/**
 	 * Schemat do ćwiczenia palców.
 	 */
@@ -53,8 +55,12 @@ public class Lesson {
 		"131 131 a6a a6a 131 131 a6a a6a 151 151 a8a a8a 151 151 a8a a8a\n" +
 		"1a1 474 1a1 474 090 909 2b2 b2b 474 747 363 636 585 858 141 a7a\n";
 	private static final Random RANDOM = new Random();
+	private static final int LENGTH_IN_LINES = 4;
 
 	private String text = "";
+	private String name;
+	private String knownChars;
+	private String newChars;
 
 	/**
 	 * Tworzy nową lekcję.
@@ -64,7 +70,19 @@ public class Lesson {
 	 * @param newChars   Znaki, których użytkownik dopiero się uczy lub ma
 	 *                   zamiar je intensywnie przećwiczyć.
 	 */
-	public Lesson(String knownChars, String newChars) {
+	public Lesson(String name, String knownChars, String newChars) {
+		this.name = name;
+		this.knownChars = knownChars;
+		this.newChars = newChars;
+	}
+
+	/**
+	 * Generuje i zwraca tekst do przepisania w tej lekcji.
+	 */
+	public String getText() {
+		if (!"".equals(text)) {
+			return text;
+		}
 		if (newChars.length() == 2) {
 			text += PATTERN_2_CHARS;
 		} else if (newChars.length() == 4) {
@@ -82,19 +100,23 @@ public class Lesson {
 		}
 		List<String> words = CoolKey.getDictionary().wordsConsistingOf(
 				knownChars + newChars);
+		if (words.size() < 10) { return text; }
 		words = Dictionary.wordsContaining(
 				newChars, words.toArray(new String[10]));
-		int minGenTextLines = 11;
-		while (text.length() < minGenTextLines
+		if (words.size() < 10) { return text; }
+		while (text.length() < LENGTH_IN_LINES
 				* CoolKey.MAX_CHARS_IN_LINE - 20) {
 			text += words.get(RANDOM.nextInt(words.size())) + ' ';
 		}
+		return text;
 	}
 
-	/**
-	 * Zwraca tekst do przepisania w tej lekcji.
-	 */
-	public String getText() {
-		return text;
+	public String getName() {
+		return name;
+	}
+
+	@Override
+	public String toString() {
+		return getName();
 	}
 }
