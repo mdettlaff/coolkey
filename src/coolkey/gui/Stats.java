@@ -302,20 +302,6 @@ public class Stats {
 			}
 		});
 		
-		System.out.println("Statystyki dla kolejnych ukończonych testów:");
-		System.out.println("Prędkość: "
-				+ CoolKey.getUser().getStatistics().getSpeeds());
-		System.out.println("Realna prędkość: "
-				+ CoolKey.getUser().getStatistics().getRealSpeeds());
-		System.out.println("Poprawność: "
-				+ CoolKey.getUser().getStatistics().getAccuracies());
-		System.out.println("Statystyki dla poszczególnych znaków:");
-		// Enter to '\r' (powrót karetki)
-		System.out.println("Prędkość: "
-				+ CoolKey.getUser().getStatistics().getCharSpeeds());
-		System.out.println("Poprawność: "
-				+ CoolKey.getUser().getStatistics().getCharAccuracies());
-
 		statsShell.setSize(400, 300);
 		
 		accTests.addListener(SWT.Selection, new Listener() {

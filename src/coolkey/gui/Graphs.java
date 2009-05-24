@@ -94,8 +94,6 @@ public class Graphs implements Runnable	{
 				if (resultsList.size() > 0) {
 					TestResults newestResults = resultsList.get(
 							resultsList.size() - 1);
-					String progress = String.format("%.0f%%", newestResults.getProgress());
-					int seconds = newestResults.getTypingTimeMilliseconds() / 1000;
 					gc.drawString("Prędkość średnia (ogólnie): " + String.format("%.1f", newestResults.getSpeed()), MARGIN_LEFT, 5);
 					gc.drawString("Prędkość średnia (faktycznie): " + String.format("%.1f", newestResults.getRealSpeed()), MARGIN_LEFT, 5+MARGIN_TOP2);
 					gc.drawString("Prędkość chwilowa: " + String.format("%.1f", newestResults.getSpeed()), MARGIN_LEFT, 5+MARGIN_TOP3);
@@ -116,7 +114,7 @@ public class Graphs implements Runnable	{
 					gc.drawString(String.format("Czas: %d minut %d sekund", ((newestResults.getTypingTimeMilliseconds()/1000)/60), 
 							newestResults.getTypingTimeMilliseconds()/1000%60), 5, canvasSize.y-MARGIN_BOTTOM+36, true);
 					gc.setBackground(GUI.display.getSystemColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND));
-					gc.drawString(String.format("Przepisano: %d / %d znaków", newestResults.getCharCounts().values().toArray().length+1, 
+					gc.drawString(String.format("Przepisano: %d / %d znaków", newestResults.getWrittenCharsCount(),
 							newestResults.getTotalCharsCount()), 5, canvasSize.y-MARGIN_BOTTOM+48, false);
 					String s = "";
 					s += String.format("prędkość średnia: %.1f znaków/min\n",
@@ -129,7 +127,6 @@ public class Graphs implements Runnable	{
 					s += String.format("(%d błędów, %d poprawek)",
 							newestResults.getMistakesCount(),
 							newestResults.getCorrectionsCount());
-					System.out.println('\n' + s);
 					
 					gc.setBackground(GUI.display.getSystemColor(SWT.COLOR_WHITE));
 					/*wykres*/
