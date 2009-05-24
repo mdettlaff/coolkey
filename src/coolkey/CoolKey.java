@@ -31,6 +31,7 @@ import coolkey.gui.GUI;
  */
 public class CoolKey {
 
+	public static final String VERSION = "0.9";
 	public static final String TEXT_DIRECTORY = "data" + File.separator
 			+ "text" + File.separator;
 	public static final String TEXT_NORM_DIRECTORY = TEXT_DIRECTORY

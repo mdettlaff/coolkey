@@ -60,7 +60,7 @@ public class GUI {
 		shell = new Shell(display);
 		icon = new Image(display, "data" + File.separator + "images"
 				+ File.separator + "icons" + File.separator + "coolkey.png");
-		shell.setText("CoolKey 0.1");
+		shell.setText("CoolKey " + CoolKey.VERSION);
 		shell.setImage(icon);
 		shell.setLayout(new GridLayout(2, false));
 
@@ -102,15 +102,6 @@ public class GUI {
 			CoolKey.getCurrentTest().restart();
 		}
 		display.dispose();
-	}
-
-	public static void showLessonInstructions() {
-    	int style = SWT.ICON_INFORMATION;
-    	MessageBox messageBox = new MessageBox(GUI.shell, style);
-    	messageBox.setText("Instrukcja");
-    	messageBox.setMessage(CoolKey.getUser().getCurrentCourse()
-    			.getCurrentLesson().getInstructions());
-    	messageBox.open();
 	}
 
 	public static void refresh() {

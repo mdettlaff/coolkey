@@ -32,6 +32,18 @@ public class ResultsMessage {
 			// zaliczone
 			if (results.getRealSpeed() >= SPEED_THRESHOLD
 					&& results.getCorrectness() >= CORRECTNESS_THRESHOLD) {
+				int[] progress = CoolKey.getUser().getCurrentCourse().getProgress();
+				// kurs zaliczony
+				if (progress[0] == progress[1]) {
+					message += "\n\nGratulacje! Kurs został ukończony.";
+					int style = SWT.ICON_INFORMATION;
+			    	MessageBox messageBox = new MessageBox(GUI.shell, style);
+			    	messageBox.setText("Wyniki");
+			    	messageBox.setMessage(message);
+			    	messageBox.open();
+			    	return;
+				}
+				// lekcja zaliczona
 				message += "\n\nGratulacje! Lekcja została zaliczona.\n\n";
 				message += "Czy chcesz przejść do następnej lekcji?";
 				confirmation.setMessage(message);
@@ -42,7 +54,7 @@ public class ResultsMessage {
 							.getCurrentCourse().getCurrentLesson().getText(),
 							true));
 					GUI.refresh();
-					GUI.showLessonInstructions();
+					GUI.buttonBar.showLessonInstructions();
 				} else {
 					CoolKey.getCurrentTest().restart();
 					GUI.refresh();

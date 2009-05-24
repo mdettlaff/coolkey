@@ -64,9 +64,7 @@ public class CourseManager {
 					return;
 				}
 				CoolKey.getUser().deleteCourse(courses.getSelectionIndex());
-				if (CoolKey.getUser().getCourses().size() == 0) {
-					GUI.menuBar.getContinueCourseItem().setEnabled(false);
-				}
+				GUI.menuBar.refresh();
 				refresh();
 			}
 		});

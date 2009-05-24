@@ -10,6 +10,8 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.MessageBox;
 
 import coolkey.CoolKey;
+import coolkey.Course;
+import coolkey.Lesson;
 
 /**
  * Belka z przyciskami na środku.
@@ -18,6 +20,7 @@ public class ButtonBar {
 
 	private Button pause;
 	private Button restartTest;
+	private Button instructions;
 
 	public ButtonBar() {
 		Composite comp = new Composite(GUI.shell, SWT.NONE);
@@ -61,7 +64,33 @@ public class ButtonBar {
 				refresh();
 			}
 		});
+		// przycisk pokazujący instrukcję do lekcji
+		instructions = new Button(comp, SWT.PUSH);
+		instructions.setText("Instrukcja do lekcji");
+		instructions.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				showLessonInstructions();
+				GUI.typingArea.setFocus();
+			}
+		});
 		refresh();
+	}
+
+	public void showLessonInstructions() {
+		Lesson lesson =
+			CoolKey.getUser().getCurrentCourse().getCurrentLesson();
+		Course course = CoolKey.getUser().getCurrentCourse();
+		String message =
+			"Lekcja " + course.getProgress()[0] + "/"
+			+ course.getProgress()[1] + ": ";
+		message += lesson.getName() + "\n\n";
+		message += lesson.getInstructions();
+    	int style = SWT.ICON_INFORMATION;
+    	MessageBox messageBox = new MessageBox(GUI.shell, style);
+    	messageBox.setText(course.getName());
+    	messageBox.setMessage(message);
+    	messageBox.open();
 	}
 
 	public void refresh() {
@@ -78,5 +107,6 @@ public class ButtonBar {
 			pause.setEnabled(false);
 		}
 		restartTest.setEnabled(CoolKey.getCurrentTest().isStarted());
+		instructions.setEnabled(CoolKey.getCurrentTest().isPartOfCourse());
 	}
 }

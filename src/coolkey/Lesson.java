@@ -87,6 +87,7 @@ public class Lesson implements Serializable {
 		if (!"".equals(text)) {
 			return text;
 		}
+		// pierwszą część tekstu bierzemy z gotowych wzorów
 		if (newChars.length() == 2) {
 			text += PATTERN_2_CHARS;
 		} else if (newChars.length() == 4) {
@@ -98,10 +99,17 @@ public class Lesson implements Serializable {
 		} else if (newChars.length() == 12) {
 			text += PATTERN_12_CHARS;
 		}
+		// zabezpieczamy się przed przypadkiem, kiedy w tekście występują
+		// cyfry lub litery 'a', 'b'
+		String rare = "\u00b6"; // znak, który nie wystąpi w tekście
+		text = text.replace("", rare);
 		for (int i=0; i < newChars.length(); i++) {
 			text = text.replace(
-					Integer.toHexString(i).charAt(0), newChars.charAt(i));
+					Integer.toHexString(i).charAt(0) + rare,
+					newChars.charAt(i) + "");
 		}
+		text = text.replace(rare, "");
+		// drugą część tekstu tworzymy ze słów ze słownika
 		List<String> words = CoolKey.getDictionary().wordsConsistingOf(
 				knownChars + newChars);
 		if (words.size() < 10) { return text; }

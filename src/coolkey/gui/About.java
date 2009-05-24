@@ -18,6 +18,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import coolkey.CoolKey;
 import coolkey.Utils;
 
 /**
@@ -68,7 +69,7 @@ public class About {
 
 		// tekst z odnośnikami
 		Label programName = new Label(info, SWT.NONE);
-		programName.setText("CoolKey 1.0");
+		programName.setText("CoolKey " + CoolKey.VERSION);
 		programName.setFont(new Font(GUI.display, "Arial", 12, SWT.BOLD));
 		Link homepage = new Link(info, SWT.NONE);
 		homepage.setText(INFO);
