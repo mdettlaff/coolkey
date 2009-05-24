@@ -57,7 +57,7 @@ public class GUI {
 	 */
 	public static void init() {
 		display = new Display();
-		shell = new Shell(display);
+		shell = new Shell(display, SWT.DIALOG_TRIM);
 		icon = new Image(display, "data" + File.separator + "images"
 				+ File.separator + "icons" + File.separator + "coolkey.png");
 		shell.setText("CoolKey " + CoolKey.VERSION);
