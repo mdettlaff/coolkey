@@ -1,15 +1,4 @@
 #summary Lista rzeczy które zostały jeszcze do zrobienia.
 #labels Phase-Implementation
 
-Karol:
-  * Wykresy na panelu z prawej strony (Graphs.java):
-    * Prędkość średnia (wykres)
-    * Realna prędkość średnia (wykres)
-    * Prędkość chwilowa (wykres)
-    * Ilość błędów i poprawek (napis, pasek postępu)
-    * Pasek postępu lekcji (pasek postępu)
-    * Czas jaki upłynął (napis)
-
-Michał:
-  * Instrukcja użytkowania
   * Ukrywanie wykresów i klawiatury
