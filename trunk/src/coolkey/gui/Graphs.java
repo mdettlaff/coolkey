@@ -22,9 +22,10 @@ public class Graphs implements Runnable	{
 	private final int CANVAS_WIDTH = 195;
 	private final int SLEEP_TIME = 1000;
 	private final int MARGIN_TOP = 20;
-	private final int MARGIN_TOP2 = 160;
-	private final int MARGIN_TOP3 = 320;
-	private final int MARGIN_LEFT = 20;
+	private final int MARGIN_TOP2 = 150;
+	private final int MARGIN_TOP3 = 300;
+	private final int MARGIN_LEFT = 23;
+	private final int MARGIN_BOTTOM = 65;
 	/**
 	 * Przedział czasu, z którego obliczana jest prędkość chwilowa.
 	 */
@@ -46,19 +47,19 @@ public class Graphs implements Runnable	{
 			public void paintControl(PaintEvent pe) {
 				GC gc = pe.gc;
 				Point canvasSize = canvas.getSize();
-				gc.setBackground(GUI.display.getSystemColor(SWT.COLOR_WHITE));
-				gc.setForeground(GUI.display.getSystemColor(SWT.COLOR_BLACK));
-				gc.fillRectangle(0, 0, canvasSize.x, canvasSize.y); // tło
+				gc.setBackground(GUI.display.getSystemColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND));
+				gc.setForeground(GUI.display.getSystemColor(SWT.COLOR_WHITE));
+				gc.drawRectangle(1, 1, canvasSize.x-5, canvasSize.y-5);
 				Font font = new Font(GUI.display,"Arial",7, SWT.None);
 				gc.setFont(font);
 	
 				/* 
-				 * skala1 
+				 * skala 
 				 */
 				int skala=500;
 				int j;
 				for (j=MARGIN_TOP+20; j<=140; j+=20) {
-					gc.setForeground(GUI.display.getSystemColor(SWT.COLOR_GRAY));
+					gc.setForeground(GUI.display.getSystemColor(SWT.COLOR_WHITE));
 					gc.drawLine(MARGIN_LEFT-2, j, canvasSize.x-MARGIN_LEFT, j);
 					gc.drawLine(MARGIN_LEFT-2, j+MARGIN_TOP2, canvasSize.x-MARGIN_LEFT, j+MARGIN_TOP2);
 					gc.drawLine(MARGIN_LEFT-2, j+MARGIN_TOP3, canvasSize.x-MARGIN_LEFT, j+MARGIN_TOP3);
@@ -86,6 +87,9 @@ public class Graphs implements Runnable	{
 				gc.drawLine(MARGIN_LEFT-2, MARGIN_TOP+120, canvasSize.x-MARGIN_LEFT, MARGIN_TOP+120);	//oś x 
 				gc.drawLine(MARGIN_LEFT-2, MARGIN_TOP+120+MARGIN_TOP2, canvasSize.x-MARGIN_LEFT, MARGIN_TOP+120+MARGIN_TOP2);	//oś x
 				gc.drawLine(MARGIN_LEFT-2, MARGIN_TOP+120+MARGIN_TOP3, canvasSize.x-MARGIN_LEFT, MARGIN_TOP+120+MARGIN_TOP3);	//oś x
+				gc.drawString("Poprawność:", 5, canvasSize.y-MARGIN_BOTTOM, true);
+				gc.drawString("Postęp lekcji:", 5, canvasSize.y-MARGIN_BOTTOM+24, true);
+				gc.drawString("Przepisano: 0 znaków", 5, canvasSize.y-MARGIN_BOTTOM+48, true);
 				
 				if (resultsList.size() > 0) {
 					TestResults newestResults = resultsList.get(
@@ -95,8 +99,25 @@ public class Graphs implements Runnable	{
 					gc.drawString("Prędkość średnia (ogólnie): " + String.format("%.1f", newestResults.getSpeed()), MARGIN_LEFT, 5);
 					gc.drawString("Prędkość średnia (faktycznie): " + String.format("%.1f", newestResults.getRealSpeed()), MARGIN_LEFT, 5+MARGIN_TOP2);
 					gc.drawString("Prędkość chwilowa: " + String.format("%.1f", newestResults.getSpeed()), MARGIN_LEFT, 5+MARGIN_TOP3);
-					//gc.drawString(seconds + "", 15, 40);
-					//gc.drawString(progress, 15, 76);
+					gc.setBackground(GUI.display.getSystemColor(SWT.COLOR_CYAN));
+					gc.setForeground(GUI.display.getSystemColor(SWT.COLOR_BLUE));
+					gc.drawRectangle(60, canvasSize.y-MARGIN_BOTTOM+1, (int)newestResults.getCorrectness(), 8);
+					gc.fillRectangle(61, canvasSize.y-MARGIN_BOTTOM+2, (int)newestResults.getCorrectness()-1, 7);
+					gc.drawString(String.format("%.1f%% ",newestResults.getCorrectness()), 
+							65+(int)newestResults.getCorrectness(), canvasSize.y-MARGIN_BOTTOM, true);
+					gc.setForeground(GUI.display.getSystemColor(SWT.COLOR_BLACK));
+					gc.drawString(String.format("Błędy: %d        Poprawki: %d", newestResults.getMistakesCount(),
+							newestResults.getCorrectionsCount()), 5, canvasSize.y-MARGIN_BOTTOM+12, true);
+					gc.drawRectangle(68, canvasSize.y-MARGIN_BOTTOM+25, 100, 8);
+					gc.setBackground(GUI.display.getSystemColor(SWT.COLOR_WHITE));
+					gc.fillRectangle(69, canvasSize.y-MARGIN_BOTTOM+26, 99, 7);
+					gc.setBackground(GUI.display.getSystemColor(SWT.COLOR_DARK_GREEN));
+					gc.fillRectangle(69, canvasSize.y-MARGIN_BOTTOM+26, (int)newestResults.getProgress()-1, 7);
+					gc.drawString(String.format("Czas: %d minut %d sekund", ((newestResults.getTypingTimeMilliseconds()/1000)/60), 
+							newestResults.getTypingTimeMilliseconds()/1000%60), 5, canvasSize.y-MARGIN_BOTTOM+36, true);
+					gc.setBackground(GUI.display.getSystemColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND));
+					gc.drawString(String.format("Przepisano: %d / %d znaków", newestResults.getCharCounts().values().toArray().length+1, 
+							newestResults.getTotalCharsCount()), 5, canvasSize.y-MARGIN_BOTTOM+48, false);
 					String s = "";
 					s += String.format("prędkość średnia: %.1f znaków/min\n",
 							newestResults.getSpeed());
@@ -110,6 +131,7 @@ public class Graphs implements Runnable	{
 							newestResults.getCorrectionsCount());
 					System.out.println('\n' + s);
 					
+					gc.setBackground(GUI.display.getSystemColor(SWT.COLOR_WHITE));
 					/*wykres*/
 					double x=MARGIN_LEFT+1;
 					int y=120+MARGIN_TOP;
@@ -122,8 +144,13 @@ public class Graphs implements Runnable	{
 					TestResults result = resultsList.get(0);
 					double sample = result.getSpeed();
 					gc.setForeground(GUI.display.getSystemColor(SWT.COLOR_GREEN));
-					gc.drawLine((int)inc+(int)x, y-(int)sample/5, (int)x, y-(int)sample/5);
-					gc.drawLine((int)inc+(int)x, (y-(int)sample/5)-1, (int)x, (y-(int)sample/5)-1);
+					if (y-(int)sample/5 > MARGIN_TOP) {
+						gc.drawLine((int)inc+(int)x, y-(int)sample/5, (int)x, y-(int)sample/5);
+						gc.drawLine((int)inc+(int)x, (y-(int)sample/5)-1, (int)x, (y-(int)sample/5)-1);
+					} else {
+						gc.drawLine((int)inc+(int)x, MARGIN_TOP, (int)x, MARGIN_TOP);
+						gc.drawLine((int)inc+(int)x, MARGIN_TOP-1, (int)x, MARGIN_TOP-1);
+					}
 					sample = result.getSpeed();
 					gc.setForeground(GUI.display.getSystemColor(SWT.COLOR_RED));
 					gc.drawLine((int)inc+(int)x, y-(int)sample/5+MARGIN_TOP2, (int)x, y-(int)sample/5+MARGIN_TOP2);
@@ -142,19 +169,27 @@ public class Graphs implements Runnable	{
 						gc.drawLine((int)x+(int)inc, (y-(int)sample/5)-1+MARGIN_TOP2, (int)x, (y-(int)(resultsList.get(i-1).getRealSpeed()/5))-1+MARGIN_TOP2);
 						x+=inc;
 					}
-					inc = 2;
 					x=MARGIN_LEFT+1;
-					/*
-					 * Info dla Karola:
-					 * Tutaj pobieraj bezpośrednio z listy currentSpeeds zamiast resultsList.
-					 * Prędkość chwilowa równa -1.0 oznacza brak danych w danym momencie.
-					 */
-					for (int i=(resultsList.size() < 79 ? 1 : resultsList.size()-(78*(resultsList.size()/78)-1)); i<resultsList.size(); i++) {
-						result = resultsList.get(i);
-						sample = result.getSpeed();
+					
+					inc=((double)canvasSize.x-40)/(currentSpeeds.size()-CURRENT_SPEED_INTERVAL);
+					for (int i=CURRENT_SPEED_INTERVAL; i<currentSpeeds.size(); i++) {
+						double currentSpd = currentSpeeds.get(i);
+						double lastCurrentSpd = currentSpeeds.get(i-1);
+						if (currentSpd < 500) {
+							sample = currentSpd;
+						}
+						else {
+							sample = 500;
+						}
+						if (lastCurrentSpd > 500) {
+							lastCurrentSpd = 500;
+						}
+						if (sample == -1) {
+							continue;
+						}
 						gc.setForeground(GUI.display.getSystemColor(SWT.COLOR_BLUE));
-						gc.drawLine((int)x+(int)inc, y-(int)sample/5+MARGIN_TOP3, (int)x, y-(int)(resultsList.get(i-1).getSpeed()/5)+MARGIN_TOP3);
-						gc.drawLine((int)x+(int)inc, (y-(int)sample/5)-1+MARGIN_TOP3, (int)x, (y-(int)(resultsList.get(i-1).getSpeed()/5))-1+MARGIN_TOP3);	//pogrubiona linia
+							gc.drawLine((int)x+(int)inc, y-(int)sample/5+MARGIN_TOP3, (int)x, y-(int)(lastCurrentSpd/5)+MARGIN_TOP3);
+							gc.drawLine((int)x+(int)inc, (y-(int)sample/5)-1+MARGIN_TOP3, (int)x, (y-(int)(lastCurrentSpd/5))-1+MARGIN_TOP3);	//pogrubiona linia
 						x+=inc;
 					}
 				}
