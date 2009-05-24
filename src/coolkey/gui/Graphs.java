@@ -83,7 +83,7 @@ public class Graphs implements Runnable	{
 				gc.drawLine(MARGIN_LEFT, MARGIN_TOP+MARGIN_TOP3, MARGIN_LEFT, MARGIN_TOP+122+MARGIN_TOP3);		//oś y
 				gc.drawString("Prędkość średnia (ogólnie): 0", MARGIN_LEFT, 5);
 				gc.drawString("Prędkość średnia (faktycznie): 0", MARGIN_LEFT, 5+MARGIN_TOP2);
-				gc.drawString("Prędkość chwilowa: 0", MARGIN_LEFT, 5+MARGIN_TOP3);
+				gc.drawString("Prędkość chwilowa: ?", MARGIN_LEFT, 5+MARGIN_TOP3);
 				gc.drawLine(MARGIN_LEFT-2, MARGIN_TOP+120, canvasSize.x-MARGIN_LEFT, MARGIN_TOP+120);	//oś x 
 				gc.drawLine(MARGIN_LEFT-2, MARGIN_TOP+120+MARGIN_TOP2, canvasSize.x-MARGIN_LEFT, MARGIN_TOP+120+MARGIN_TOP2);	//oś x
 				gc.drawLine(MARGIN_LEFT-2, MARGIN_TOP+120+MARGIN_TOP3, canvasSize.x-MARGIN_LEFT, MARGIN_TOP+120+MARGIN_TOP3);	//oś x
@@ -96,7 +96,12 @@ public class Graphs implements Runnable	{
 							resultsList.size() - 1);
 					gc.drawString("Prędkość średnia (ogólnie): " + String.format("%.1f", newestResults.getSpeed()), MARGIN_LEFT, 5);
 					gc.drawString("Prędkość średnia (faktycznie): " + String.format("%.1f", newestResults.getRealSpeed()), MARGIN_LEFT, 5+MARGIN_TOP2);
-					gc.drawString("Prędkość chwilowa: " + String.format("%.1f", newestResults.getSpeed()), MARGIN_LEFT, 5+MARGIN_TOP3);
+					double currentSpeed = currentSpeed(CURRENT_SPEED_INTERVAL);
+					if (currentSpeed < 0) {
+						gc.drawString("Prędkość chwilowa: ?", MARGIN_LEFT, 5+MARGIN_TOP3);
+					} else {
+						gc.drawString("Prędkość chwilowa: " + String.format("%.1f", currentSpeed), MARGIN_LEFT, 5+MARGIN_TOP3);
+					}
 					gc.setBackground(GUI.display.getSystemColor(SWT.COLOR_CYAN));
 					gc.setForeground(GUI.display.getSystemColor(SWT.COLOR_BLUE));
 					gc.drawRectangle(60, canvasSize.y-MARGIN_BOTTOM+1, (int)newestResults.getCorrectness(), 8);
@@ -116,17 +121,6 @@ public class Graphs implements Runnable	{
 					gc.setBackground(GUI.display.getSystemColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND));
 					gc.drawString(String.format("Przepisano: %d / %d znaków", newestResults.getWrittenCharsCount(),
 							newestResults.getTotalCharsCount()), 5, canvasSize.y-MARGIN_BOTTOM+48, false);
-					String s = "";
-					s += String.format("prędkość średnia: %.1f znaków/min\n",
-							newestResults.getSpeed());
-					s += String.format("realna prędkość średnia: %.1f znaków/min\n",
-							newestResults.getRealSpeed());
-					s += "prędkość chwilowa: " + currentSpeeds + "\n";
-					s += String.format("poprawność: %.1f%% ",
-							newestResults.getCorrectness());
-					s += String.format("(%d błędów, %d poprawek)",
-							newestResults.getMistakesCount(),
-							newestResults.getCorrectionsCount());
 					
 					gc.setBackground(GUI.display.getSystemColor(SWT.COLOR_WHITE));
 					/*wykres*/
