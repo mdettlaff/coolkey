@@ -276,7 +276,7 @@ public class MenuBar {
 						.getCurrentCourse().getCurrentLesson().getText(),
 						true));
 				GUI.refresh();
-				GUI.showLessonInstructions();
+				GUI.buttonBar.showLessonInstructions();
 			}
 		});
 		// załaduj plik tekstowy
@@ -442,10 +442,6 @@ public class MenuBar {
 				GUI.refresh();
 			}
 		});
-	}
-
-	public MenuItem getContinueCourseItem() {
-		return continueItem;
 	}
 
 	public void refresh() {

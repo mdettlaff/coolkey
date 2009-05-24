@@ -301,8 +301,7 @@ public class TypingTest implements Serializable {
 	 * Wyniki testu (prędkość, poprawność, dane statystyczne itp.).
 	 */
 	public TestResults getResults() {
-		return new TestResults(this, charCounts, charTimes, charMistakes,
-				isPartOfCourse);
+		return new TestResults(this, charCounts, charTimes, charMistakes);
 	}
 
 	/**
@@ -373,6 +372,10 @@ public class TypingTest implements Serializable {
 
 	public boolean isPaused() {
 		return isPaused;
+	}
+
+	public boolean isPartOfCourse() {
+		return isPartOfCourse;
 	}
 
 	private void addCharToStatistics(char c, boolean isTypedCorrectly) {

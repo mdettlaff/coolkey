@@ -26,9 +26,9 @@ public class TestResults implements Serializable {
 	 * @param test Test którego będą dotyczyły te wyniki.
 	 */
 	public TestResults(TypingTest test, Map<Character, Long> charCounts,
-			Map<Character, Long> charTimes, Map<Character, Long> charMistakes,
-			boolean isPartOfCourse) {
-		this.isPartOfCourse = isPartOfCourse;
+			Map<Character, Long> charTimes, Map<Character, Long> charMistakes)
+	{
+		this.isPartOfCourse = test.isPartOfCourse();
 		// policz wszystkie znaki do przepisania
 		totalCharsCount = 0;
 		for (String line : test.getTextLines()) {

@@ -47,13 +47,13 @@ public class NewCourse {
 			public void handleEvent(Event event) {
 				CoolKey.getUser().addCourse(CourseFactory.allCourses().get(
 						courses.getSelectionIndex()));
-				GUI.menuBar.getContinueCourseItem().setEnabled(true);
+				GUI.menuBar.refresh();
 				CoolKey.setCurrentTest(new TypingTest(CoolKey.getUser()
 						.getCurrentCourse().getCurrentLesson().getText(),
 						true));
 				newCourseShell.close();
 				GUI.refresh();
-				GUI.showLessonInstructions();
+				GUI.buttonBar.showLessonInstructions();
 			}
 		});
 	}
