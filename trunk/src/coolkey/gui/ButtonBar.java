@@ -1,14 +1,20 @@
 package coolkey.gui;
 
+import java.io.File;
+
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.Shell;
 
+import coolkey.Config;
 import coolkey.CoolKey;
 import coolkey.Course;
 import coolkey.Lesson;
@@ -21,6 +27,7 @@ public class ButtonBar {
 	private Button pause;
 	private Button restartTest;
 	private Button instructions;
+	private Button fingering;
 
 	public ButtonBar() {
 		Composite comp = new Composite(GUI.shell, SWT.NONE);
@@ -74,6 +81,45 @@ public class ButtonBar {
 				GUI.typingArea.setFocus();
 			}
 		});
+		// przycisk pokazujący obrazek z palcowaniem
+		fingering = new Button(comp, SWT.PUSH);
+		fingering.setText("Palcowanie");
+		fingering.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				String imageFilename = "";
+				if (CoolKey.getUser().getConfig().getKeyboardLayout()
+						== Config.QWERTY) {
+					imageFilename = "qwerty.png";
+				} else if (CoolKey.getUser().getConfig().getKeyboardLayout()
+						== Config.DVORAK) {
+					imageFilename = "dvorak.png";
+				} else {
+					return;
+				}
+				final Shell shell = new Shell(GUI.shell, SWT.APPLICATION_MODAL
+						| SWT.DIALOG_TRIM);
+				shell.setText("Palcowanie");
+				shell.setLayout(new GridLayout());
+				Image fingering = new Image(GUI.display, "data"
+						+ File.separator + "images" + File.separator
+						+ "fingering" + File.separator + imageFilename);
+				Label image = new Label(shell, SWT.NONE);
+				image.setImage(fingering);
+			    Button ok = new Button(shell, SWT.PUSH);
+			    ok.setText("  OK  ");
+			    ok.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
+				ok.addListener(SWT.Selection, new Listener() {
+					public void handleEvent(Event event) {
+						shell.close();
+					}
+				});
+				shell.pack();
+				shell.open();
+				GUI.typingArea.setFocus();
+			}
+		});
+
 		refresh();
 	}
 
