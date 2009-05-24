@@ -22,10 +22,7 @@ import coolkey.CoolKey;
 import coolkey.User;
 
 /**
- * Panel wyboru i edycji użytkownika.
- * 
- * @author kd
- *
+ * Okno wyboru i edycji użytkownika.
  */
 public class ChangeUser {
 	private static Shell changeUserShell;

@@ -16,6 +16,9 @@ import coolkey.CoolKey;
 import coolkey.Course;
 import coolkey.TypingTest;
 
+/**
+ * Okno wyboru kursów.
+ */
 public class CourseManager {
 	private static Shell CMShell;
 	private Table courses;
@@ -85,5 +88,4 @@ public class CourseManager {
 				CoolKey.getUser().getCurrentCourse()));
 		courses.getColumn(0).pack();
 	}
-
 }

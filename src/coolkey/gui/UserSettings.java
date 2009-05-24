@@ -15,9 +15,6 @@ import coolkey.CoolKey;
 
 /**
  * Okno ustawień użytkownika.
- * 
- * @author kd
- *
  */
 public class UserSettings {
 	private static Shell USShell;
