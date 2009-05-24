@@ -11,4 +11,5 @@ Karol:
     * Czas jaki upłynął (napis)
 
 Michał:
-  * Kursy i lekcje (QWERTY i Dvorak)
+  * Instrukcja użytkowania
+  * Ukrywanie wykresów i klawiatury
