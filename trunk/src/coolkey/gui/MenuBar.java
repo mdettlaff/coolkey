@@ -220,8 +220,8 @@ public class MenuBar {
 
 		final Menu helpMenu = new Menu(GUI.shell, SWT.DROP_DOWN);
 		help.setMenu(helpMenu);
-		final MenuItem topicsItem = new MenuItem(helpMenu, SWT.PUSH);
-		topicsItem.setText("Tematy pomocy");
+		final MenuItem helpItem = new MenuItem(helpMenu, SWT.PUSH);
+		helpItem.setText("Tematy pomocy");
 		final MenuItem aboutItem = new MenuItem(helpMenu, SWT.PUSH);
 		aboutItem.setText("O programie");
 
@@ -392,6 +392,13 @@ public class MenuBar {
 					if (!GUI.display.readAndDispatch()) GUI.display.sleep();
 				}
 				defender.dispose();
+			}
+		});
+		// pomoc programu
+		helpItem.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				new Help().open();
 			}
 		});
 		// informacje o programie
